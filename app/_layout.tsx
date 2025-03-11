@@ -1,14 +1,31 @@
-import {Stack} from 'expo-router';
-
+import "@/utils/polyfills";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { Provider } from "react-redux";
+import RootState from "@/stores";
+import { StrictMode } from "react";
+import App from "@/app/App";
 
+
+if (typeof global.FinalizationRegistry === "undefined") {
+  (global.FinalizationRegistry as any) = class FinalizationRegistry {
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+    constructor() {
+    }
+    register() {
+    }
+    unregister() {
+    }
+  };
+}
 export default function RootLayout() {
-    return (
-        <GluestackUIProvider mode="light"><Stack>
-                <Stack.Screen name="index" options={{headerShown: false}}/>
-                <Stack.Screen name="login" options={{headerShown: false}}/>
-                <Stack.Screen name="(main)" options={{headerShown: false}}/>
-            </Stack></GluestackUIProvider>
-    );
+  return (
+    <StrictMode>
+      <GluestackUIProvider mode="light">
+        <Provider store={RootState}>
+          <App />
+        </Provider>
+      </GluestackUIProvider>
+    </StrictMode>
+  );
 }
