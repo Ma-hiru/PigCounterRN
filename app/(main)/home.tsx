@@ -1,13 +1,40 @@
-import { View, Text } from "react-native";
+import { View, Text, BackHandler, ToastAndroid, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback } from "react";
 
 
 export default function Home() {
+  const navigation = useNavigation();
+  useFocusEffect(
+    useCallback(() => {
+      let lastBackPressed = 0;
+      const onBackPress = () => {
+        const now = Date.now();
+        if (now - lastBackPressed < 2000) { // 2秒内双击退出
+          BackHandler.exitApp();
+          return true;
+        }
+        lastBackPressed = now;
+        ToastAndroid.show("再次返回以退出应用", ToastAndroid.SHORT);
+        if (Platform.OS === "ios") {
+          navigation.setOptions({
+            gestureEnabled: false
+          });
+        }
+        return true;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [])
+  );
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 flex justify-center items-center w-screen h-screen bg-gray-50">
-        <Text>Home</Text>
+        <Text>Home1</Text>
       </View>
     </>
   );

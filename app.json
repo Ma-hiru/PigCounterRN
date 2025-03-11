@@ -1,21 +1,17 @@
 {
   "expo": {
-    "name": "PigCounterRN",
-    "slug": "PigCounterRN",
+    "name": "猪只技术",
+    "slug": "PigCounter",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "pigcounter",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "permissions": [
         "INTERNET"
       ],
