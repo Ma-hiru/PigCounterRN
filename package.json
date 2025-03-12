@@ -9,7 +9,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "server": "start cmd /k \"cd /d D:\\Project\\Go\\MyDownloadServer && go build && MyDownloadServer.exe --mode release --ssl false\"",
+    "model": "start cmd /k \"cd /d D:\\Py\\result\\ && .venv\\Scripts\\activate.bat && python predict.py\""
   },
   "jest": {
     "preset": "jest-expo"
