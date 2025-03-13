@@ -177,23 +177,25 @@ const ToastTitle = React.forwardRef<
   }, [children]);
 
   return (
-    <Text
-      {...props}
-      ref={ref}
-      aria-live="assertive"
-      aria-atomic="true"
-      role="alert"
-      className={toastTitleStyle({
-        size,
-        class: className,
-        parentVariants: {
-          variant: parentVariant,
-          action: parentAction,
-        },
-      })}
-    >
-      {children}
-    </Text>
+    <View className="flex justify-center items-center">
+      <Text
+        {...props}
+        ref={ref}
+        aria-live="assertive"
+        aria-atomic="true"
+        role="alert"
+        className={toastTitleStyle({
+          size,
+          class: className,
+          parentVariants: {
+            variant: parentVariant,
+            action: parentAction,
+          },
+        })}
+      >
+        {children}
+      </Text>
+    </View>
   );
 });
 
