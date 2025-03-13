@@ -1,0 +1,26 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+spring:
+  profiles:
+    active: dev
+  datasource:
+    druid:
+      driver-class-name: ${zlz.datasource.driver-class-name}
+      url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${zlz.datasource.username}
+      password: ${zlz.datasource.password}
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zlz.entity
+  configuration:
+    map-underscore-to-camel-case: true
+zlz:
+  jwt:
+    admin-secret-key: PigCounter
+    admin-token-name: token
+    #过期时间
+    admin-ttl: 86400000
