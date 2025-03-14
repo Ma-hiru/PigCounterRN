@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void add(Employee employee, MultipartFile profilePicture) throws IOException {
+    public void add( Employee employee, MultipartFile profilePicture) throws IOException {
         String  password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
         employee.setPassword(password);
         if(profilePicture!=null&&!profilePicture.isEmpty()){

@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -59,7 +60,7 @@ public class EmployeeController {
      * 新增员工
      */
     @PostMapping("/register")
-    public Result add(@Validated @ModelAttribute Employee employee, @RequestParam("picture")MultipartFile porfilePicture) throws IOException {
+    public Result add( @ModelAttribute @Validated Employee employee, @RequestParam("picture")MultipartFile porfilePicture) throws IOException {
         log.info("新增员工：{}",employee);
         employeeService.add(employee,porfilePicture);
         return Result.success();
