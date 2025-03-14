@@ -6,3 +6,5 @@ zlz:
     database: pig_counter
     username: root
     password: 123456
+  image:
+    save-path: ${working.dir}/images

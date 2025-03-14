@@ -8,12 +8,11 @@ import lombok.Data;
 public class EmployeeVO {
     private Long id;
 
+    private String username;
+
     private String name;
 
-    private String sex;
-
-    private String phone;
-
+    private String profilePicture;
     //jwt令牌
     private String token;
 }

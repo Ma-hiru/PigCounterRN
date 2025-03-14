@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @RestController
@@ -30,9 +30,14 @@ public class EmployeeController {
     @Autowired
     private JwtProperties jwtProperties;
 
+    /**
+     * 员工登录
+     * @param employeeLoginDTO
+     * @return
+     */
     @PostMapping("/login")
     public Result<EmployeeVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO){
-        log.info("aaa");
+        log.info("开始登录");
         Employee employee = employeeService.login(employeeLoginDTO);
 
         HashMap<String,Object> map = new HashMap<>();
@@ -42,12 +47,21 @@ public class EmployeeController {
 
         EmployeeVO employeeVO = EmployeeVO.builder().id(employee.getId())
                 .name(employee.getName())
-                .sex(employee.getSex())
-                .phone(employee.getPhone())
+                .username(employee.getUsername())
                 .token(token)
+                .profilePicture(employee.getProfilePicture())
                 .build();
 
         return Result.success(employeeVO);
 
+    }
+    /**
+     * 新增员工
+     */
+    @PostMapping("/register")
+    public Result add(@Validated @ModelAttribute Employee employee, @RequestParam("picture")MultipartFile porfilePicture) throws IOException {
+        log.info("新增员工：{}",employee);
+        employeeService.add(employee,porfilePicture);
+        return Result.success();
     }
 }
