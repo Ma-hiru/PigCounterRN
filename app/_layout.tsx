@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import RootState from "@/stores";
 import { StrictMode } from "react";
 import App from "@/app/App";
+import TopSafeArea from "@/components/TopSafeArea";
 
 
 if (typeof global.FinalizationRegistry === "undefined") {
@@ -12,8 +13,10 @@ if (typeof global.FinalizationRegistry === "undefined") {
     // eslint-disable-next-line @typescript-eslint/no-useless-constructor
     constructor() {
     }
+
     register() {
     }
+
     unregister() {
     }
   };

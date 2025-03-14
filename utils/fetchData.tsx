@@ -4,7 +4,7 @@ import { showNewToast } from "@/utils/toast";
 
 
 export const fetchData =
-  async <T extends ResponseData<any>, P>(reqFn: (data: P) => Promise<T>, reqData: P, successFn: (res: T) => void, failFn: (res: any, createToast: typeof showNewToast) => void, toast: ReturnType<typeof useToast>) => {
+  async <T extends ResponseData<any>, P>(reqFn: (data: P) => Promise<T>, reqData: P, successFn: (res: T) => void, failFn: (res: T, createToast: typeof showNewToast) => void, toast: ReturnType<typeof useToast>) => {
     try {
       const res = await reqFn(reqData);
       if (res?.ok) {

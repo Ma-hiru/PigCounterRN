@@ -19,7 +19,7 @@ export default function My() {
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 flex justify-center items-center w-screen h-screen">
+      <View className="flex-1 flex justify-center items-center w-screen h-screen bg-gray-50">
         <Button onPress={goToLogin}>
           <ButtonText>go to login</ButtonText>
         </Button>

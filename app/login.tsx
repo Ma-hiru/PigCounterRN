@@ -33,11 +33,15 @@ export default function Login() {
     else setIsInvalidPassword(false);
     if (username.length < 4) return setIsInvalidUsername(true);
     else setIsInvalidUsername(false);
-    await fetchData(reqLogin, { username, password }, (res) => {
-      dispatch(setToken(res.data.token));
-    }, (res, createToast) => {
-      createToast(toast, "请求出错！", res?.message);
-    }, toast);
+    await fetchData(
+      reqLogin,
+      { username, password },
+      (res) => {
+        dispatch(setToken(res.data.token));
+      },
+      (res, createToast) => {
+        createToast(toast, "请求出错！", res?.message);
+      }, toast);
   }, 1000);
   useEffect(() => {
     if (token !== "") {
