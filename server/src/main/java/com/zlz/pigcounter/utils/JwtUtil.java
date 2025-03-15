@@ -26,7 +26,7 @@ public class JwtUtil {
         // 指定签名的时候使用的签名算法，也就是header那部分
 //        SignatureAlgorithm = SignatureAlgorithm.HS256;
 
-        SecretKey key= Keys.hmacShaKeyFor(Arrays.copyOf(secretKey.getBytes(StandardCharsets.UTF_8),32));
+        SecretKey key= Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         // 生成JWT的时间
         long expMillis = System.currentTimeMillis() + ttlMillis;

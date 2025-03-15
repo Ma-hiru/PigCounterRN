@@ -20,7 +20,7 @@ mybatis:
     map-underscore-to-camel-case: true
 zlz:
   jwt:
-    admin-secret-key: PigCounter
+    admin-secret-key: PigCounteraaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     admin-token-name: token
     #过期时间
     admin-ttl: 86400000

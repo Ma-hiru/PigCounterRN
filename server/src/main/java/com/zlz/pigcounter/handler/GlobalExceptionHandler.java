@@ -32,4 +32,8 @@ public class GlobalExceptionHandler {
 
         return Result.error(sb.toString());
     }
+    @ExceptionHandler Result <String> exceptionHandler(Exception e) {
+        log.info(e.getMessage());
+        return Result.error(e.getMessage());
+    }
 }

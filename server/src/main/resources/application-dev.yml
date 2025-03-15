@@ -8,3 +8,5 @@ zlz:
     password: 123456
   image:
     save-path: ${working.dir}/images
+  password:
+    salt: PigCounter

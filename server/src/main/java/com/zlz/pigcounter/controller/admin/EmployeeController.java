@@ -5,12 +5,15 @@ import Common.pojo.dto.EmployeeLoginDTO;
 import Common.pojo.entity.Employee;
 import Common.pojo.vo.EmployeeVO;
 import Common.result.Result;
+import Common.validation.EmployeeValidation;
 import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
 import com.zlz.pigcounter.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,9 +63,28 @@ public class EmployeeController {
      * 新增员工
      */
     @PostMapping("/register")
-    public Result add( @ModelAttribute @Validated Employee employee, @RequestParam("picture")MultipartFile porfilePicture) throws IOException {
+    public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class,EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile porfilePicture)  {
         log.info("新增员工：{}",employee);
         employeeService.add(employee,porfilePicture);
         return Result.success();
     }
+    /**
+     * 根据id 查询员工
+     */
+    @GetMapping("/{id}")
+    public Result<Employee> getById(@PathVariable Long id){
+        log.info("根据id查询员工信息：{}",id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+    /**
+     * 修改员工信息
+     */
+    @PutMapping
+    public Result update(@ModelAttribute @Validated(EmployeeValidation.update.class) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile profilePicture)  {
+        log.info("修改员工信息：{}",employee);
+        employeeService.update(employee,profilePicture);
+        return Result.success();
+    }
+    
 }
