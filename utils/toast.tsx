@@ -1,9 +1,8 @@
 import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
 import { ToastPlacement } from "@gluestack-ui/toast/lib/types";
-import { getProps } from "@/global";
 import { StatusBar } from "react-native";
 
-export const showNewToast = (toast: ReturnType<typeof useToast>, title: string, desc: string, placement: ToastPlacement = "top", duration: number = 3000, action: getProps<typeof Toast>["action"] = "info") => {
+export const showNewToast = (toast: ReturnType<typeof useToast>, title: string, desc: string, placement: ToastPlacement = "top", duration: number = 3000, action: GetReactProps<typeof Toast>["action"] = "info") => {
   const topInset = StatusBar.currentHeight ?? 0;
   toast.show({
     id: String(Math.random()),
@@ -21,7 +20,7 @@ export const showNewToast = (toast: ReturnType<typeof useToast>, title: string, 
             paddingRight: 50,
             paddingTop: 5,
             paddingBottom: 5,
-            marginTop: topInset + 10
+            marginTop: topInset+5
           }}
         >
           <ToastTitle style={{color:"#409eff"}}>

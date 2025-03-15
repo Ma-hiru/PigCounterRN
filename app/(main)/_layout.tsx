@@ -46,7 +46,7 @@ export default function MainLayout() {
         }
       }}>
       <Tabs.Screen
-        name="home"
+        name="Home"
         options={{
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
@@ -55,7 +55,7 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
-        name="upload"
+        name="Upload"
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="upload-cloud" size={24} color={color} />
@@ -64,7 +64,7 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
-        name="report"
+        name="Report"
         options={{
           tabBarIcon: ({ color }) => (
             <AntDesign name="bells" size={24} color={color} />
@@ -73,7 +73,7 @@ export default function MainLayout() {
         }}
       />
       <Tabs.Screen
-        name="my"
+        name="My"
         options={{
           tabBarIcon: ({ color }) => (
             <AntDesign name="team" size={24} color={color} />

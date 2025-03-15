@@ -24,3 +24,4 @@ export const GlobalStyles = {
   ThemeColor: "#409eff",
   TabBarBg:"#ffffff"
 };
+export const LOCAL_SECRET_KEY = "Mahiru";

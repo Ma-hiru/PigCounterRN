@@ -45,7 +45,7 @@ export default function Login() {
   }, 1000);
   useEffect(() => {
     if (token !== "") {
-      router.push("/home");
+      router.push("/Home");
     }
   }, [router, token]);
   return (
@@ -62,6 +62,7 @@ export default function Login() {
           <Input variant="outline" size="lg">
             <InputField
               placeholder="请输入用户名"
+              returnKeyType="next"
               value={username}
               onChangeText={(text) => setUsername(text)}
             />
@@ -77,6 +78,7 @@ export default function Login() {
               type="password"
               placeholder="请输入密码"
               value={password}
+              returnKeyType="done"
               onChangeText={(text) => setPassword(text)}
             />
           </Input>

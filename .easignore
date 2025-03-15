@@ -7,6 +7,9 @@
 /ios
 /node_modules
 /server
+/images
+README.md
+/.idea
 
 # Ignore test coverage reports
 /coverage
