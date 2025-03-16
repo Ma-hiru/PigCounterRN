@@ -27,6 +27,7 @@ export default function App() {
       <Stack.Screen name="HistoryInfo" options={{ headerShown: false }} />
       <Stack.Screen name="UserInfo" options={{ headerShown: false }} />
       <Stack.Screen name="Feedback" options={{ headerShown: false }} />
+      <Stack.Screen name="UploadFiles" options={{ headerShown: true, title: "上传文件" }} />
     </Stack>
   );
 }

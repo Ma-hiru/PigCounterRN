@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import headBg from "@/assets/images/my/user_bg.webp";
 import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
 import checkIcon from "@/assets/images/my/check.svg";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { setImageScale } from "@/utils/setImageScale";
 import MyPagesCard from "@/components/MyPagesCard";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ const CardIconList = [
     onPress: (router: Router) => goToPages(router, "/Feedback", "FN")
   }
 ];
-export default function My() {
+const MyFC = () => {
   const [bgScale, setBgScale] = useState(1);
   const [avatarScale, setAvatarScale] = useState(1);
   const router = useRouter();
@@ -118,6 +118,8 @@ export default function My() {
     </>
   );
 };
+const My = memo(MyFC);
+export default My;
 const styles = StyleSheet.create({
   UserBg: {
     width: "100%",
