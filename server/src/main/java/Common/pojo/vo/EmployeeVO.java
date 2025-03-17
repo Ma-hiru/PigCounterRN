@@ -15,4 +15,6 @@ public class EmployeeVO {
     private String profilePicture;
     //jwt令牌
     private String token;
+
+    private String organization;
 }

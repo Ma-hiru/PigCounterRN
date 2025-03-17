@@ -1,27 +1,22 @@
 package com.zlz.pigcounter.controller.admin;
 
-import Common.constant.JwtClaimsConstant;
 import Common.pojo.dto.EmployeeLoginDTO;
 import Common.pojo.entity.Employee;
 import Common.pojo.vo.EmployeeVO;
+import Common.result.PageResult;
 import Common.result.Result;
 import Common.validation.EmployeeValidation;
 import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
-import com.zlz.pigcounter.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.HashMap;
 
 @RestController
 @Slf4j
@@ -42,27 +37,17 @@ public class EmployeeController {
     @PostMapping("/login")
     public Result<EmployeeVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO){
         log.info("开始登录");
-        Employee employee = employeeService.login(employeeLoginDTO);
+        EmployeeVO employeeVo = employeeService.login(employeeLoginDTO);
 
-        HashMap<String,Object> map = new HashMap<>();
-        map.put(JwtClaimsConstant.EMP_ID,employee.getId());
 
-        String token = JwtUtil.createJWT(jwtProperties.getAdminSecretKey(), jwtProperties.getAdminTtl(), map);
-
-        EmployeeVO employeeVO = EmployeeVO.builder().id(employee.getId())
-                .name(employee.getName())
-                .username(employee.getUsername())
-                .token(token)
-                .profilePicture(employee.getProfilePicture())
-                .build();
-
-        return Result.success(employeeVO);
+        return Result.success(employeeVo);
 
     }
     /**
      * 新增员工
      */
     @PostMapping("/register")
+    @CacheEvict(cacheNames = "employee_page",allEntries = true)
     public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class,EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile porfilePicture)  {
         log.info("新增员工：{}",employee);
         employeeService.add(employee,porfilePicture);
@@ -72,6 +57,7 @@ public class EmployeeController {
      * 根据id 查询员工
      */
     @GetMapping("/{id}")
+    @Cacheable(cacheNames = "employee",key = "#id")
     public Result<Employee> getById(@PathVariable Long id){
         log.info("根据id查询员工信息：{}",id);
         Employee employee = employeeService.getById(id);
@@ -81,10 +67,37 @@ public class EmployeeController {
      * 修改员工信息
      */
     @PutMapping
+    @Caching(evict ={
+    @CacheEvict(cacheNames = "employee",key = "#employee.id"),
+    @CacheEvict(cacheNames = "employee_page",allEntries = true)})
     public Result update(@ModelAttribute @Validated(EmployeeValidation.update.class) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile profilePicture)  {
         log.info("修改员工信息：{}",employee);
         employeeService.update(employee,profilePicture);
         return Result.success();
     }
-    
+
+    /**
+     * 根据id删除员工
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    @Caching(evict ={
+            @CacheEvict(cacheNames = "employee",key = "#id"),
+            @CacheEvict(cacheNames = "employee_page",allEntries = true)})
+    public Result deleteById(@PathVariable Long id){
+        log.info("删除员工：{}",id);
+        employeeService.deleteById(id);
+        return Result.success();
+    }
+
+    /**
+     * 分页查询员工
+     */
+    @GetMapping("/page")
+    @Cacheable(cacheNames = "employee_page",key = "#pageNum+'-'+#pageSize+'-'+#organization")
+    public Result<PageResult> page(int pageNum, int pageSize, String organization){
+        log.info("分页查询员工：{}",pageNum,pageSize,organization);
+        return Result.success(employeeService.page(pageNum,pageSize,organization)) ;
+    }
 }

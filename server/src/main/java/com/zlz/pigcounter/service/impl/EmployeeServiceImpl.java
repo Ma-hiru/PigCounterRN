@@ -1,34 +1,35 @@
 package com.zlz.pigcounter.service.impl;
 
+import Common.constant.JwtClaimsConstant;
 import Common.context.BaseContext;
-import Common.exception.NotFoundUserException;
-import Common.exception.PasswordError;
-import Common.exception.ProfilePictureUploadException;
-import Common.exception.UnauthorizedModificationException;
+import Common.exception.*;
 import Common.pojo.entity.Employee;
 import Common.pojo.entity.ProfilePicture;
+import Common.pojo.vo.EmployeeVO;
+import Common.result.PageResult;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.zlz.pigcounter.mapper.EmployeeMapper;
 import Common.pojo.dto.EmployeeLoginDTO;
-import Common.pojo.vo.EmployeeVO;
 import com.zlz.pigcounter.mapper.ProfilePictureHistoryMapper;
+import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
+import com.zlz.pigcounter.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.DigestUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.print.PrinterAbortException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,10 +44,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private Pbkdf2PasswordEncoder passwordEncoder;
 
+    @Autowired
+    JwtProperties jwtProperties;
+
     @Value("${zlz.image.save-path}")
     private String imageSavePath;
+
     @Override
-    public Employee login(EmployeeLoginDTO employeeLoginDTO) {
+    public EmployeeVO login(EmployeeLoginDTO employeeLoginDTO) {
+
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
@@ -62,14 +68,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(!passwordEncoder.matches(password,employee.getPassword())){
             throw new PasswordError();
         }
+        HashMap<String,Object> map = new HashMap<>();
+        map.put(JwtClaimsConstant.EMP_ID,employee.getId());
 
-        return employee;
+        String token = JwtUtil.createJWT(jwtProperties.getAdminSecretKey(), jwtProperties.getAdminTtl(), map);
+
+        EmployeeVO employeeVo = Common.pojo.vo.EmployeeVO.builder().id(employee.getId())
+                .name(employee.getName())
+                .username(employee.getUsername())
+                .token(token)
+                .profilePicture(employee.getProfilePicture())
+                .organization(employee.getOrganization())
+                .build();
+
+
+        return employeeVo;
     }
 
 
     @Override
     @Transactional
     public void add( Employee employee, MultipartFile profilePicture)  {
+
+        if(employeeMapper.getByUsername(employee.getUsername())!=null){
+            throw new UserAlreadyExistsException();
+        }
         String filePath="";
         String  password = passwordEncoder.encode(employee.getPassword());
         employee.setPassword(password);
@@ -130,7 +153,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .uploadTime(LocalDateTime.now())
                 .build();
 
-        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getById(employee.getId()).getProfilePicture(),false);
+        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()).getProfilePicture(),false);
 
         employeeMapper.update(employee);
 
@@ -153,6 +176,42 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employee;
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        if(!BaseContext.getCurrentId().equals(id)){
+            throw new UnauthorizedModificationException();
+        }
+        Employee employee = employeeMapper.getProfilePictureById(id);
+        if (employee == null) {
+            throw new NotFoundUserException();
+        }
+        List<String> profilePictures = profilePictureHistoryMapper.getByEmployeeId(id);
+        for (String profilePicture : profilePictures) {
+            File file = new File(profilePicture);
+            if (file.exists()) {
+               if(!file.delete()){
+                   throw new ProfilePictureDeleteException();
+               };
+            }
+        }
+
+        employeeMapper.deleteById(id);
+
+
+    }
+
+    @Override
+    public PageResult page(int pageNum, int pageSize, String organization) {
+        PageHelper.startPage(pageNum,pageSize);
+        Page<Employee> page  = employeeMapper.page(organization);
+        if(page==null){
+            throw new NotFoundUserException();
+        }
+        return new PageResult(page.getTotal(),page.getResult());
+    }
+
     private void uploadProfilePicture( MultipartFile profilePicture,String filePath) throws IOException {
 
 
