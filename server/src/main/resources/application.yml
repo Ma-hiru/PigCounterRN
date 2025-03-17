@@ -11,7 +11,12 @@ spring:
       url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${zlz.datasource.username}
       password: ${zlz.datasource.password}
-
+  data:
+    redis:
+      port: ${zlz.redis.port}
+      host: ${zlz.redis.host}
+      database: ${zlz.redis.database}
+      password: ${zlz.redis.password}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

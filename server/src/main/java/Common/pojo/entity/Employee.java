@@ -6,11 +6,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-
+import java.io.Serializable;
 
 
 @Data
-public class Employee {
+public class Employee implements Serializable {
+
     private Long id;
     @NotBlank(message = "用户名不能为空",groups = {EmployeeValidation.add.class})
     private String username;
