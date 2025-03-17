@@ -11,7 +11,8 @@ import { setImageScale } from "@/utils/setImageScale";
 import { ButtonText, Button } from "@/components/ui/button";
 import * as FileSystem from "expo-file-system";
 import localStore from "@/utils/localStore";
-import { awaitExpression } from "@babel/types";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+
 
 interface props {
   id?: number;
@@ -70,6 +71,12 @@ export const UploadFiles: FC<props> = () => {
     setCacheImg("");
     await localStore.setItem("cachedPhotoPath", "");
   };
+  /* 更新标题 */
+  const { title } = useLocalSearchParams();
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({ title });
+  }, [navigation, title]);
   return (
     <>
       <View className="pl-4 pr-4 mt-4">

@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootStateType, useUserStore } from "@/stores";
 import { useEffect } from "react";
@@ -27,7 +27,7 @@ export default function App() {
       <Stack.Screen name="HistoryInfo" options={{ headerShown: false }} />
       <Stack.Screen name="UserInfo" options={{ headerShown: false }} />
       <Stack.Screen name="Feedback" options={{ headerShown: false }} />
-      <Stack.Screen name="UploadFiles" options={{ headerShown: true, title: "上传文件" }} />
+      <Stack.Screen name="UploadFiles" options={{ headerShown: true }} />
     </Stack>
   );
 }

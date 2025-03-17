@@ -161,7 +161,8 @@ export default {
           success: "rgb(var(--color-background-success)/<alpha-value>)",
           info: "rgb(var(--color-background-info)/<alpha-value>)",
           light: "#FBFBFB",
-          dark: "#181719"
+          dark: "#181719",
+          new: "var(--color-themeBlue-secondary)"
         },
         indicator: {
           primary: "rgb(var(--color-indicator-primary)/<alpha-value>)",

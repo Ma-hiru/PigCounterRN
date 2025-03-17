@@ -10,7 +10,7 @@ interface props {
   onPress?: (e: GestureResponderEvent) => void;
 }
 
-export const CardIcon: FC<props> = ({ text, img, onPress }) => {
+export const MyPagesCardIcon: FC<props> = ({ text, img, onPress }) => {
   const [scale, setScale] = useState(1);
 
   return (
@@ -33,9 +33,8 @@ export const CardIcon: FC<props> = ({ text, img, onPress }) => {
     </Pressable>
   );
 };
-const MyPagesCardIcon = memo(CardIcon);
+export default memo(MyPagesCardIcon);
 
-export default MyPagesCardIcon;
 const styles = StyleSheet.create({
   IconContainer: {},
   IconContainerActive: {

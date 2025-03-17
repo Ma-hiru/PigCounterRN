@@ -67,7 +67,7 @@ export const config = {
     '--color-success-400': '72 151 102',
     '--color-success-500': '52 131 82',
     '--color-success-600': '42 121 72',
-    '--color-success-700': '18 128 242',//自定义（#1280f2）
+    '--color-success-700': '132 211 162',
     '--color-success-800': '22 101 52',
     '--color-success-900': '20 83 45',
     '--color-success-950': '27 50 36',
@@ -153,6 +153,8 @@ export const config = {
     '--color-indicator-primary': '55 55 55',
     '--color-indicator-info': '83 153 236',
     '--color-indicator-error': '185 28 28',
+
+    '--color-themeBlue-secondary': '#1280f2',//自定义（#1280f2）
   }),
   dark: vars({
     '--color-primary-0': '166 166 166',
@@ -305,5 +307,7 @@ export const config = {
     '--color-indicator-primary': '247 247 247',
     '--color-indicator-info': '161 199 245',
     '--color-indicator-error': '232 70 69',
+
+    '--color-themeBlue-secondary': '#1280f2',//自定义（#1280f2）
   }),
 };

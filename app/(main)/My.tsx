@@ -7,14 +7,18 @@ import checkIcon from "@/assets/images/my/check.svg";
 import { memo, useState } from "react";
 import { setImageScale } from "@/utils/setImageScale";
 import MyPagesCard from "@/components/MyPagesCard";
-import { Button } from "@/components/ui/button";
 import MyPagesCardIcon from "@/components/MyPagesCardIcon";
 import company from "@/assets/images/my/company.svg";
 import history from "@/assets/images/my/history.svg";
 import userInfo from "@/assets/images/my/userInfo.svg";
 import feedback from "@/assets/images/my/feedback.svg";
+import logout from "@/assets/images/my/logout.svg";
+import settings from "@/assets/images/my/settings.svg";
 import { useRouter, type Router } from "expo-router";
 import { goToPages } from "@/utils/goToPages";
+import MyPagesCardItem from "@/components/MyPagesCardItem";
+import { useDispatch } from "react-redux";
+import { useUserStore } from "@/stores";
 
 const CardIconList = [
   {
@@ -42,6 +46,12 @@ const MyFC = () => {
   const [bgScale, setBgScale] = useState(1);
   const [avatarScale, setAvatarScale] = useState(1);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { setToken } = useUserStore.actions;
+  const hanleLogout = () => {
+    dispatch(setToken(""));
+    goToPages(router, "/Login", "MOVE");
+  };
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
@@ -77,7 +87,8 @@ const MyFC = () => {
                   (
                     <MyPagesCardIcon text={item.text} img={item.img}
                                      key={item.text}
-                                     onPress={item.onPress(router)} />
+                                     onPress={item.onPress(router)}
+                    />
                   )
                 )
               }
@@ -87,31 +98,18 @@ const MyFC = () => {
                 <Text style={{ textAlign: "center" }}>暂无任务</Text>
               </View>
             </MyPagesCard>
-            <MyPagesCard title={"未处理上传"}>
+            <MyPagesCard cardStyle={{ marginBottom: 10 }} title={"未处理上传"}>
               <View className="mb-4">
                 <Text style={{ textAlign: "center" }}>暂无数据</Text>
               </View>
             </MyPagesCard>
-          </View>
-          <View>
-            <Button
-              className="w-full mb-4"
-              size="lg"
-              variant="outline"
-              action="negative"
-            >
-              <Pressable className="flex-1 justify-center items-center"
-                         onStartShouldSetResponderCapture={() => true}>
-                {
-                  ({ pressed }) => (
-                    <Text
-                      style={pressed ? styles.LogoutTextActive : styles.LogoutText}>
-                      退出登录
-                    </Text>
-                  )
-                }
-              </Pressable>
-            </Button>
+            <MyPagesCard title={"更多"}>
+              <View className="mb-4">
+                <MyPagesCardItem text={"设置"} img={settings} iconSize={25}
+                                 onPress={goToPages(router, "/Settings", "FN")} />
+                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22} onPress={hanleLogout}/>
+              </View>
+            </MyPagesCard>
           </View>
         </View>
       </View>
