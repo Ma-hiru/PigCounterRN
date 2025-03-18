@@ -1,15 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { useUserStore } from "./moudule/useUserStore";
-import { useUploadStore } from "./moudule/useUploadStore";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import RootState, { Persistor } from "./persist";
 
-const RootState = configureStore({
-  reducer: {
-    userStore: useUserStore.reducer,
-    uploadStore: useUploadStore.reducer
-  }
-});
+
 export default RootState;
-export type RootStateType = ReturnType<typeof RootState.getState>
-export type AppDispatch = typeof RootState.dispatch;
+export const PersistedRootState = Persistor;
+
+type RootStateType = ReturnType<typeof RootState.getState>
+type AppDispatch = typeof RootState.dispatch;
+
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootStateType> = useSelector;
 export * from "./moudule/useUserStore";
 export * from "./moudule/useUploadStore";

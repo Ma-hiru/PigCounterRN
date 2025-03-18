@@ -1,12 +1,11 @@
-import { Stack, useLocalSearchParams } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootStateType, useUserStore } from "@/stores";
+import { Stack } from "expo-router";
+import { useAppDispatch, useAppSelector, useUserStore } from "@/stores";
 import { useEffect } from "react";
 import localStore from "@/utils/localStore";
 
 export default function App() {
-  const { token } = useSelector((Root: RootStateType) => Root.userStore);
-  const dispatch: AppDispatch = useDispatch();
+  const { token } = useAppSelector((Root) => Root.userStore);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     let isMounted = true;
     if (token === "") {

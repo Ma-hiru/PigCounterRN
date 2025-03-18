@@ -29,13 +29,13 @@ export const useUploadStore = createSlice({
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           },
@@ -47,19 +47,19 @@ export const useUploadStore = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           },
@@ -71,19 +71,19 @@ export const useUploadStore = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           }
@@ -102,19 +102,19 @@ export const useUploadStore = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           },
@@ -126,19 +126,19 @@ export const useUploadStore = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           },
@@ -150,19 +150,19 @@ export const useUploadStore = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
-                res: 0
+                res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
-                res: 0
+                res: -1
               }
             ]
           }
@@ -171,9 +171,9 @@ export const useUploadStore = createSlice({
     ]
   } as initialType,
   reducers: {
-    setTasksList: (state, action) => {
+    setTasksList: (state, action: { type: string; payload: TaskList }) => {
       state.TasksList = action.payload;
-    },
+    }
   }
 });
 

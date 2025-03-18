@@ -15,12 +15,14 @@ import { Divider } from "@/components/ui/divider";
 import { useRouter } from "expo-router";
 import { View, Text } from "react-native";
 
+
 interface props {
-  task: Task,
-  router: ReturnType<typeof useRouter>
+  task: Task;
+  taskIndex: number;
+  router: ReturnType<typeof useRouter>;
 }
 
-const UploadPagesList: FC<props> = ({ task, router }) => {
+const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
   return (
     <>
       <View className="w-screen mt-4">
@@ -34,8 +36,8 @@ const UploadPagesList: FC<props> = ({ task, router }) => {
         isDisabled={false}
         className="m-5 w-[90%] border border-outline-200"
       >
-        {task.area.map((item, index) =>
-          <Fragment key={index}>
+        {task.area.map((item, itemIndex) =>
+          <Fragment key={itemIndex}>
             <AccordionItem value={item.name} isDisabled={!task.validation}>
               <AccordionHeader>
                 <AccordionTrigger>
@@ -57,25 +59,32 @@ const UploadPagesList: FC<props> = ({ task, router }) => {
               </AccordionHeader>
               <AccordionContent>
                 {
-                  (item as { children: Area[] }).children.map((child, index) =>
-                    <Button
-                      key={index}
-                      onPress={goToPages(router, {
-                        pathname: "/UploadFiles",
-                        params: {
-                          title: item.name + "-" + child.name,
-                          id: [task.id, item.id, child.id]
+                  (item as { children: Area[] }).children.map((child, childIndex) => {
+                      let action: GetReactProps<typeof Button>["action"];
+                      if ((child as { path: string; res: number }).path !== "") {
+                        if ((child as { path: string; res: number }).res >= 0) {
+                          action = "positive";
+                        } else action = "secondary";
+                      } else action = "negative";
+                      return <Button
+                        key={childIndex}
+                        onPress={goToPages(router, {
+                          pathname: "/UploadFiles",
+                          params: {
+                            title: item.name + "-" + child.name,
+                            taskIndex: [taskIndex, itemIndex, childIndex]
+                          }
+                        }, "FN")}
+                        action={action}
+                        style={
+                          childIndex !== 0 || childIndex !== (item as {
+                            children: Area[]
+                          }).children.length - 1 ? { marginBottom: 10 } : {}
                         }
-                      }, "FN")}
-                      action="positive"
-                      style={
-                        index !== 0 || index !== (item as {
-                          children: Area[]
-                        }).children.length - 1 ? { marginBottom: 10 } : {}
-                      }
-                    >
-                      <ButtonText>{child.name}</ButtonText>
-                    </Button>
+                      >
+                        <ButtonText>{child.name}</ButtonText>
+                      </Button>;
+                    }
                   )
                 }
               </AccordionContent>
