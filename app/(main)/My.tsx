@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Image } from "expo-image";
 import headBg from "@/assets/images/my/user_bg.webp";
 import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
@@ -19,6 +19,7 @@ import { goToPages } from "@/utils/goToPages";
 import MyPagesCardItem from "@/components/MyPagesCardItem";
 import { useDispatch } from "react-redux";
 import { useUserStore } from "@/stores";
+import { DEFAULT_MY_BG_SCALE } from "@/settings";
 
 const CardIconList = [
   {
@@ -43,12 +44,12 @@ const CardIconList = [
   }
 ];
 const MyFC = () => {
-  const [bgScale, setBgScale] = useState(1);
-  const [avatarScale, setAvatarScale] = useState(1);
+  const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);
+
   const router = useRouter();
   const dispatch = useDispatch();
   const { setToken } = useUserStore.actions;
-  const hanleLogout = () => {
+  const handleLogout = () => {
     dispatch(setToken(""));
     goToPages(router, "/Login", "MOVE");
   };
@@ -60,13 +61,14 @@ const MyFC = () => {
           <Image source={headBg}
                  style={{ ...styles.UserBg, aspectRatio: bgScale }}
                  onLoad={setImageScale(bgScale, setBgScale)}
+                 contentFit="contain"
           />
           <View
             className="flex justify-center items-center w-screen -translate-x-1/2  -translate-y-1/2"
             style={styles.UserBox}>
             <Image source={defaultAvatar}
-                   style={{ ...styles.UserAvatar, aspectRatio: avatarScale }}
-                   onLoad={setImageScale(avatarScale, setAvatarScale)}
+                   style={styles.UserAvatar }
+                   contentFit="cover"
             />
             <Text style={styles.UserNameText}>
               {"点击登录"}
@@ -107,7 +109,7 @@ const MyFC = () => {
               <View className="mb-4">
                 <MyPagesCardItem text={"设置"} img={settings} iconSize={25}
                                  onPress={goToPages(router, "/Settings", "FN")} />
-                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22} onPress={hanleLogout}/>
+                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22} onPress={handleLogout}/>
               </View>
             </MyPagesCard>
           </View>
@@ -120,13 +122,11 @@ const My = memo(MyFC);
 export default My;
 const styles = StyleSheet.create({
   UserBg: {
-    width: "100%",
-    // @ts-ignore
-    contentFit: "cover"
+    // width: "100%",
   },
   UserAvatar: {
     width: 65,
-    contentFit: "cover",
+    height: 65,
     borderRadius: 99999,
     borderWidth: 2,
     borderColor: "#fff",

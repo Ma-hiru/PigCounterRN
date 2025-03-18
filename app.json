@@ -13,7 +13,9 @@
     },
     "android": {
       "permissions": [
-        "INTERNET"
+        "INTERNET",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "package": "com.mahiru.pigcounter"
     },

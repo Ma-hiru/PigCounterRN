@@ -4,6 +4,8 @@ import { TaskList } from "@/types/task";
 
 interface initialType {
   TasksList: TaskList;
+  DEFAULT_UPLOAD_RES: number;
+  DEFAULT_UPLOAD_PATH: string;
 }
 
 export const useUploadStore = createSlice({
@@ -168,7 +170,9 @@ export const useUploadStore = createSlice({
           }
         ]
       }
-    ]
+    ],
+    DEFAULT_UPLOAD_RES: -1,
+    DEFAULT_UPLOAD_PATH: ""
   } as initialType,
   reducers: {
     setTasksList: (state, action: { type: string; payload: TaskList }) => {

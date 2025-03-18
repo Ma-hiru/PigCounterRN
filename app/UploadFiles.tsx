@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { View, Alert } from "react-native";
+import { View, Alert, Pressable } from "react-native";
 import { Card } from "@/components/ui/card";
 import {
   ImagePickerAsset,
@@ -11,14 +11,16 @@ import { setImageScale } from "@/utils/setImageScale";
 import { ButtonText, Button } from "@/components/ui/button";
 import * as FileSystem from "expo-file-system";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector, useUploadStore } from "@/stores";
 import { AreaItem } from "@/types/task";
 import { cloneDeep } from "lodash";
+import { showNewToast } from "@/utils/toast";
+import { useToast } from "@/components/ui/toast";
+import ImagePreview from "@/components/ImagePreview";
 
 
 interface props {
-  id?: number;
+  /* empty */
 }
 
 const UploadFiles: FC<props> = () => {
@@ -26,11 +28,16 @@ const UploadFiles: FC<props> = () => {
   const [previewImg, setPreviewImg] = useState<ImagePickerAsset>();
   const [scale, setScale] = useState(1);
   /** store */
-  const { TasksList } = useAppSelector((root) => root.uploadStore);
-  const dispatch= useAppDispatch();
+  const {
+    TasksList,
+    DEFAULT_UPLOAD_PATH,
+    DEFAULT_UPLOAD_RES
+  } = useAppSelector((root) => root.uploadStore);
+  const dispatch = useAppDispatch();
   /** 更新标题 */
   const { title, taskIndex } = useLocalSearchParams();
   const navigation = useNavigation();
+  const toast = useToast();
   useEffect(() => {
     navigation.setOptions({ title });
   }, [navigation, title]);
@@ -42,14 +49,16 @@ const UploadFiles: FC<props> = () => {
   const cacheImg = useMemo(() => {
     return (TasksList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path;
   }, [ChildIndex, ItemIndex, TaskIndex, TasksList]);
-  /** 处理图片 */
+  console.log(previewImg, cacheImg);
+  /** 选择、缓存图片 */
   const updateStore = (newPath?: string, newRes?: number) => {
     const newTaskList = cloneDeep(TasksList);
-    newPath && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path = newPath);
+    newPath !== undefined && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path = newPath);
     newRes && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].res = newRes);
     dispatch(useUploadStore.actions.setTasksList(newTaskList));
   };
   const saveImageToStore = async (tempUri: string) => {
+    Alert.alert("正在保存图片", "请稍候");
     const fileName = `${Date.now()}.jpg`;
     const cachePath = `${FileSystem.cacheDirectory}${fileName}`;
     try {
@@ -82,18 +91,29 @@ const UploadFiles: FC<props> = () => {
   };
   const clearImg = async () => {
     setPreviewImg(undefined);
-    updateStore("", -1);
+    updateStore(DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES);
+    try {
+      const { exists } = await FileSystem.getInfoAsync(previewImg?.uri || cacheImg);
+      exists && await FileSystem.deleteAsync(previewImg?.uri || cacheImg, { idempotent: true });
+    } catch (err) {
+      console.log(err);
+      showNewToast(toast, "缓存清除失败", "可能缓存已被删除。");
+    }
   };
+  /** 预览 */
+  const [previewVisible, setPreviewVisible] = useState(false);
   return (
     <>
       <View className="pl-4 pr-4 mt-4" key={(taskIndex as string[]).toString()}>
         <Card>
           {
             (previewImg || cacheImg) &&
-            <Image source={previewImg || cacheImg}
-                   style={{ width: "100%", aspectRatio: scale }}
-                   onLoad={setImageScale(scale, setScale)}
-            />
+            <Pressable onPress={() => setPreviewVisible(true)}>
+              <Image source={previewImg || cacheImg}
+                     style={{ width: "100%", aspectRatio: scale }}
+                     onLoad={setImageScale(scale, setScale)}
+              />
+            </Pressable>
           }
           {
             (previewImg || cacheImg) ?
@@ -114,6 +134,11 @@ const UploadFiles: FC<props> = () => {
               )
           }
         </Card>
+        <ImagePreview
+          isPreviewVisible={previewVisible}
+          setPreviewVisible={setPreviewVisible}
+          source={{ uri: previewImg?.uri || cacheImg }}
+        />
       </View>
     </>
   );
