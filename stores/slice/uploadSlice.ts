@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TaskList } from "@/types/task";
+import { RootStateType } from "@/stores";
 
 
 interface initialType {
@@ -8,7 +9,7 @@ interface initialType {
   DEFAULT_UPLOAD_PATH: string;
 }
 
-export const useUploadStore = createSlice({
+const uploadSlice = createSlice({
   name: "uploadStore",
   initialState: {
     TasksList: [
@@ -175,9 +176,11 @@ export const useUploadStore = createSlice({
     DEFAULT_UPLOAD_PATH: ""
   } as initialType,
   reducers: {
-    setTasksList: (state, action: { type: string; payload: TaskList }) => {
+    setTasksList: (state, action: PayloadAction<TaskList>) => {
       state.TasksList = action.payload;
     }
   }
 });
-
+export const uploadReducer = uploadSlice.reducer;
+export const uploadSelector = (root: RootStateType) => root.uploadStore;
+export const uploadActions = uploadSlice.actions;

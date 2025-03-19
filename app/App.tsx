@@ -1,22 +1,23 @@
 import { Stack } from "expo-router";
-import { useAppDispatch, useAppSelector, useUserStore } from "@/stores";
+import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { useEffect } from "react";
 import localStore from "@/utils/localStore";
 
 export default function App() {
-  const { token } = useAppSelector((Root) => Root.userStore);
+  const { token } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
+  const { setToken } = userActions;
   useEffect(() => {
     let isMounted = true;
     if (token === "") {
       localStore.getItem("token").then((token) => {
-        isMounted && dispatch(useUserStore.actions.setToken(token));
+        isMounted && dispatch(setToken(token));
       });
     }
     return () => {
       isMounted = false;
     };
-  }, [token, dispatch]);
+  }, [token, dispatch, setToken]);
   return (
     <Stack>
       <Stack.Screen name="(main)" options={{ headerShown: false }} />

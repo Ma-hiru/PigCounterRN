@@ -1,7 +1,7 @@
-import { useUserStore } from "@/stores/moudule/useUserStore";
-import { useUploadStore } from "@/stores/moudule/useUploadStore";
+import { userReducer } from "@/stores/slice/userSlice";
+import { uploadReducer } from "@/stores/slice/uploadSlice";
 
 export default {
-  userStore: useUserStore.reducer,
-  uploadStore: useUploadStore.reducer
+  userStore: userReducer,
+  uploadStore: uploadReducer
 };

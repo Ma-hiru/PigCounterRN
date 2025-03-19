@@ -17,9 +17,9 @@ import settings from "@/assets/images/my/settings.svg";
 import { useRouter, type Router } from "expo-router";
 import { goToPages } from "@/utils/goToPages";
 import MyPagesCardItem from "@/components/MyPagesCardItem";
-import { useDispatch } from "react-redux";
-import { useUserStore } from "@/stores";
+import { useAppDispatch, userActions } from "@/stores";
 import { DEFAULT_MY_BG_SCALE } from "@/settings";
+import Logger from "@/utils/logger";
 
 const CardIconList = [
   {
@@ -45,17 +45,16 @@ const CardIconList = [
 ];
 const MyFC = () => {
   const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);
-
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { setToken } = useUserStore.actions;
+  const dispatch = useAppDispatch();
+  const { setToken } = userActions;
   const handleLogout = () => {
     dispatch(setToken(""));
     goToPages(router, "/Login", "MOVE");
   };
   return (
     <>
-      <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
+      <StatusBar style="dark" backgroundColor="transparent" translucent={true}  />
       <View className="flex-1">
         <View className="relative">
           <Image source={headBg}
@@ -67,7 +66,7 @@ const MyFC = () => {
             className="flex justify-center items-center w-screen -translate-x-1/2  -translate-y-1/2"
             style={styles.UserBox}>
             <Image source={defaultAvatar}
-                   style={styles.UserAvatar }
+                   style={styles.UserAvatar}
                    contentFit="cover"
             />
             <Text style={styles.UserNameText}>
@@ -109,7 +108,8 @@ const MyFC = () => {
               <View className="mb-4">
                 <MyPagesCardItem text={"设置"} img={settings} iconSize={25}
                                  onPress={goToPages(router, "/Settings", "FN")} />
-                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22} onPress={handleLogout}/>
+                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22}
+                                 onPress={handleLogout} />
               </View>
             </MyPagesCard>
           </View>
@@ -118,8 +118,7 @@ const MyFC = () => {
     </>
   );
 };
-const My = memo(MyFC);
-export default My;
+export default memo(MyFC);
 const styles = StyleSheet.create({
   UserBg: {
     // width: "100%",

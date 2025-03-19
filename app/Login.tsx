@@ -11,8 +11,7 @@ import { AlertCircleIcon } from "@/components/ui/icon";
 import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { reqLogin } from "@/api";
-import { useDispatch, useSelector } from "react-redux";
-import { useAppDispatch, useAppSelector, useUserStore } from "@/stores";
+import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { fetchData } from "@/utils/fetchData";
 import { useToast } from "@/components/ui/toast";
 import { debounce } from "lodash";
@@ -24,12 +23,12 @@ export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { token } = useAppSelector((Root) => Root.userStore);
   const [isInvalidUsername, setIsInvalidUsername] = useState(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState(false);
-  const toast = useToast();
+  const { token } = useAppSelector(userSelector);
+  const { setToken } = userActions;
   const dispatch = useAppDispatch();
-  const { setToken } = useUserStore.actions;
+  const toast = useToast();
   const handleSubmit = debounce(async () => {
     if (password.length < 4) return setIsInvalidPassword(true);
     else flushSync(() => {

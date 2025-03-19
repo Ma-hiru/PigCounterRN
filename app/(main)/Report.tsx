@@ -5,14 +5,14 @@ import { useToast } from "@/components/ui/toast";
 import { StatusBar } from "expo-status-bar";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import { useRouter } from "expo-router";
-import { useAppDispatch, useAppSelector, useUserStore } from "@/stores";
+import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 
 
 export default function Report() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { token } = useAppSelector((Root) => Root.userStore);
-  const { setToken } = useUserStore.actions;
+  const { token } = useAppSelector(userSelector);
+  const { setToken } = userActions;
   const goToLogin = () => {
     router.push("/Login");
   };

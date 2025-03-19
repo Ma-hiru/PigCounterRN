@@ -12,7 +12,6 @@ import {
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import rootReducer from "@/stores/reducer";
 
-
 /** 分开配置 以免丢失类型推导 */
 const persistConfig = {
   key: "root",
@@ -24,8 +23,7 @@ const persistConfig = {
 };
 const persistedReducer = persistReducer(persistConfig, combineReducers(rootReducer));
 
-
-const RootState = configureStore({
+export const RootState = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -34,9 +32,7 @@ const RootState = configureStore({
       }
     })
 });
-export default RootState;
 export const Persistor = persistStore(RootState);
-
 
 Persistor.subscribe(() => {
   const { bootstrapped } = Persistor.getState();

@@ -4,12 +4,12 @@ import { useSafeArea } from "@/hooks/useSafeArea";
 import { useRouter } from "expo-router";
 import UploadPagesList from "@/components/UploadPagesList";
 import MyBlueBtn from "@/components/MyBlueBtn";
-import { useAppSelector } from "@/stores";
+import { uploadSelector, useAppSelector } from "@/stores";
 
 export default function Upload() {
   const { topInset } = useSafeArea();
   const router = useRouter();
-  const { TasksList } = useAppSelector((root) => root.uploadStore);
+  const { TasksList } = useAppSelector(uploadSelector);
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
