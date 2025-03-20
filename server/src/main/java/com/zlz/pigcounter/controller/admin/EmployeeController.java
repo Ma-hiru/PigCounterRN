@@ -6,7 +6,6 @@ import Common.pojo.vo.EmployeeVO;
 import Common.result.PageResult;
 import Common.result.Result;
 import Common.validation.EmployeeValidation;
-import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @Slf4j
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class EmployeeController {
     @Autowired
     @Qualifier("employeeServiceImpl")
@@ -32,68 +32,73 @@ public class EmployeeController {
 
     /**
      * 员工登录
+     *
      * @param employeeLoginDTO
      * @return
      */
     @PostMapping("/login")
-    public Result<EmployeeVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO){
+    public Result<EmployeeVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("开始登录");
         EmployeeVO employeeVo = employeeService.login(employeeLoginDTO);
         return Result.success(employeeVo);
 
     }
+
     /**
      * 新增员工
      */
     @PostMapping("/register")
-    @CacheEvict(cacheNames = "employee_page",allEntries = true)
-    public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class,EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile porfilePicture)  {
-        log.info("新增员工：{}",employee);
-        employeeService.add(employee,porfilePicture);
+    @CacheEvict(cacheNames = "employee_page", allEntries = true)
+    public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class, EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture", required = false) MultipartFile porfilePicture) {
+        log.info("新增员工：{}", employee);
+        employeeService.add(employee, porfilePicture);
         return Result.success();
     }
+
     /**
      * 根据id 查询员工
      */
     @GetMapping("/{id}")
-    @Cacheable(cacheNames = "employee",key = "#id")
-    public Result<Employee> getById(@PathVariable Long id){
-        log.info("根据id查询员工信息：{}",id);
+    @Cacheable(cacheNames = "employee", key = "#id")
+    public Result<Employee> getById(@PathVariable Long id) {
+        log.info("根据id查询员工信息：{}", id);
         Employee employee = employeeService.getById(id);
         return Result.success(employee);
     }
+
     /**
      * 修改员工信息
      */
     @PutMapping
-    @Caching(evict ={
-    @CacheEvict(cacheNames = "employee",key = "#employee.id"),
-    @CacheEvict(cacheNames = "employee_page",allEntries = true)})
-    public Result update(@ModelAttribute @Validated(EmployeeValidation.update.class) Employee employee, @RequestParam(value = "picture",required = false)MultipartFile profilePicture)  {
-        log.info("修改员工信息：{}",employee);
-        employeeService.update(employee,profilePicture);
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "employee", key = "#employee.id"),
+            @CacheEvict(cacheNames = "employee_page", allEntries = true)})
+    public Result update(@ModelAttribute @Validated(EmployeeValidation.update.class) Employee employee, @RequestParam(value = "picture", required = false) MultipartFile profilePicture) {
+        log.info("修改员工信息：{}", employee);
+        employeeService.update(employee, profilePicture);
         return Result.success();
     }
 
     /**
      * 根据id删除员工
+     *
      * @param id
      * @return
      */
     @DeleteMapping("/{id}")
-    @Caching(evict ={
-            @CacheEvict(cacheNames = "employee",key = "#id"),
-            @CacheEvict(cacheNames = "employee_page",allEntries = true)})
-    public Result deleteById(@PathVariable Long id){
-        log.info("删除员工：{}",id);
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "employee", key = "#id"),
+            @CacheEvict(cacheNames = "employee_page", allEntries = true)})
+    public Result deleteById(@PathVariable Long id) {
+        log.info("删除员工：{}", id);
         employeeService.deleteById(id);
         return Result.success();
     }
 
     @DeleteMapping("/batch")
-    @CacheEvict(cacheNames = "employee_page",allEntries = true)
-    public Result deleteByIds(@RequestBody Long[] ids){
-        log.info("批量删除员工：{}",ids);
+    @CacheEvict(cacheNames = "employee_page", allEntries = true)
+    public Result deleteByIds(@RequestBody Long[] ids) {
+        log.info("批量删除员工：{}", ids);
 
         for (Long id : ids) {
             cacheManager.getCache("employee").evict(id.toString());
@@ -101,13 +106,14 @@ public class EmployeeController {
         employeeService.deleteByIds(ids);
         return Result.success();
     }
+
     /**
      * 分页查询员工
      */
     @GetMapping("/page")
-    @Cacheable(cacheNames = "employee_page",key = "#pageNum+'-'+#pageSize+'-'+#organization")
-    public Result<PageResult> page(int pageNum, int pageSize, String organization){
-        log.info("分页查询员工：{}",pageNum,pageSize,organization);
-        return Result.success(employeeService.page(pageNum,pageSize,organization)) ;
+    @Cacheable(cacheNames = "employee_page", key = "#pageNum+'-'+#pageSize+'-'+#organization")
+    public Result<PageResult> page(int pageNum, int pageSize, String organization) {
+        log.info("分页查询员工：{}", pageNum, pageSize, organization);
+        return Result.success(employeeService.page(pageNum, pageSize, organization));
     }
 }

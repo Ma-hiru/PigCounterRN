@@ -1,15 +1,17 @@
 import { FC } from "react";
-import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import { Image, ImageStyle } from "expo-image";
+import { Pressable, StyleSheet, View } from "react-native";
+import { Image } from "expo-image";
 import { setImageScale } from "@/utils/setImageScale";
 import NoData from "@/assets/images/upload/logout.svg";
 import { Text as TextInline } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { ImagePickerAsset } from "expo-image-picker";
+import { useVideoPlayer, VideoSource, VideoView } from "expo-video";
+import { useEvent } from "expo";
 
 interface props {
   previewImg?: ImagePickerAsset;
-  previewVideo?: unknown;
+  previewVideo?: VideoSource;
   cachePath: { path: string; type: string };
   setPreviewVisible: (previewVisible: boolean) => any;
   scale: number;
@@ -19,11 +21,19 @@ interface props {
 export const UploadPagesPreviewCard: FC<props> = (
   {
     previewImg,
+    previewVideo,
     cachePath,
     setPreviewVisible,
     scale,
-    setScale,
+    setScale
   }) => {
+  const videoSource = previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null);
+  const player = useVideoPlayer(videoSource as VideoSource, player => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+  const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
   return (
     <>
       <Card className="mb-4">
@@ -37,7 +47,13 @@ export const UploadPagesPreviewCard: FC<props> = (
                          style={{ width: "100%", aspectRatio: scale }}
                          onLoad={setImageScale(scale, setScale)}
                   /> :
-                  ""
+                  <View style={styles.contentContainer}>
+                    <VideoView style={styles.video}
+                               player={player}
+                               allowsFullscreen
+                               allowsPictureInPicture
+                    />
+                  </View>
               }
             </Pressable>
             :
@@ -61,5 +77,19 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 5
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 50
+  },
+  video: {
+    width: 350,
+    height: 275
+  },
+  controlsContainer: {
+    padding: 10
   }
 });

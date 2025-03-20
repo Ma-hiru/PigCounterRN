@@ -5,7 +5,7 @@ zlz:
     port: 3306
     database: pig_counter
     username: root
-    password: 123456
+    password: 0514+
   image:
     save-path: ${working.dir}/images
   password:
