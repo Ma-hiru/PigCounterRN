@@ -22,6 +22,8 @@ export enum API {
 
 export const GlobalStyles = {
   ThemeColor: "#409eff",
-  TabBarBg:"#ffffff"
+  PressColorBlue: "#1280f2",
+  TabBarBg: "#ffffff"
 };
 export const LOCAL_SECRET_KEY = "Mahiru";
+export const DEFAULT_MY_BG_SCALE = 1.777;

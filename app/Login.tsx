@@ -11,28 +11,34 @@ import { AlertCircleIcon } from "@/components/ui/icon";
 import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { reqLogin } from "@/api";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, useUserStore, RootStateType } from "@/stores";
+import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { fetchData } from "@/utils/fetchData";
 import { useToast } from "@/components/ui/toast";
 import { debounce } from "lodash";
 import { useRouter } from "expo-router";
+import MyBlueBtn from "@/components/MyBlueBtn";
+import { flushSync } from "react-dom";
 
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { token } = useSelector((Root: RootStateType) => Root.userStore);
   const [isInvalidUsername, setIsInvalidUsername] = useState(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState(false);
+  const { token } = useAppSelector(userSelector);
+  const { setToken } = userActions;
+  const dispatch = useAppDispatch();
   const toast = useToast();
-  const dispatch: AppDispatch = useDispatch();
-  const { setToken } = useUserStore.actions;
   const handleSubmit = debounce(async () => {
     if (password.length < 4) return setIsInvalidPassword(true);
-    else setIsInvalidPassword(false);
+    else flushSync(() => {
+      setIsInvalidPassword(false);
+    });
     if (username.length < 4) return setIsInvalidUsername(true);
-    else setIsInvalidUsername(false);
+    else flushSync(() => {
+      setIsInvalidUsername(false);
+    });
+    console.log(11);
     await fetchData(
       reqLogin,
       { username, password },
@@ -87,15 +93,9 @@ export default function Login() {
             <FormControlErrorText>密码至少需要六位字符</FormControlErrorText>
           </FormControlError>
         </FormControl>
-        <Button
-          className="w-full bg-[#409eff]  mb-4"
-          size="lg"
-          variant="solid"
-          action="positive"
-          onPress={handleSubmit as any}
-        >
-          <ButtonText>登录</ButtonText>
-        </Button>
+        <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-4">
+          登录
+        </MyBlueBtn>
         <View className="flex flex-row w-full justify-end">
           <Button variant="link" size="md" className="p-0">
             <ButtonText>忘记密码？</ButtonText>

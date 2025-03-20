@@ -5,15 +5,14 @@ import { useToast } from "@/components/ui/toast";
 import { StatusBar } from "expo-status-bar";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import { useRouter } from "expo-router";
-import { AppDispatch, RootStateType, useUserStore } from "@/stores";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 
 
 export default function Report() {
   const router = useRouter();
-  const dispatch: AppDispatch = useDispatch();
-  const { token } = useSelector((Root: RootStateType) => Root.userStore);
-  const { setToken } = useUserStore.actions;
+  const dispatch = useAppDispatch();
+  const { token } = useAppSelector(userSelector);
+  const { setToken } = userActions;
   const goToLogin = () => {
     router.push("/Login");
   };
@@ -28,7 +27,8 @@ export default function Report() {
   return (
     <>
       <StatusBar style="auto" translucent={true} backgroundColor="transparent" />
-      <View className="flex-1 w-screen h-screen justify-center items-center bg-gray-50" style={{paddingTop:topInset}}>
+      <View className="flex-1 w-screen h-screen justify-center items-center bg-gray-50"
+            style={{ paddingTop: topInset }}>
         <Button onPress={showToast}>
           <ButtonText>Show Toast.</ButtonText>
         </Button>

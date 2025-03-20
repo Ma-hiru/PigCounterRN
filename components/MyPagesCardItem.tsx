@@ -1,0 +1,64 @@
+import { FC, useState } from "react";
+import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, ImageSource } from "expo-image";
+import { setImageScale } from "@/utils/setImageScale";
+
+interface props {
+  text: string;
+  img: ImageSource;
+  onPress?: (e: GestureResponderEvent) => void;
+  iconSize?: number;
+}
+
+export const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => {
+  const [scale, setScale] = useState(1);
+  return (
+    <>
+      <Pressable onPress={onPress}>
+        {
+          ({ pressed }) =>
+            (
+              <>
+                <View className="flex w-full justify-start flex-row items-center mt-4"
+                      style={[pressed && styles.ContainerActive]}
+                >
+                  <View style={styles.IconContainer}
+                        className="flex justify-center items-center">
+                    <Image source={img}
+                           style={{
+                             ...styles.Icon,
+                             aspectRatio: scale,
+                             width: iconSize ?? styles.Icon.width
+                           }}
+                           onLoad={
+                             setImageScale(scale, setScale)
+                           }
+                    />
+                  </View>
+                  <Text style={styles.Text}>{text}</Text>
+                </View>
+              </>
+            )
+        }
+      </Pressable>
+    </>
+  );
+};
+export default MyPagesCardItem;
+
+const styles = StyleSheet.create({
+  IconContainer: {
+    width: 35,
+    height: 35
+  },
+  ContainerActive: {
+    backgroundColor: "rgba(153,153,153,0.17)",
+    borderRadius: 5
+  },
+  Icon: {
+    width: 20
+  },
+  Text: {
+    marginLeft: 5
+  }
+});

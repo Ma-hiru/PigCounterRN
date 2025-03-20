@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet, Pressable, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Image } from "expo-image";
 import headBg from "@/assets/images/my/user_bg.webp";
 import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
@@ -7,14 +7,19 @@ import checkIcon from "@/assets/images/my/check.svg";
 import { memo, useState } from "react";
 import { setImageScale } from "@/utils/setImageScale";
 import MyPagesCard from "@/components/MyPagesCard";
-import { Button } from "@/components/ui/button";
 import MyPagesCardIcon from "@/components/MyPagesCardIcon";
 import company from "@/assets/images/my/company.svg";
 import history from "@/assets/images/my/history.svg";
 import userInfo from "@/assets/images/my/userInfo.svg";
 import feedback from "@/assets/images/my/feedback.svg";
+import logout from "@/assets/images/my/logout.svg";
+import settings from "@/assets/images/my/settings.svg";
 import { useRouter, type Router } from "expo-router";
 import { goToPages } from "@/utils/goToPages";
+import MyPagesCardItem from "@/components/MyPagesCardItem";
+import { useAppDispatch, userActions } from "@/stores";
+import { DEFAULT_MY_BG_SCALE } from "@/settings";
+import Logger from "@/utils/logger";
 
 const CardIconList = [
   {
@@ -39,24 +44,30 @@ const CardIconList = [
   }
 ];
 const MyFC = () => {
-  const [bgScale, setBgScale] = useState(1);
-  const [avatarScale, setAvatarScale] = useState(1);
+  const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { setToken } = userActions;
+  const handleLogout = () => {
+    dispatch(setToken(""));
+    goToPages(router, "/Login", "MOVE");
+  };
   return (
     <>
-      <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
+      <StatusBar style="dark" backgroundColor="transparent" translucent={true}  />
       <View className="flex-1">
         <View className="relative">
           <Image source={headBg}
                  style={{ ...styles.UserBg, aspectRatio: bgScale }}
                  onLoad={setImageScale(bgScale, setBgScale)}
+                 contentFit="contain"
           />
           <View
             className="flex justify-center items-center w-screen -translate-x-1/2  -translate-y-1/2"
             style={styles.UserBox}>
             <Image source={defaultAvatar}
-                   style={{ ...styles.UserAvatar, aspectRatio: avatarScale }}
-                   onLoad={setImageScale(avatarScale, setAvatarScale)}
+                   style={styles.UserAvatar}
+                   contentFit="cover"
             />
             <Text style={styles.UserNameText}>
               {"点击登录"}
@@ -77,7 +88,8 @@ const MyFC = () => {
                   (
                     <MyPagesCardIcon text={item.text} img={item.img}
                                      key={item.text}
-                                     onPress={item.onPress(router)} />
+                                     onPress={item.onPress(router)}
+                    />
                   )
                 )
               }
@@ -87,48 +99,33 @@ const MyFC = () => {
                 <Text style={{ textAlign: "center" }}>暂无任务</Text>
               </View>
             </MyPagesCard>
-            <MyPagesCard title={"未处理上传"}>
+            <MyPagesCard cardStyle={{ marginBottom: 10 }} title={"未处理上传"}>
               <View className="mb-4">
                 <Text style={{ textAlign: "center" }}>暂无数据</Text>
               </View>
             </MyPagesCard>
-          </View>
-          <View>
-            <Button
-              className="w-full mb-4"
-              size="lg"
-              variant="outline"
-              action="negative"
-            >
-              <Pressable className="flex-1 justify-center items-center"
-                         onStartShouldSetResponderCapture={() => true}>
-                {
-                  ({ pressed }) => (
-                    <Text
-                      style={pressed ? styles.LogoutTextActive : styles.LogoutText}>
-                      退出登录
-                    </Text>
-                  )
-                }
-              </Pressable>
-            </Button>
+            <MyPagesCard title={"更多"}>
+              <View className="mb-4">
+                <MyPagesCardItem text={"设置"} img={settings} iconSize={25}
+                                 onPress={goToPages(router, "/Settings", "FN")} />
+                <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22}
+                                 onPress={handleLogout} />
+              </View>
+            </MyPagesCard>
           </View>
         </View>
       </View>
     </>
   );
 };
-const My = memo(MyFC);
-export default My;
+export default memo(MyFC);
 const styles = StyleSheet.create({
   UserBg: {
-    width: "100%",
-    // @ts-ignore
-    contentFit: "cover"
+    // width: "100%",
   },
   UserAvatar: {
     width: 65,
-    contentFit: "cover",
+    height: 65,
     borderRadius: 99999,
     borderWidth: 2,
     borderColor: "#fff",

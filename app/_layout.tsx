@@ -1,31 +1,22 @@
-import "@/utils/polyfills";
 import "@/global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { Provider } from "react-redux";
-import RootState from "@/stores";
+import RootState, { PersistedRootState } from "@/stores";
 import { StrictMode } from "react";
 import App from "@/app/App";
+import { PersistGate } from "redux-persist/integration/react";
 
-
-if (typeof global.FinalizationRegistry === "undefined") {
-  (global.FinalizationRegistry as any) = class FinalizationRegistry {
-    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-    constructor() {
-    }
-
-    register() {
-    }
-
-    unregister() {
-    }
-  };
-}
 export default function RootLayout() {
   return (
     <StrictMode>
       <GluestackUIProvider mode="light">
         <Provider store={RootState}>
-          <App />
+          <PersistGate
+            persistor={PersistedRootState}
+            onBeforeLift={() => console.log("状态恢复中...")}
+          >
+            <App />
+          </PersistGate>
         </Provider>
       </GluestackUIProvider>
     </StrictMode>

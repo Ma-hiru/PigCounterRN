@@ -1,106 +1,145 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { View, Alert } from "react-native";
-import { Card } from "@/components/ui/card";
 import {
   ImagePickerAsset,
   launchCameraAsync,
   requestCameraPermissionsAsync
 } from "expo-image-picker";
-import { Image } from "expo-image";
-import { setImageScale } from "@/utils/setImageScale";
-import { ButtonText, Button } from "@/components/ui/button";
 import * as FileSystem from "expo-file-system";
-import localStore from "@/utils/localStore";
-import { awaitExpression } from "@babel/types";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { uploadActions, uploadSelector, useAppDispatch, useAppSelector} from "@/stores";
+import { AreaItem } from "@/types/task";
+import { cloneDeep } from "lodash";
+import { showNewToast } from "@/utils/toast";
+import { useToast } from "@/components/ui/toast";
+import ImagePreview from "@/components/ImagePreview";
+import UploadPagesPreviewCard from "@/components/UploadPagesPreviewCard";
+import UploadPagesOptionsCard from "@/components/UploadPagesOptionsCard";
+import Logger from "@/utils/logger";
 
 interface props {
-  id?: number;
+  /* empty */
 }
 
-const saveImageToCache = async (tempUri: string) => {
-  try {
-    const fileName = `${Date.now()}.jpg`;
-    const cachePath = `${FileSystem.cacheDirectory}${fileName}`;
-    await FileSystem.copyAsync({
-      from: tempUri,
-      to: cachePath
-    });
-    await localStore.setItem("cachedPhotoPath", cachePath);
-    return cachePath;
-  } catch (error) {
-    console.error("保存失败:", error);
-    return null;
-  }
-};
-export const UploadFiles: FC<props> = () => {
+const { setTasksList } = uploadActions;
+const UploadFiles: FC<props> = () => {
+  /** 预览图 */
   const [previewImg, setPreviewImg] = useState<ImagePickerAsset>();
+  const [previewVideo, setPreviewVideo] = useState<any>();
   const [scale, setScale] = useState(1);
-  const [cacheImg, setCacheImg] = useState("");
+  /** store */
+  const {
+    TasksList,
+    DEFAULT_UPLOAD_PATH,
+    DEFAULT_UPLOAD_RES
+  } = useAppSelector(uploadSelector);
+  const dispatch = useAppDispatch();
+  /** 更新标题 */
+  const { title, taskIndex }: Record<string, string> = useLocalSearchParams();
+  const navigation = useNavigation();
+  const toast = useToast();
   useEffect(() => {
-    if (cacheImg === "") {
-      localStore.getItem("cachedPhotoPath").then((path) => {
-        if (path) {
-          setCacheImg(path);
+    navigation.setOptions({ title });
+  }, [navigation, title]);
+  /** 获取缓存 */
+  const [TaskIndex, ItemIndex, ChildIndex] = taskIndex.split(",").map(Number);
+  const cachePath = useMemo(() => {
+    const path = (TasksList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path;
+    const type = path.includes("video") ? "video" : "image";
+    return {
+      path,
+      type
+    };
+  }, [ChildIndex, ItemIndex, TaskIndex, TasksList]);
+  /** 选择、缓存图片 */
+  const updateStore = (newPath?: string, newRes?: number) => {
+    const newTaskList = cloneDeep(TasksList);
+    newPath !== undefined && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path = newPath);
+    newRes && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].res = newRes);
+    dispatch(setTasksList(newTaskList));
+  };
+  const resolveTemp = async (tempUri: string, mode: "save" | "delete") => {
+    switch (mode) {
+      case "save":
+        const fileName = `${Date.now()}.jpg`;
+        const cachePath = `${FileSystem.cacheDirectory}${fileName}`;
+        try {
+          await FileSystem.copyAsync({
+            from: tempUri,
+            to: cachePath
+          });
+          updateStore(cachePath);
+        } catch (err) {
+          Logger("console", err);
+          Alert.alert("资源存储失败", "请检查权限！");
         }
-      });
+        break;
+      case "delete":
+        try {
+          const { exists } = await FileSystem.getInfoAsync(tempUri);
+          exists && await FileSystem.deleteAsync(tempUri, { idempotent: true });
+        } catch (err) {
+          Logger("console", err);
+          showNewToast(toast, "缓存清除失败", "可能缓存已被删除。");
+        }
     }
-  }, [cacheImg]);
-  const takePhoto = async () => {
+  };
+  const takeCamera = (mode: "image" | "video") => async () => {
     const { status } = await requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("权限被拒绝", "需要相机权限才能拍照");
-      return;
-    }
+    if (status !== "granted")
+      return Alert.alert("权限被拒绝", `需要相机权限才能${mode === "image" ? "拍照" : "录像"}`);
     const result = await launchCameraAsync({
-      mediaTypes: ["images", "videos"],
+      mediaTypes: mode === "image" ? ["images"] : ["videos"],
       allowsEditing: false,
       quality: 0.8,
       base64: false,
       selectionLimit: 1
     });
     if (!result.canceled) {
-      const imgInfo = result.assets[0];
-      setPreviewImg(imgInfo);
-      setCacheImg(imgInfo.uri);
-      await saveImageToCache(imgInfo.uri);
+      const fileInfo = result.assets[0];
+      switch (mode) {
+        case "image":
+          setPreviewImg(fileInfo);
+          setScale(fileInfo.width / fileInfo.height);
+          break;
+        case "video":
+          setPreviewVideo(fileInfo);
+      }
+      return await resolveTemp(fileInfo.uri, "save");
     }
   };
   const clearImg = async () => {
     setPreviewImg(undefined);
-    setCacheImg("");
-    await localStore.setItem("cachedPhotoPath", "");
+    updateStore(DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES);
+    await resolveTemp(previewImg?.uri || cachePath.path, "delete");
   };
+  /** 预览 */
+  const [previewVisible, setPreviewVisible] = useState(false);
   return (
     <>
-      <View className="pl-4 pr-4 mt-4">
-        <Card>
-          {
-            (previewImg || cacheImg) &&
-            <Image source={previewImg || cacheImg}
-                   style={{ width: "100%", aspectRatio: scale }}
-                   onLoad={setImageScale(scale, setScale)}
-            />
-          }
-          {
-            (previewImg || cacheImg) ?
-              (
-                <>
-                  <Button onPress={clearImg} className="mt-4">
-                    <ButtonText>取消</ButtonText>
-                  </Button>
-                  <Button style={{ marginTop: 10 }}>
-                    <ButtonText>上传</ButtonText>
-                  </Button>
-                </>
-              ) :
-              (
-                <Button onPress={takePhoto} className="mt-4">
-                  <ButtonText>拍照</ButtonText>
-                </Button>
-              )
-          }
-        </Card>
+      <View className="pl-4 pr-4 mt-4 flex-1"
+            key={taskIndex}
+      >
+        <UploadPagesPreviewCard
+          setPreviewVisible={setPreviewVisible}
+          previewImg={previewImg}
+          previewVideo={previewVideo}
+          setScale={setScale}
+          cachePath={cachePath}
+          scale={scale}
+        />
+        <UploadPagesOptionsCard
+          previewImg={previewImg}
+          cachePath={cachePath}
+          clearImg={clearImg}
+          takeCamera={takeCamera}
+        />
       </View>
+      <ImagePreview
+        isPreviewVisible={previewVisible}
+        setPreviewVisible={setPreviewVisible}
+        source={{ uri: previewImg?.uri || cachePath.path }}
+      />
     </>
   );
 };

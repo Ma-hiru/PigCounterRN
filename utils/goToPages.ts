@@ -12,6 +12,7 @@ export const goToPages =
       case "FN":
         return (() => router.push(path)) as IfReturnFn<T, "FN">;
       case "MOVE":
-        return router.push(path) as IfReturnFn<T, "FN">;
+        router.push(path);
     }
+    return undefined as IfReturnFn<T, "FN">;
   };
