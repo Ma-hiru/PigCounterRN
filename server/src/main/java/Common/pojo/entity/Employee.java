@@ -31,8 +31,12 @@ public class Employee implements Serializable {
 
     private String createTime;
 
+    @NotBlank(message = "头像不能为空",groups = EmployeeValidation.update.class)
     private String profilePicture;
 
     @NotBlank(message = "组织不能为空",groups = EmployeeValidation.update.class)
     private String organization;
+
+    @NotBlank(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)
+    private Boolean isAdmin;
 }

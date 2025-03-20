@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.zlz.pigcounter.mapper.PenMapper">
+
+
+    <select id="page" resultType="Common.pojo.entity.Pen">
+        select id, pen_name
+        <if test="buildingId==null">
+        , building_id
+        </if>
+        from pen
+        <where>
+        <if test="buildingId!=null">
+            and building_id=#{buildingId}
+        </if>
+    </where>
+    </select>
+</mapper>

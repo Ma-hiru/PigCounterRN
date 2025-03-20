@@ -18,4 +18,6 @@ public interface EmployeeService {
     void deleteById(Long id);
 
     PageResult page(int pageNum, int pageSize, String organization);
+
+    void deleteByIds(Long[] ids);
 }

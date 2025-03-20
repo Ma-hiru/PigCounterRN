@@ -11,6 +11,7 @@ import com.zlz.pigcounter.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -27,7 +28,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Autowired
-    private JwtProperties jwtProperties;
+    private CacheManager cacheManager;
 
     /**
      * 员工登录
@@ -38,8 +39,6 @@ public class EmployeeController {
     public Result<EmployeeVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO){
         log.info("开始登录");
         EmployeeVO employeeVo = employeeService.login(employeeLoginDTO);
-
-
         return Result.success(employeeVo);
 
     }
@@ -91,6 +90,17 @@ public class EmployeeController {
         return Result.success();
     }
 
+    @DeleteMapping("/batch")
+    @CacheEvict(cacheNames = "employee_page",allEntries = true)
+    public Result deleteByIds(@RequestBody Long[] ids){
+        log.info("批量删除员工：{}",ids);
+
+        for (Long id : ids) {
+            cacheManager.getCache("employee").evict(id.toString());
+        }
+        employeeService.deleteByIds(ids);
+        return Result.success();
+    }
     /**
      * 分页查询员工
      */

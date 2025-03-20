@@ -89,6 +89,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public void add( Employee employee, MultipartFile profilePicture)  {
+        //确保只有管理员账号能创建管理员账号
+        Long currentId = BaseContext.getCurrentId();
+        if(currentId==null||!employeeMapper.getById(currentId).getIsAdmin()){
+            throw new UnauthorizedModificationException("只有管理员能创建管理员账号");
+        }
 
         if(employeeMapper.getByUsername(employee.getUsername())!=null){
             throw new UserAlreadyExistsException();
@@ -129,8 +134,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public void update(Employee employee, MultipartFile profilePicture)  {
+        //只有自己或者管理员能修改员工信息
         Long currentId = BaseContext.getCurrentId();
-        if(!currentId.equals(employee.getId())){
+        if(!currentId.equals(employee.getId())&&!employeeMapper.getById(currentId).getIsAdmin()){
            throw new UnauthorizedModificationException();
         }
         String filePath="";
@@ -153,7 +159,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .uploadTime(LocalDateTime.now())
                 .build();
 
-        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()).getProfilePicture(),false);
+        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()),false);
 
         employeeMapper.update(employee);
 
@@ -180,27 +186,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        if(!BaseContext.getCurrentId().equals(id)){
+        //只有管理员和自己能删除自己的账号
+        if(!BaseContext.getCurrentId().equals(id)&&!employeeMapper.getById(BaseContext.getCurrentId()).getIsAdmin()){
             throw new UnauthorizedModificationException();
         }
-        Employee employee = employeeMapper.getProfilePictureById(id);
-        if (employee == null) {
-            throw new NotFoundUserException();
-        }
-        List<String> profilePictures = profilePictureHistoryMapper.getByEmployeeId(id);
-        for (String profilePicture : profilePictures) {
-            File file = new File(profilePicture);
-            if (file.exists()) {
-               if(!file.delete()){
-                   throw new ProfilePictureDeleteException();
-               };
-            }
-        }
+
+        deleteProfilePicture(id);
 
         employeeMapper.deleteById(id);
 
-
     }
+
+
 
     @Override
     public PageResult page(int pageNum, int pageSize, String organization) {
@@ -210,6 +207,20 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new NotFoundUserException();
         }
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    @Override
+    @Transactional
+    public void deleteByIds(Long[] ids) {
+        Long curentId = BaseContext.getCurrentId();
+        if(!employeeMapper.getById(curentId).getIsAdmin()){
+            throw new UnauthorizedModificationException();
+        }
+
+        for (Long id : ids) {
+            deleteProfilePicture(id);
+        }
+        employeeMapper.deleteBatch(ids);
     }
 
     private void uploadProfilePicture( MultipartFile profilePicture,String filePath) throws IOException {
@@ -246,5 +257,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return false;
+    }
+    private void deleteProfilePicture(Long id) {
+        String employeeProfilePicture = employeeMapper.getProfilePictureById(id);
+        if (employeeProfilePicture == null) {
+            throw new NotFoundUserException();
+        }
+        List<String> profilePictures = profilePictureHistoryMapper.getByEmployeeId(id);
+        for (String profilePicture : profilePictures) {
+            File file = new File(profilePicture);
+            if (file.exists()) {
+                if(!file.delete()){
+                    throw new ProfilePictureDeleteException();
+                };
+            }
+        }
     }
 }
