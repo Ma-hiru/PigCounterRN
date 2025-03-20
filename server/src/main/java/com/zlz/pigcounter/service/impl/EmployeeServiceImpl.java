@@ -91,8 +91,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void add( Employee employee, MultipartFile profilePicture)  {
         //确保只有管理员账号能创建管理员账号
         Long currentId = BaseContext.getCurrentId();
-        if(currentId==null||!employeeMapper.getById(currentId).getIsAdmin()){
-            throw new UnauthorizedModificationException("只有管理员能创建管理员账号");
+        if(employee.getIsAdmin()) {
+            if (currentId == null || !employeeMapper.getById(currentId).getIsAdmin()) {
+                throw new UnauthorizedModificationException("只有管理员能创建管理员账号");
+            }
         }
 
         if(employeeMapper.getByUsername(employee.getUsername())!=null){

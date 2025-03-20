@@ -2,6 +2,7 @@ package Common.pojo.entity;
 
 import Common.validation.EmployeeValidation;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -31,12 +32,12 @@ public class Employee implements Serializable {
 
     private String createTime;
 
-    @NotBlank(message = "头像不能为空",groups = EmployeeValidation.update.class)
+
     private String profilePicture;
 
     @NotBlank(message = "组织不能为空",groups = EmployeeValidation.update.class)
     private String organization;
 
-    @NotBlank(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)
+    @NotNull(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)
     private Boolean isAdmin;
 }
