@@ -7,6 +7,7 @@ interface initialType {
   TasksList: TaskList;
   DEFAULT_UPLOAD_RES: number;
   DEFAULT_UPLOAD_PATH: string;
+  DEFAULT_UPLOAD_TYPE: string;
 }
 
 const uploadSlice = createSlice({
@@ -25,6 +26,7 @@ const uploadSlice = createSlice({
               {
                 id: 1,
                 name: "栏舍1",
+                type: "",
                 res: 0,
                 path: ""
               },
@@ -32,12 +34,14 @@ const uploadSlice = createSlice({
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -50,18 +54,21 @@ const uploadSlice = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -74,18 +81,21 @@ const uploadSlice = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -105,18 +115,21 @@ const uploadSlice = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -129,18 +142,21 @@ const uploadSlice = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -153,18 +169,21 @@ const uploadSlice = createSlice({
                 id: 1,
                 name: "栏舍1",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 2,
                 name: "栏舍2",
                 path: "",
+                type: "",
                 res: -1
               },
               {
                 id: 3,
                 name: "栏舍3",
                 path: "",
+                type: "",
                 res: -1
               }
             ]
@@ -173,7 +192,8 @@ const uploadSlice = createSlice({
       }
     ],
     DEFAULT_UPLOAD_RES: -1,
-    DEFAULT_UPLOAD_PATH: ""
+    DEFAULT_UPLOAD_PATH: "",
+    DEFAULT_UPLOAD_TYPE: ""
   } as initialType,
   reducers: {
     setTasksList: (state, action: PayloadAction<TaskList>) => {

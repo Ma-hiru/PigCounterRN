@@ -8,7 +8,7 @@ interface props {
   previewImg?: ImagePickerAsset;
   cachePath: { path: string; type: string },
   clearImg: () => Promise<void>,
-  takeCamera: (mode: "image" | "video") => () => Promise<void>,
+  takeAssets: (mode: "images" | "videos",method:"take"|"pick") => () => Promise<void>,
 }
 
 const UploadPagesOptionsCard: FC<props> = (
@@ -16,7 +16,7 @@ const UploadPagesOptionsCard: FC<props> = (
     previewImg,
     cachePath,
     clearImg,
-    takeCamera
+    takeAssets
   }) => {
   const router = useRouter();
   return (
@@ -39,13 +39,13 @@ const UploadPagesOptionsCard: FC<props> = (
             ) :
             (
               <>
-                <Button onPress={takeCamera("image")} className="mt-4">
+                <Button onPress={takeAssets("images","take")} className="mt-4">
                   <ButtonText>拍照上传</ButtonText>
                 </Button>
-                <Button onPress={takeCamera("video")} className="mt-4">
+                <Button onPress={takeAssets("videos","take")} className="mt-4">
                   <ButtonText>录像上传</ButtonText>
                 </Button>
-                <Button onPress={takeCamera("image")} className="mt-4">
+                <Button onPress={takeAssets("images","pick")} className="mt-4">
                   <ButtonText>本地选择</ButtonText>
                 </Button>
               </>

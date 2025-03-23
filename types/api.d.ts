@@ -12,62 +12,26 @@ export type loginInfo = {
 }
 
 export type LoginResponseData = {
+  id: number;
+  username: string;
+  name: string;
+  profilePicture: string;
   token: string;
+  organization: string;
 };
 /**`registry`*/
 export type registryInfo = {
   username: string,
   password: string,
-  introduction: string,
+  organization: string;
+  picture: string;
+  isAdmin: boolean;
+  name: string;
+  sex: string;
 }
 
-export interface RegistryResponseData extends ResponseData {
-  data: undefined;
-}
-
-/**`getUserInfo`*/
-export interface userInfo {
-  id: number,
-  username: string,
-  password?: string,
-  introduction?: string,
-  status?: {
-    Int16: number,
-    Valid: boolean
-  },
-  avatar?: string,
-  createTime?: string,
-  updateTime?: string,
-}
-
-export interface GetUserInfoResponseData extends ResponseData {
-  data: userInfo;
-}
-
-/** `file`*/
-export type fileUploadInfo = {
-  file?: File,
-  type?: string,
-}
-export type uploadInfo = {
-  id?: number,
-  userId?: number,
-  url?: string,
-  filename?: string,
-  type?: string,
-  status?: {
-    Int16: number,
-    Valid: boolean
-  },
-  createTime?: string,
-}
-
-export interface FileUploadResponseData extends ResponseData {
-  data: {
-    url: string,
-    fileName: string,
-    id: number
-  };
+export interface RegistryResponseData {
+  data: null;
 }
 
 /**
@@ -162,51 +126,3 @@ export type WeatherType = {
     license: [string];
   };
 };
-
-/** `feedback`*/
-export type feedbackInfo = {
-  id?: number,
-  userId?: number,
-  content?: string,
-  createTime?: string,
-  isHandle?: {
-    Int16: number,
-    Valid: boolean
-  },
-}
-
-export interface AddFeedbackResponseData extends ResponseData {
-  data: undefined;
-}
-
-export type PaginationRequest = {
-  page?: number,
-  size?: number,
-}
-export type PaginationResponse<T> = {
-  ok: boolean,
-  currentPage: number,
-  pageSize: number,
-  total: number,
-  totalPages: number,
-  data: T[]
-}
-/** Statistics */
-export type StatisticsBase = {
-  report: number;
-  dead: number;
-  name: string;
-}
-export type StatisticsInfo = StatisticsBase & {
-  id: number;
-  userId: number;
-  time: string;
-}
-
-export interface ReqAddStatisticsResponseData extends ResponseData {
-  data: StatisticsInfo;
-}
-
-export interface ReqGetStatisticsResponseData extends ResponseData {
-  data: StatisticsInfo[];
-}

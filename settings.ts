@@ -1,5 +1,7 @@
 /** 基本URL */
-export const baseUrl = "https://shiina-mahiru.cn:4000";
+
+// export const baseUrl = "https://shiina-mahiru.cn:4000";
+export const baseUrl = "http://127.0.0.1:8080";
 
 /** token prefix type */
 export enum tokenTypePrefix {
@@ -14,10 +16,10 @@ export const tokenPrefix = tokenTypePrefix.Bearer;
 
 export enum API {
   // LOGIN_URL = "https://shiina-mahiru.cn/sub/pigcounter/api/login",
-  LOGIN_URL = "https://shiina-mahiru.cn/api/file/user",
-  REGISTRY_URL = "/registry",
-  GET_USERINFO_URL = "/api/getUserInfo",
-  LOGOUT_URL = "/logout",
+  LOGIN_URL = "/api/user/login",
+  REGISTRY_URL = "/api/user/register",
+  // GET_USERINFO_URL = "/api/getUserInfo",
+  // LOGOUT_URL = "/logout",
 }
 
 export const GlobalStyles = {
