@@ -1,16 +1,16 @@
 package com.zlz.pigcounter.service.impl;
 
-import Common.constant.JwtClaimsConstant;
-import Common.context.BaseContext;
-import Common.exception.*;
-import Common.pojo.entity.Employee;
-import Common.pojo.entity.ProfilePicture;
-import Common.pojo.vo.EmployeeVO;
-import Common.result.PageResult;
+import com.common.constant.JwtClaimsConstant;
+import com.common.context.BaseContext;
+import com.common.exception.*;
+import com.common.pojo.entity.Employee;
+import com.common.pojo.entity.ProfilePicture;
+import com.common.pojo.vo.EmployeeVO;
+import com.common.result.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.zlz.pigcounter.mapper.EmployeeMapper;
-import Common.pojo.dto.EmployeeLoginDTO;
+import com.common.pojo.dto.EmployeeLoginDTO;
 import com.zlz.pigcounter.mapper.ProfilePictureHistoryMapper;
 import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
@@ -73,7 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         String token = JwtUtil.createJWT(jwtProperties.getAdminSecretKey(), jwtProperties.getAdminTtl(), map);
 
-        EmployeeVO employeeVo = Common.pojo.vo.EmployeeVO.builder().id(employee.getId())
+        EmployeeVO employeeVo = EmployeeVO.builder().id(employee.getId())
                 .name(employee.getName())
                 .username(employee.getUsername())
                 .token(token)
@@ -91,8 +91,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void add( Employee employee, MultipartFile profilePicture)  {
         //确保只有管理员账号能创建管理员账号
         Long currentId = BaseContext.getCurrentId();
-        if(employee.getIsAdmin()) {
-            if (currentId == null || !employeeMapper.getById(currentId).getIsAdmin()) {
+        if(employee.getAdmin()) {
+            if (currentId == null || !employeeMapper.getById(currentId).getAdmin()) {
                 throw new UnauthorizedModificationException("只有管理员能创建管理员账号");
             }
         }
@@ -138,7 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(Employee employee, MultipartFile profilePicture)  {
         //只有自己或者管理员能修改员工信息
         Long currentId = BaseContext.getCurrentId();
-        if(!currentId.equals(employee.getId())&&!employeeMapper.getById(currentId).getIsAdmin()){
+        if(!currentId.equals(employee.getId())&&!employeeMapper.getById(currentId).getAdmin()){
            throw new UnauthorizedModificationException();
         }
         String filePath="";
@@ -189,7 +189,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public void deleteById(Long id) {
         //只有管理员和自己能删除自己的账号
-        if(!BaseContext.getCurrentId().equals(id)&&!employeeMapper.getById(BaseContext.getCurrentId()).getIsAdmin()){
+        if(!BaseContext.getCurrentId().equals(id)&&!employeeMapper.getById(BaseContext.getCurrentId()).getAdmin()){
             throw new UnauthorizedModificationException();
         }
 
@@ -215,7 +215,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public void deleteByIds(Long[] ids) {
         Long curentId = BaseContext.getCurrentId();
-        if(!employeeMapper.getById(curentId).getIsAdmin()){
+        if(!employeeMapper.getById(curentId).getAdmin()){
             throw new UnauthorizedModificationException();
         }
 

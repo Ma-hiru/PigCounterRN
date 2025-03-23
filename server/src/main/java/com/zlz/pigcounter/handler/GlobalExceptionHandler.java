@@ -1,14 +1,12 @@
 package com.zlz.pigcounter.handler;
 
-import Common.exception.BaseException;
-import Common.result.Result;
+import com.common.exception.BaseException;
+import com.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler {
         return Result.error(sb.toString());
     }
     @ExceptionHandler Result <String> exceptionHandler(Exception e) {
-        log.info(e.getMessage());
-        return Result.error(e.getMessage());
+        log.info( e.getCause().getMessage());
+        return Result.error( e.getCause().getMessage());
     }
 }

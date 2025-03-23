@@ -1,11 +1,9 @@
 package com.zlz.pigcounter.mapper;
 
 
-import Common.pojo.entity.Employee;
+import com.common.pojo.entity.Employee;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
-
-import java.util.List;
 
 @Mapper
 public interface EmployeeMapper {

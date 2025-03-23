@@ -1,7 +1,7 @@
 package com.zlz.pigcounter.service;
 
-import Common.pojo.entity.Building;
-import Common.result.PageResult;
+import com.common.pojo.entity.Building;
+import com.common.result.PageResult;
 
 public interface PenService {
     void addBuilding(Building building);

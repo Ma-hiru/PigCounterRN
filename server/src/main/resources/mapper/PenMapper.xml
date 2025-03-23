@@ -6,7 +6,7 @@
 <mapper namespace="com.zlz.pigcounter.mapper.PenMapper">
 
 
-    <select id="page" resultType="Common.pojo.entity.Pen">
+    <select id="page" resultType="com.common.pojo.entity.Pen">
         select id, pen_name
         <if test="buildingId==null">
         , building_id

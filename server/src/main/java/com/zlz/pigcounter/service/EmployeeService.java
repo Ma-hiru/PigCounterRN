@@ -1,9 +1,9 @@
 package com.zlz.pigcounter.service;
 
-import Common.pojo.dto.EmployeeLoginDTO;
-import Common.pojo.entity.Employee;
-import Common.pojo.vo.EmployeeVO;
-import Common.result.PageResult;
+import com.common.pojo.dto.EmployeeLoginDTO;
+import com.common.pojo.entity.Employee;
+import com.common.pojo.vo.EmployeeVO;
+import com.common.result.PageResult;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface EmployeeService {

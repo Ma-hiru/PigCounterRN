@@ -1,6 +1,6 @@
 package com.zlz.pigcounter.mapper;
 
-import Common.pojo.entity.Building;
+import com.common.pojo.entity.Building;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 

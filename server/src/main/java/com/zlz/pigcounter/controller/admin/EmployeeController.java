@@ -1,12 +1,11 @@
 package com.zlz.pigcounter.controller.admin;
 
-import Common.pojo.dto.EmployeeLoginDTO;
-import Common.pojo.entity.Employee;
-import Common.pojo.vo.EmployeeVO;
-import Common.result.PageResult;
-import Common.result.Result;
-import Common.validation.EmployeeValidation;
-import com.zlz.pigcounter.properties.JwtProperties;
+import com.common.pojo.dto.EmployeeLoginDTO;
+import com.common.pojo.entity.Employee;
+import com.common.pojo.vo.EmployeeVO;
+import com.common.result.PageResult;
+import com.common.result.Result;
+import com.common.validation.EmployeeValidation;
 import com.zlz.pigcounter.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +108,13 @@ public class EmployeeController {
     public Result<PageResult> page(int pageNum, int pageSize, String organization){
         log.info("分页查询员工：{}",pageNum,pageSize,organization);
         return Result.success(employeeService.page(pageNum,pageSize,organization)) ;
+    }
+    /**
+     * 登出
+     */
+    @PostMapping("/logout")
+    public Result logout(){
+        log.info("登出");
+        return Result.success();
     }
 }

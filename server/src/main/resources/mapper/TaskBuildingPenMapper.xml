@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.zlz.pigcounter.mapper.TaskBuildingPenMapper">
+    <resultMap id="TaskDTOResultMap" type="com.common.pojo.dto.TaskDTO">
+        <id property="id" column="task_id"/>
+        <collection property="buildings" ofType="com.common.pojo.dto.BuildingDTO" column="task_id"
+                    javaType="ArrayList" select="getBuildingsByTaskId"/>
+    </resultMap>
+
+    <resultMap id="BuildingsDTOResultMap" type="com.common.pojo.dto.BuildingDTO">
+        <id property="buildingId" column="building_id"/>
+        <collection property="pens" ofType="com.common.pojo.dto.PenDTO" column="building_id"
+                    javaType="ArrayList" select="getPensByBuildingId"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into task_building_pen (task_id,building_id,pen_id) values 
+        <foreach collection="buildings" item="building" separator=",">
+            <foreach collection="building.pens" item="pen" separator=",">
+                (#{id},#{building.buildingId},#{pen.penId})
+            </foreach>
+         </foreach>
+    </insert>
+
+    <select id="getTaskDetail" resultMap="TaskDTOResultMap">
+        select task_id from task_building_pen where task_id = #{taskId}
+    </select>
+
+    <select id="getBuildingsByTaskId" resultMap="BuildingsDTOResultMap">
+        select building_id from task_building_pen where task_id = #{taskId}
+    </select>
+    <select id="getPensByBuildingId" resultType="com.common.pojo.dto.PenDTO">
+        select pen_id from task_building_pen where building_id = #{buildingId}
+    </select>
+</mapper>

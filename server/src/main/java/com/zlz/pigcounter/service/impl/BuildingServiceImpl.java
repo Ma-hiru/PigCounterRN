@@ -1,10 +1,10 @@
 package com.zlz.pigcounter.service.impl;
 
-import Common.context.BaseContext;
-import Common.exception.UnauthorizedModificationException;
-import Common.pojo.entity.Building;
-import Common.pojo.vo.BuildingVO;
-import Common.result.PageResult;
+import com.common.context.BaseContext;
+import com.common.exception.UnauthorizedModificationException;
+import com.common.pojo.entity.Building;
+import com.common.pojo.vo.BuildingVO;
+import com.common.result.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.zlz.pigcounter.mapper.BuildingMapper;
@@ -29,7 +29,7 @@ public class BuildingServiceImpl implements BuildingService {
     public void addBuilding(Building building) {
         //确保只有管理员账号能添加楼栋信息
         Long currentId = BaseContext.getCurrentId();
-        if(currentId==null||!employeeMapper.getById(currentId).getIsAdmin()){
+        if(currentId==null||!employeeMapper.getById(currentId).getAdmin()){
             throw new UnauthorizedModificationException("只有管理员能添加楼栋信息");
         }
         log.info("添加楼栋");
@@ -40,7 +40,7 @@ public class BuildingServiceImpl implements BuildingService {
     public void deleteBuilding(Long id) {
         //确保只有管理员账号能删除楼栋信息
         Long currentId = BaseContext.getCurrentId();
-        if(currentId==null||!employeeMapper.getById(currentId).getIsAdmin()){
+        if(currentId==null||!employeeMapper.getById(currentId).getAdmin()){
             throw new UnauthorizedModificationException("只有管理员能删除楼栋信息");
         }
         log.info("删除楼栋");
@@ -69,7 +69,7 @@ public class BuildingServiceImpl implements BuildingService {
     public void updateBuilding(Building building) {
         //确保只有管理员账号能修改楼栋信息
         Long currentId = BaseContext.getCurrentId();
-        if(currentId==null||!employeeMapper.getById(currentId).getIsAdmin()){
+        if(currentId==null||!employeeMapper.getById(currentId).getAdmin()){
             throw new UnauthorizedModificationException("只有管理员能修改楼栋信息");
         }
         log.info("修改楼栋");
