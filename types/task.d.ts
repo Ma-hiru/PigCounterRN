@@ -6,10 +6,11 @@ export type Area = {
   | { children: Area[]; }
   )
 export type AreaItem = Area & { children: AreaChild[] }
-export type AreaChild = Area & { path: string; res: number;type: string; }
+export type AreaChild = Area & { path: string; res: number; type: "images" | "videos" | ""; }
 export type Task = {
   id: number,
-  time: string,
+  startTime: string,
+  endTime: string,
   validation: boolean,
   area: Area[]
 }

@@ -13,15 +13,22 @@ export default function Upload() {
   return (
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
-      <ScrollView className="flex-1 bg-gray-50" style={{ paddingTop: topInset }}>
-        {
-          TasksList.map((task, index) =>
-            <UploadPagesList task={task} key={index} router={router} taskIndex={index} />
-          )
-        }
+      <ScrollView className="flex-1 bg-gray-50">
+        <View className="w-full items-center" style={{paddingTop: topInset,paddingBottom:40}}>
+          {
+            TasksList.map((task, index) =>
+              <UploadPagesList
+                task={task}
+                key={index}
+                router={router}
+                taskIndex={index+1}
+              />
+            )
+          }
+        </View>
       </ScrollView>
       <View className="bg-gray-50 "
-            style={{ padding: 30, paddingBottom: 0 }}
+            style={{ padding: 40, paddingBottom: 0,paddingTop: 20 }}
       >
         <MyBlueBtn>
           刷新

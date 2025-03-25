@@ -10,7 +10,7 @@ interface props {
 
 const MyBlueBtn: FC<props> = ({ children, onPress, className }) => {
   return (
-    <View className={className}>
+    <View className={className} style={{ borderRadius: 5, overflow: "hidden" }}>
       <Button title={children ?? ""} color="#409eff" onPress={onPress} />
     </View>
   );

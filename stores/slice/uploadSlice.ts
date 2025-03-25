@@ -7,7 +7,7 @@ interface initialType {
   TasksList: TaskList;
   DEFAULT_UPLOAD_RES: number;
   DEFAULT_UPLOAD_PATH: string;
-  DEFAULT_UPLOAD_TYPE: string;
+  DEFAULT_UPLOAD_TYPE: "";
 }
 
 const uploadSlice = createSlice({
@@ -16,7 +16,8 @@ const uploadSlice = createSlice({
     TasksList: [
       {
         id: 1,
-        time: "2025/3/17/12/00~2025/3/17/14/00",
+        startTime: "2025-03-17 12:00",
+        endTime: "2025-03-17 12:00",
         validation: true,
         area: [
           {
@@ -104,7 +105,8 @@ const uploadSlice = createSlice({
       },
       {
         id: 2,
-        time: "2025/3/17/12/00~2025/3/17/14/00",
+        startTime: "2025-03-17 12:00",
+        endTime: "2025-03-17 12:00",
         validation: false,
         area: [
           {

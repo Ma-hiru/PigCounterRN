@@ -46,7 +46,10 @@ const UploadPagesOptionsCard: FC<props> = (
                   <ButtonText>录像上传</ButtonText>
                 </Button>
                 <Button onPress={takeAssets("images","pick")} className="mt-4">
-                  <ButtonText>本地选择</ButtonText>
+                  <ButtonText>本地图片</ButtonText>
+                </Button>
+                <Button onPress={takeAssets("videos","pick")} className="mt-4">
+                  <ButtonText>本地视频</ButtonText>
                 </Button>
               </>
             )

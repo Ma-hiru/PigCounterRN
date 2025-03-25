@@ -17,12 +17,9 @@ import UploadPagesPreviewCard from "@/components/UploadPagesPreviewCard";
 import UploadPagesOptionsCard from "@/components/UploadPagesOptionsCard";
 import Logger from "@/utils/logger";
 
-interface props {
-  /* empty */
-}
 
 const { setTasksList } = uploadActions;
-const UploadFiles: FC<props> = () => {
+const UploadFiles: FC = () => {
   /** 预览图 */
   const [previewImg, setPreviewImg] = useState<ImagePickerAsset>();
   const [previewVideo, setPreviewVideo] = useState<any>();
@@ -46,7 +43,7 @@ const UploadFiles: FC<props> = () => {
   const [TaskIndex, ItemIndex, ChildIndex] = taskIndex.split(",").map(Number);
   const cachePath = useMemo(() => {
     const item = (TasksList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
-    const path = item.path;
+    const path = item.path ?? "";
     const type = item.type ?? "";
     return {
       path,
@@ -54,17 +51,19 @@ const UploadFiles: FC<props> = () => {
     };
   }, [ChildIndex, ItemIndex, TaskIndex, TasksList]);
   /** 选择、缓存图片 */
-  const updateStore = (newPath?: string, newType?: string, newRes?: number) => {
+  const updateStore = (newPath?: string, newType?: "videos" | "images" | typeof DEFAULT_UPLOAD_TYPE, newRes?: number) => {
     const newTaskList = cloneDeep(TasksList);
-    newPath !== undefined && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].path = newPath);
-    newRes && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].res = newRes);
-    newType !== undefined && ((newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex].type = newType);
+    const item = (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
+    newPath !== undefined && (item.path = newPath);
+    newRes && (item.res = newRes);
+    newType !== undefined && (item.type = newType);
+    (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex] = item;
     dispatch(setTasksList(newTaskList));
   };
-  const resolveTemp = async (tempUri: string, mode: "save" | "delete", type?: string) => {
+  const resolveTemp = async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos") => {
     switch (mode) {
       case "save":
-        const fileName = `${Date.now()}.jpg`;
+        const fileName = `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`;
         const cachePath = `${FileSystem.cacheDirectory}${fileName}`;
         try {
           await FileSystem.copyAsync({
@@ -105,7 +104,7 @@ const UploadFiles: FC<props> = () => {
       const { status } = await requestMediaLibraryPermissionsAsync();
       if (status !== "granted") return Alert.alert("权限被拒绝", `需要文件访问权限才能选择文件`);
       result = await launchImageLibraryAsync({
-        mediaTypes: ["images", "videos"],
+        mediaTypes: mode,
         allowsEditing: false,
         quality: 0.8,
         base64: false,
@@ -122,11 +121,12 @@ const UploadFiles: FC<props> = () => {
         case "videos":
           setPreviewVideo(fileInfo);
       }
-      return await resolveTemp(fileInfo.uri, "save", fileInfo.type);
+      return await resolveTemp(fileInfo.uri, "save", mode);
     }
   };
   const clearImg = async () => {
     setPreviewImg(undefined);
+    setPreviewVideo(undefined);
     await resolveTemp(previewImg?.uri || cachePath.path, "delete");
   };
   /** 预览 */
@@ -159,4 +159,5 @@ const UploadFiles: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default UploadFiles;

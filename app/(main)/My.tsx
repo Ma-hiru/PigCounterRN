@@ -19,7 +19,6 @@ import { goToPages } from "@/utils/goToPages";
 import MyPagesCardItem from "@/components/MyPagesCardItem";
 import { useAppDispatch, userActions } from "@/stores";
 import { DEFAULT_MY_BG_SCALE } from "@/settings";
-import Logger from "@/utils/logger";
 
 const CardIconList = [
   {

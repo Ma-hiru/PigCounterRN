@@ -25,6 +25,8 @@ export enum API {
 export const GlobalStyles = {
   ThemeColor: "#409eff",
   PressColorBlue: "#1280f2",
+  PositiveColor: "rgb(52,131,82)",
+  ErrorColor: "rgb(230,53,53)",
   TabBarBg: "#ffffff"
 };
 export const LOCAL_SECRET_KEY = "Mahiru";

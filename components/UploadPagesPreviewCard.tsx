@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
 import { setImageScale } from "@/utils/setImageScale";
@@ -6,8 +6,8 @@ import NoData from "@/assets/images/upload/logout.svg";
 import { Text as TextInline } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { ImagePickerAsset } from "expo-image-picker";
-import { useVideoPlayer, VideoSource, VideoView } from "expo-video";
-import { useEvent } from "expo";
+import { useVideoPlayer, VideoSource } from "expo-video";
+import PreviewVideo from "@/components/PreviewVideo";
 
 interface props {
   previewImg?: ImagePickerAsset;
@@ -18,7 +18,7 @@ interface props {
   setScale: (scale: number) => any;
 }
 
-export const UploadPagesPreviewCard: FC<props> = (
+const UploadPagesPreviewCard: FC<props> = (
   {
     previewImg,
     previewVideo,
@@ -27,13 +27,17 @@ export const UploadPagesPreviewCard: FC<props> = (
     scale,
     setScale
   }) => {
-  const videoSource = previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null);
+  const videoSource = useMemo(() => {
+    console.log("cachePath",cachePath);
+    console.log("Video=>",previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null));
+    console.log("Img=>",previewImg || { uri: cachePath.path });
+    return previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null);
+  }, [cachePath, previewVideo]);
   const player = useVideoPlayer(videoSource as VideoSource, player => {
     player.loop = true;
     player.muted = true;
     player.play();
   });
-  const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
   return (
     <>
       <Card className="mb-4">
@@ -42,18 +46,16 @@ export const UploadPagesPreviewCard: FC<props> = (
             ?
             <Pressable onPress={() => setPreviewVisible(true)}>
               {
-                cachePath.type === "image" ?
-                  <Image source={previewImg || cachePath.path}
+                cachePath.type === "images" ?
+                  <Image source={previewImg || { uri: cachePath.path }}
                          style={{ width: "100%", aspectRatio: scale }}
                          onLoad={setImageScale(scale, setScale)}
                   /> :
-                  <View style={styles.contentContainer}>
-                    <VideoView style={styles.video}
-                               player={player}
-                               allowsFullscreen
-                               allowsPictureInPicture
-                    />
-                  </View>
+                  <PreviewVideo
+                    ContainerStyle={styles.videoContainer}
+                    videoStyle={styles.video}
+                    player={player}
+                  />
               }
             </Pressable>
             :
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: 5
   },
-  contentContainer: {
+  videoContainer: {
     flex: 1,
     padding: 10,
     alignItems: "center",
