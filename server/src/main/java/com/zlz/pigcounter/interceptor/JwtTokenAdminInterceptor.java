@@ -1,8 +1,8 @@
 package com.zlz.pigcounter.interceptor;
 
 
-import Common.constant.JwtClaimsConstant;
-import Common.context.BaseContext;
+import com.common.constant.JwtClaimsConstant;
+import com.common.context.BaseContext;
 import com.zlz.pigcounter.properties.JwtProperties;
 import com.zlz.pigcounter.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

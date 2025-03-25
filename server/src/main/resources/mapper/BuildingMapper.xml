@@ -6,7 +6,7 @@
 <mapper namespace="com.zlz.pigcounter.mapper.BuildingMapper">
 
 
-    <select id="page" resultType="Common.pojo.entity.Building">
+    <select id="page" resultType="com.common.pojo.entity.Building">
         select id, building_name
         <if test="orgId == null">
             , org_id

@@ -1,12 +1,11 @@
 package com.zlz.pigcounter.controller.admin;
 
-import Common.pojo.entity.Building;
-import Common.result.PageResult;
-import Common.result.Result;
+import com.common.pojo.entity.Building;
+import com.common.result.PageResult;
+import com.common.result.Result;
 import com.zlz.pigcounter.service.BuildingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;

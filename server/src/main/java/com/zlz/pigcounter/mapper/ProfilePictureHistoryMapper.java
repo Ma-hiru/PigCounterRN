@@ -1,6 +1,6 @@
 package com.zlz.pigcounter.mapper;
 
-import Common.pojo.entity.ProfilePicture;
+import com.common.pojo.entity.ProfilePicture;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
