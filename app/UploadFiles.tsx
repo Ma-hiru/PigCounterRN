@@ -16,6 +16,7 @@ import ImagePreview from "@/components/ImagePreview";
 import UploadPagesPreviewCard from "@/components/UploadPagesPreviewCard";
 import UploadPagesOptionsCard from "@/components/UploadPagesOptionsCard";
 import Logger from "@/utils/logger";
+import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 
 
 const { setTasksList } = uploadActions;
@@ -32,6 +33,15 @@ const UploadFiles: FC = () => {
     DEFAULT_UPLOAD_TYPE
   } = useAppSelector(uploadSelector);
   const dispatch = useAppDispatch();
+
+  useGetRouteParam<{ title: string; taskIndex: string }>((params) => {
+    const [TaskIndex, ItemIndex, ChildIndex] = params.taskIndex.split(",").map(Number);
+    return {
+      TaskIndex,
+      ItemIndex,
+      ChildIndex,
+    };
+  });
   /** 更新标题 */
   const { title, taskIndex }: Record<string, string> = useLocalSearchParams();
   const navigation = useNavigation();

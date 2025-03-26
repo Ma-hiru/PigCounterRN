@@ -2550,6 +2550,11 @@
   dependencies:
     tslib "^2.8.0"
 
+"@tailwindcss/language-server@^0.14.11":
+  version "0.14.11"
+  resolved "https://registry.npmmirror.com/@tailwindcss/language-server/-/language-server-0.14.11.tgz#3a6fb7b0bb2afcc66a94bd07f86bcfcf6250f36d"
+  integrity sha512-+XmN57O7/t6Oh4mBhzuTN5XILvr9LCVa84m5u1sK6EnKB+O8w/hkyVM/KyWlH5SyOUuaIUY/hu7uq6hRUgQpyg==
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.npmmirror.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"

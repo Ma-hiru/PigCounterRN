@@ -28,9 +28,9 @@ const UploadPagesPreviewCard: FC<props> = (
     setScale
   }) => {
   const videoSource = useMemo(() => {
-    console.log("cachePath",cachePath);
-    console.log("Video=>",previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null));
-    console.log("Img=>",previewImg || { uri: cachePath.path });
+    // console.log("cachePath",cachePath);
+    // console.log("Video=>",previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null));
+    // console.log("Img=>",previewImg || { uri: cachePath.path });
     return previewVideo || (cachePath.type === "video" ? { uri: cachePath.path } : null);
   }, [cachePath, previewVideo]);
   const player = useVideoPlayer(videoSource as VideoSource, player => {

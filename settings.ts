@@ -1,4 +1,5 @@
 /** 基本URL */
+import { Persistor, RootState } from "@/stores/persist";
 
 // export const baseUrl = "https://shiina-mahiru.cn:4000";
 export const baseUrl = "http://127.0.0.1:8080";
