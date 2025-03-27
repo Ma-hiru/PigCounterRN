@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/sto
 import { memo, useEffect } from "react";
 import localStore from "@/utils/localStore";
 
-const App = ()=> {
+const App = () => {
   const { token } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
   const { setToken } = userActions;
@@ -28,7 +28,9 @@ const App = ()=> {
       <Stack.Screen name="UserInfo" options={{ headerShown: false }} />
       <Stack.Screen name="Feedback" options={{ headerShown: false }} />
       <Stack.Screen name="UploadFiles" options={{ headerShown: true }} />
+      <Stack.Screen name="Registry" options={{ headerShown: true }} />
+      <Stack.Screen name="ForgetPassword" options={{ headerShown: true }} />
     </Stack>
   );
-}
-export default memo(App)
+};
+export default memo(App);

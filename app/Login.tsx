@@ -1,3 +1,4 @@
+import LoginPagesMoreBtn from "@/components/LoginPagesMoreBtn";
 import { View, Text } from "react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Input, InputField } from "@/components/ui/input";
@@ -19,7 +20,7 @@ import { useRouter } from "expo-router";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { flushSync } from "react-dom";
 
-const Login = ()=> {
+const Login = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -95,11 +96,7 @@ const Login = ()=> {
         <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-4">
           登录
         </MyBlueBtn>
-        <View className="flex flex-row w-full justify-end">
-          <Button variant="link" size="md" className="p-0">
-            <ButtonText>忘记密码？</ButtonText>
-          </Button>
-        </View>
+        <LoginPagesMoreBtn />
       </View>
     </View>
   );

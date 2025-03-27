@@ -6,7 +6,7 @@ import {
   AccordionHeader, AccordionIcon,
   AccordionItem,
   AccordionTitleText,
-  AccordionTrigger,
+  AccordionTrigger
 } from "@/components/ui/accordion";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icon";
 import { Area, Task } from "@/types/task";
@@ -35,7 +35,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
     <>
       <View className="items-center w-[90%] shadow-2xl" style={{
         ...styles.CardStyle,
-        backgroundColor: task.validation ? styles.CardStyle.backgroundColor : "#999",
+        backgroundColor: task.validation ? styles.CardStyle.backgroundColor : "#999"
       }}>
         <View className="w-screen mt-4">
           <Text style={styles.HeadText} className="text-xl font-bold">
@@ -44,13 +44,16 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
           <Text style={{
             ...styles.HeadText,
             color: task.validation ? GlobalStyles.PositiveColor : "#666666",
-            marginBottom: 5,
+            marginBottom: 5
           }}>
             {task.validation ? "已开放" : "未开放"}
           </Text>
-          <Text style={styles.HeadText}>
-            剩余时间：<CountDown endTime={endTime.getTime()} format={format} />
-          </Text>
+          {
+            task.validation &&
+            <Text style={styles.HeadText}>
+              剩余时间：<CountDown endTime={endTime.getTime()} format={format} />
+            </Text>
+          }
           <Text style={styles.HeadText}>
             任务起始：{task.startTime}
           </Text>
@@ -101,8 +104,8 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                         pathname: "/UploadFiles",
                                         params: {
                                           title: item.name + "·" + child.name,
-                                          taskIndex: [taskIndex, itemIndex, childIndex],
-                                        },
+                                          taskIndex: [taskIndex, itemIndex, childIndex]
+                                        }
                                       }, "FN")
                                     }
                                     action={action}
@@ -115,13 +118,13 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                               <ButtonText>{child.name}</ButtonText>
                             </Button>
                           );
-                        },
+                        }
                       )
                     }
                   </AccordionContent>
                 </AccordionItem>
                 {itemIndex !== task.area.length - 1 && <Divider />}
-              </Fragment>,
+              </Fragment>
             )
           }
         </Accordion>
@@ -137,10 +140,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ffffff",
     borderRadius: 10,
-    padding: 10,
+    padding: 10
   },
   HeadText: {
     textAlign: "center",
-    color: "#ffffff",
-  },
+    color: "#ffffff"
+  }
 });
