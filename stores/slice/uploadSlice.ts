@@ -16,8 +16,8 @@ const uploadSlice = createSlice({
     TasksList: [
       {
         id: 1,
-        startTime: "2025-03-17 12:00",
-        endTime: "2025-03-17 12:00",
+        startTime: "2025-04-17 14:00",
+        endTime: "2025-04-17 16:00",
         validation: true,
         area: [
           {
@@ -105,8 +105,8 @@ const uploadSlice = createSlice({
       },
       {
         id: 2,
-        startTime: "2025-03-17 12:00",
-        endTime: "2025-03-17 12:00",
+        startTime: "2025-04-17 8:00",
+        endTime: "2025-04-17 12:00",
         validation: false,
         area: [
           {

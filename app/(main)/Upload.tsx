@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { View, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSafeArea } from "@/hooks/useSafeArea";
@@ -6,7 +7,7 @@ import UploadPagesList from "@/components/UploadPagesList";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { uploadSelector, useAppSelector } from "@/stores";
 
-export default function Upload() {
+const Upload = () => {
   const { topInset } = useSafeArea();
   const router = useRouter();
   const { TasksList } = useAppSelector(uploadSelector);
@@ -14,21 +15,21 @@ export default function Upload() {
     <>
       <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
       <ScrollView className="flex-1 bg-gray-50">
-        <View className="w-full items-center" style={{paddingTop: topInset,paddingBottom:40}}>
+        <View className="w-full items-center" style={{ paddingTop: topInset, paddingBottom: 40 }}>
           {
             TasksList.map((task, index) =>
               <UploadPagesList
                 task={task}
                 key={index}
                 router={router}
-                taskIndex={index+1}
-              />
+                taskIndex={index}
+              />,
             )
           }
         </View>
       </ScrollView>
       <View className="bg-gray-50 "
-            style={{ padding: 40, paddingBottom: 0,paddingTop: 20 }}
+            style={{ padding: 40, paddingBottom: 0, paddingTop: 20 }}
       >
         <MyBlueBtn>
           刷新
@@ -38,3 +39,5 @@ export default function Upload() {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
+export default memo(Upload);

@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactNode } from "react";
+import { FC, memo, ReactNode } from "react";
 import { View, Text, StyleProp, ViewStyle, StyleSheet } from "react-native";
 
 interface props {
@@ -32,7 +32,7 @@ export const MyPagesCard: FC<props> = ({ title, children, contentStyle, cardStyl
     </>
   );
 };
-export default MyPagesCard;
+export default memo(MyPagesCard);
 
 const styles = StyleSheet.create({
   container: {

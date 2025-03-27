@@ -1,10 +1,10 @@
 import { View, Text, BackHandler, ToastAndroid, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 
 
-export default function Home() {
+const Home = () => {
   const navigation = useNavigation();
   useFocusEffect(
     useCallback(() => {
@@ -19,7 +19,7 @@ export default function Home() {
         ToastAndroid.show("再次返回以退出应用", ToastAndroid.SHORT);
         if (Platform.OS === "ios") {
           navigation.setOptions({
-            gestureEnabled: false
+            gestureEnabled: false,
           });
         }
         return true;
@@ -28,7 +28,7 @@ export default function Home() {
       return () => {
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
       };
-    }, [])
+    }, [navigation]),
   );
   return (
     <>
@@ -39,3 +39,5 @@ export default function Home() {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
+export default memo(Home);

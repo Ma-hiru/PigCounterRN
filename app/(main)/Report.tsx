@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { View, Text } from "react-native";
 import { showNewToast } from "@/utils/toast";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 
 
-export default function Report() {
+const Report= ()=> {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { token } = useAppSelector(userSelector);
@@ -43,3 +44,5 @@ export default function Report() {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
+export default memo(Report);

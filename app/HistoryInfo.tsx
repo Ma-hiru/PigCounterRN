@@ -14,4 +14,5 @@ export const HistoryInfo: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default HistoryInfo;

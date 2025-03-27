@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import headBg from "@/assets/images/my/user_bg.webp";
 import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
 import checkIcon from "@/assets/images/my/check.svg";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { setImageScale } from "@/utils/setImageScale";
 import MyPagesCard from "@/components/MyPagesCard";
 import MyPagesCardIcon from "@/components/MyPagesCardIcon";
@@ -24,36 +24,36 @@ const CardIconList = [
   {
     text: "组织信息",
     img: company,
-    onPress: (router: Router) => goToPages(router, "/CompanyInfo", "FN")
+    onPress: (router: Router) => goToPages(router, "/CompanyInfo", "FN"),
   },
   {
     text: "个人信息",
     img: userInfo,
-    onPress: (router: Router) => goToPages(router, "/UserInfo", "FN")
+    onPress: (router: Router) => goToPages(router, "/UserInfo", "FN"),
   },
   {
     text: "历史记录",
     img: history,
-    onPress: (router: Router) => goToPages(router, "/HistoryInfo", "FN")
+    onPress: (router: Router) => goToPages(router, "/HistoryInfo", "FN"),
   },
   {
     text: "问题反馈",
     img: feedback,
-    onPress: (router: Router) => goToPages(router, "/Feedback", "FN")
-  }
+    onPress: (router: Router) => goToPages(router, "/Feedback", "FN"),
+  },
 ];
-const MyFC = () => {
+const My = () => {
   const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { setToken } = userActions;
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(setToken(""));
     goToPages(router, "/Login", "MOVE");
-  };
+  }, [dispatch, router, setToken]);
   return (
     <>
-      <StatusBar style="dark" backgroundColor="transparent" translucent={true}  />
+      <StatusBar style="dark" backgroundColor="transparent" translucent={true} />
       <View className="flex-1">
         <View className="relative">
           <Image source={headBg}
@@ -89,7 +89,7 @@ const MyFC = () => {
                                      key={item.text}
                                      onPress={item.onPress(router)}
                     />
-                  )
+                  ),
                 )
               }
             </MyPagesCard>
@@ -117,7 +117,8 @@ const MyFC = () => {
     </>
   );
 };
-export default memo(MyFC);
+// noinspection JSUnusedGlobalSymbols
+export default memo(My);
 const styles = StyleSheet.create({
   UserBg: {
     // width: "100%",
@@ -128,27 +129,27 @@ const styles = StyleSheet.create({
     borderRadius: 99999,
     borderWidth: 2,
     borderColor: "#fff",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   UserBox: {
     position: "absolute",
     top: "50%",
-    left: "50%"
+    left: "50%",
   },
   UserNameText: {
     fontWeight: "600",
     marginTop: 10,
     fontSize: 18,
-    color: "#ffffff"
+    color: "#ffffff",
   },
   UserInfoText: {
     fontSize: 14,
     lineHeight: 20,
-    color: "#222"
+    color: "#222",
   },
   CheckIcon: {
     width: 18,
-    height: 18
+    height: 18,
   },
   InfoCardBox: {
     flex: 1,
@@ -157,24 +158,24 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   InfoCard: {
     position: "relative",
-    top: -20
+    top: -20,
   },
   LogoutText: {
-    color: "red"
+    color: "red",
   },
   LogoutTextActive: {
-    color: "#fc7070"
+    color: "#fc7070",
   },
   InfoCardStyle: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center"
+    alignItems: "center",
   },
   TaskCardStyle: {},
-  UnhandledUploadCardStyle: {}
+  UnhandledUploadCardStyle: {},
 });

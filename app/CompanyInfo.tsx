@@ -14,4 +14,5 @@ export const CompanyInfo: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default CompanyInfo;

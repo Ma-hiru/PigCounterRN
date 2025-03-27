@@ -10,4 +10,5 @@ export const Settings: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default Settings;

@@ -2,9 +2,10 @@ import { Tabs } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { GlobalStyles } from "@/settings";
+import { memo } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 
-export default function MainLayout() {
+const MainLayout = () => {
   return (
     <Tabs
       backBehavior="firstRoute"
@@ -15,15 +16,15 @@ export default function MainLayout() {
               color: Platform.select({
                 android: "rgba(192,192,192,0.2)",
                 ios: "transparent",
-                web: "transparent"
-              })
+                web: "transparent",
+              }),
             }}
             style={({ pressed }) => ({
               opacity: Platform.select({
                 ios: pressed ? 0.5 : 1,
                 android: 1,
                 web: pressed ? 0.5 : 1,
-              })
+              }),
             })}
             key={props.key}
             onPress={props.onPress}
@@ -38,12 +39,12 @@ export default function MainLayout() {
         tabBarActiveTintColor: GlobalStyles.ThemeColor,
         headerShadowVisible: false,
         tabBarStyle: {
-          backgroundColor: GlobalStyles.TabBarBg
+          backgroundColor: GlobalStyles.TabBarBg,
         },
         tabBarItemStyle: {
           overflow: "hidden",
-          borderRadius: 12
-        }
+          borderRadius: 12,
+        },
       }}>
       <Tabs.Screen
         name="Home"
@@ -51,7 +52,7 @@ export default function MainLayout() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
           ),
-          title: "首页"
+          title: "首页",
         }}
       />
       <Tabs.Screen
@@ -60,7 +61,7 @@ export default function MainLayout() {
           tabBarIcon: ({ color }) => (
             <Feather name="upload-cloud" size={24} color={color} />
           ),
-          title: "上传"
+          title: "上传",
         }}
       />
       <Tabs.Screen
@@ -69,7 +70,7 @@ export default function MainLayout() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="bells" size={24} color={color} />
           ),
-          title: "上报"
+          title: "上报",
         }}
       />
       <Tabs.Screen
@@ -78,15 +79,16 @@ export default function MainLayout() {
           tabBarIcon: ({ color }) => (
             <AntDesign name="team" size={24} color={color} />
           ),
-          title: "组织"
+          title: "组织",
         }}
       />
     </Tabs>
   );
-}
-
+};
+// noinspection JSUnusedGlobalSymbols
+export default memo(MainLayout);
 const styles = StyleSheet.create({
   tabsBarBorder: {
-    borderWidth: 0
-  }
+    borderWidth: 0,
+  },
 });

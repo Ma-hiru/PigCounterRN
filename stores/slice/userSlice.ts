@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import localStore from "@/utils/localStore";
 import { RootStateType } from "@/stores";
 
 interface initialType {

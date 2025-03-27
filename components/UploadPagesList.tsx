@@ -1,11 +1,12 @@
-import { FC, Fragment, memo } from "react";
+import CountDown from "@/components/CountDown";
+import { FC, Fragment, useCallback, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionHeader, AccordionIcon,
   AccordionItem,
   AccordionTitleText,
-  AccordionTrigger
+  AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icon";
 import { Area, Task } from "@/types/task";
@@ -16,6 +17,7 @@ import { useRouter } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "@/settings";
 import * as dayjs from "dayjs";
+import * as duration from "dayjs/plugin/duration";
 
 interface props {
   task: Task;
@@ -23,25 +25,31 @@ interface props {
   router: ReturnType<typeof useRouter>;
 }
 
+dayjs.default.extend(duration.default);
 const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
-  const startTime = dayjs.default(task.startTime).toDate();
-  console.log(startTime.getMinutes());
+  const endTime = dayjs.default(task.startTime).toDate();
+  const format = useCallback((time: number) => {
+    return dayjs.default.duration(time, "milliseconds").format("HH时mm分ss秒");
+  }, []);
   return (
     <>
       <View className="items-center w-[90%] shadow-2xl" style={{
         ...styles.CardStyle,
-        backgroundColor: task.validation ? styles.CardStyle.backgroundColor : "#999"
+        backgroundColor: task.validation ? styles.CardStyle.backgroundColor : "#999",
       }}>
         <View className="w-screen mt-4">
           <Text style={styles.HeadText} className="text-xl font-bold">
-            任务编号:{taskIndex}
+            任务编号:{taskIndex + 1}
           </Text>
           <Text style={{
             ...styles.HeadText,
             color: task.validation ? GlobalStyles.PositiveColor : "#666666",
-            marginBottom: 5
+            marginBottom: 5,
           }}>
             {task.validation ? "已开放" : "未开放"}
+          </Text>
+          <Text style={styles.HeadText}>
+            剩余时间：<CountDown endTime={endTime.getTime()} format={format} />
           </Text>
           <Text style={styles.HeadText}>
             任务起始：{task.startTime}
@@ -71,9 +79,9 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                               <AccordionTitleText>{item.name}</AccordionTitleText>
                               {
                                 isExpanded ?
-                                  <AccordionIcon as={ChevronUpIcon} className="ml-3" />
-                                  :
-                                  <AccordionIcon as={ChevronDownIcon} className="ml-3" />
+                                <AccordionIcon as={ChevronUpIcon} className="ml-3" />
+                                           :
+                                <AccordionIcon as={ChevronDownIcon} className="ml-3" />
                               }
                             </>
                           )
@@ -83,23 +91,18 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                   <AccordionContent>
                     {
                       (item as { children: Area[] }).children.map((child, childIndex) => {
-                          let action: GetReactProps<typeof Button>["action"];
-                          if ((child as { path: string; res: number }).path !== "") {
-                            if ((child as { path: string; res: number }).res >= 0)
-                              action = "positive";
-                            else
-                              action = "secondary";
-                          } else
-                            action = "negative";
+                          let action: GetReactProps<typeof Button>["action"] = "negative";
+                          if ("path" in child && "res" in child && child.path !== "")
+                            action = child.res >= 0 ? "positive" : "secondary";
                           return (
-                            <Button key={childIndex}
+                            <Button key={child.id}
                                     onPress={
                                       goToPages(router, {
                                         pathname: "/UploadFiles",
                                         params: {
                                           title: item.name + "·" + child.name,
-                                          taskIndex: [taskIndex, itemIndex, childIndex]
-                                        }
+                                          taskIndex: [taskIndex, itemIndex, childIndex],
+                                        },
                                       }, "FN")
                                     }
                                     action={action}
@@ -112,13 +115,13 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                               <ButtonText>{child.name}</ButtonText>
                             </Button>
                           );
-                        }
+                        },
                       )
                     }
                   </AccordionContent>
                 </AccordionItem>
                 {itemIndex !== task.area.length - 1 && <Divider />}
-              </Fragment>
+              </Fragment>,
             )
           }
         </Accordion>
@@ -126,7 +129,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
     </>
   );
 };
-export default memo(UploadPagesList);
+export default UploadPagesList;
 const styles = StyleSheet.create({
   CardStyle: {
     backgroundColor: GlobalStyles.ThemeColor,
@@ -134,10 +137,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ffffff",
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
   HeadText: {
     textAlign: "center",
-    color: "#ffffff"
-  }
+    color: "#ffffff",
+  },
 });

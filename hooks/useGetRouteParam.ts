@@ -1,15 +1,18 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect } from "react";
+import { UnknownOutputParams, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect }                                                from "react";
 
+type DynamicReturn<U, R> = R extends UnknownOutputParams ? U extends UnknownOutputParams ? Readonly<U> : Readonly<U> : Readonly<R>;
 
-export const useGetRouteParam = <U extends Record<string, any>, T = Omit<U, keyof U>>(handleParams?: (params: U) => T): Readonly<T> => {
-  /** 更新标题 */
+export const useGetRouteParam = <
+  U extends UnknownOutputParams,
+  R extends any = UnknownOutputParams
+>(handleParams?: (params: U) => R): DynamicReturn<U, R> => {
   const params: U = useLocalSearchParams();
-  const navigation = useNavigation();
+  const { setOptions } = useNavigation();
   useEffect(() => {
     if ("title" in params) {
-      navigation.setOptions({ title: params.title });
+      setOptions({ title: params.title });
     }
-  }, [navigation, params]);
-  return (handleParams ? handleParams(params) : params) as Readonly<T>;
+  }, [params, setOptions]);
+  return (handleParams ? handleParams(params) : params) as DynamicReturn<U, R>;
 };

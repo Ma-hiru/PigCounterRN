@@ -1,9 +1,9 @@
 import { Stack } from "expo-router";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import localStore from "@/utils/localStore";
 
-export default function App() {
+const App = ()=> {
   const { token } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
   const { setToken } = userActions;
@@ -31,3 +31,4 @@ export default function App() {
     </Stack>
   );
 }
+export default memo(App)

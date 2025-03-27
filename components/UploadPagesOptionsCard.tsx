@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "expo-router";
@@ -58,4 +58,4 @@ const UploadPagesOptionsCard: FC<props> = (
     </>
   );
 };
-export default UploadPagesOptionsCard;
+export default memo(UploadPagesOptionsCard);

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Image, ImageSource } from "expo-image";
 import { setImageScale } from "@/utils/setImageScale";
@@ -44,7 +44,7 @@ export const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => 
     </>
   );
 };
-export default MyPagesCardItem;
+export default memo(MyPagesCardItem);
 
 const styles = StyleSheet.create({
   IconContainer: {

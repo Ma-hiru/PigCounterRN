@@ -1,12 +1,12 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { VideoSource } from "expo-video";
+import { FC, useCallback, useMemo, useState } from "react";
 import { Alert, ScrollView } from "react-native";
 import {
   ImagePickerAsset, ImagePickerResult, launchCameraAsync,
   launchImageLibraryAsync, requestCameraPermissionsAsync,
-  requestMediaLibraryPermissionsAsync
+  requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { useLocalSearchParams, useNavigation } from "expo-router";
 import { uploadActions, uploadSelector, useAppDispatch, useAppSelector } from "@/stores";
 import { AreaItem } from "@/types/task";
 import { cloneDeep } from "lodash";
@@ -18,50 +18,42 @@ import UploadPagesOptionsCard from "@/components/UploadPagesOptionsCard";
 import Logger from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 
-
 const { setTasksList } = uploadActions;
+
+type RouteParams = {
+  title: string;
+  taskIndex: string;
+}
+
 const UploadFiles: FC = () => {
-  /** 预览图 */
+  /** 预览 */
+  const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImg, setPreviewImg] = useState<ImagePickerAsset>();
-  const [previewVideo, setPreviewVideo] = useState<any>();
+  const [previewVideo, setPreviewVideo] = useState<VideoSource>();
   const [scale, setScale] = useState(1);
   /** store */
   const {
     TasksList,
     DEFAULT_UPLOAD_PATH,
     DEFAULT_UPLOAD_RES,
-    DEFAULT_UPLOAD_TYPE
+    DEFAULT_UPLOAD_TYPE,
   } = useAppSelector(uploadSelector);
   const dispatch = useAppDispatch();
-
-  useGetRouteParam<{ title: string; taskIndex: string }>((params) => {
-    const [TaskIndex, ItemIndex, ChildIndex] = params.taskIndex.split(",").map(Number);
-    return {
-      TaskIndex,
-      ItemIndex,
-      ChildIndex,
-    };
-  });
-  /** 更新标题 */
-  const { title, taskIndex }: Record<string, string> = useLocalSearchParams();
-  const navigation = useNavigation();
+  /** 获取路由参数 */
   const toast = useToast();
-  useEffect(() => {
-    navigation.setOptions({ title });
-  }, [navigation, title]);
+  const [TaskIndex, ItemIndex, ChildIndex] = useGetRouteParam<RouteParams, number[]>((params) => params.taskIndex.split(",").map(Number));
   /** 获取缓存 */
-  const [TaskIndex, ItemIndex, ChildIndex] = taskIndex.split(",").map(Number);
   const cachePath = useMemo(() => {
     const item = (TasksList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
     const path = item.path ?? "";
     const type = item.type ?? "";
     return {
       path,
-      type
+      type,
     };
   }, [ChildIndex, ItemIndex, TaskIndex, TasksList]);
   /** 选择、缓存图片 */
-  const updateStore = (newPath?: string, newType?: "videos" | "images" | typeof DEFAULT_UPLOAD_TYPE, newRes?: number) => {
+  const updateStore = useCallback((newPath?: string, newType?: "videos" | "images" | typeof DEFAULT_UPLOAD_TYPE, newRes?: number) => {
     const newTaskList = cloneDeep(TasksList);
     const item = (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
     newPath !== undefined && (item.path = newPath);
@@ -69,8 +61,8 @@ const UploadFiles: FC = () => {
     newType !== undefined && (item.type = newType);
     (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex] = item;
     dispatch(setTasksList(newTaskList));
-  };
-  const resolveTemp = async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos") => {
+  }, [ChildIndex, ItemIndex, TaskIndex, TasksList, dispatch]);
+  const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos") => {
     switch (mode) {
       case "save":
         const fileName = `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`;
@@ -78,7 +70,7 @@ const UploadFiles: FC = () => {
         try {
           await FileSystem.copyAsync({
             from: tempUri,
-            to: cachePath
+            to: cachePath,
           });
           updateStore(cachePath, type);
         } catch (err) {
@@ -97,8 +89,8 @@ const UploadFiles: FC = () => {
           updateStore(DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES);
         }
     }
-  };
-  const takeAssets = (mode: "images" | "videos", method: "take" | "pick") => async () => {
+  }, [DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE, toast, updateStore]);
+  const takeAssets = useCallback((mode: "images" | "videos", method: "take" | "pick") => async () => {
     let result: ImagePickerResult;
     if (method === "take") {
       const { status } = await requestCameraPermissionsAsync();
@@ -108,7 +100,7 @@ const UploadFiles: FC = () => {
         allowsEditing: false,
         quality: 0.8,
         base64: false,
-        selectionLimit: 1
+        selectionLimit: 1,
       });
     } else {
       const { status } = await requestMediaLibraryPermissionsAsync();
@@ -118,7 +110,7 @@ const UploadFiles: FC = () => {
         allowsEditing: false,
         quality: 0.8,
         base64: false,
-        selectionLimit: 1
+        selectionLimit: 1,
       });
     }
     if (!result.canceled) {
@@ -129,22 +121,20 @@ const UploadFiles: FC = () => {
           setScale(fileInfo.width / fileInfo.height);
           break;
         case "videos":
-          setPreviewVideo(fileInfo);
+          setPreviewVideo(fileInfo as VideoSource);
       }
       return await resolveTemp(fileInfo.uri, "save", mode);
     }
-  };
-  const clearImg = async () => {
+  }, [resolveTemp]);
+  const clearImg = useCallback(async () => {
     setPreviewImg(undefined);
     setPreviewVideo(undefined);
     await resolveTemp(previewImg?.uri || cachePath.path, "delete");
-  };
-  /** 预览 */
-  const [previewVisible, setPreviewVisible] = useState(false);
+  }, [cachePath.path, previewImg?.uri, resolveTemp]);
   return (
     <>
       <ScrollView className="pl-4 pr-4 mt-4 flex-1"
-                  key={taskIndex}
+                  key={TaskIndex << 23 + ItemIndex << 16 + ChildIndex}
       >
         <UploadPagesPreviewCard
           setPreviewVisible={setPreviewVisible}

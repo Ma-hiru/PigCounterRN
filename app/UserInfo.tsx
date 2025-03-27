@@ -14,4 +14,5 @@ export const UserInfo: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default UserInfo;

@@ -19,7 +19,7 @@ import { useRouter } from "expo-router";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { flushSync } from "react-dom";
 
-export default function Login() {
+const Login = ()=> {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +38,6 @@ export default function Login() {
     else flushSync(() => {
       setIsInvalidUsername(false);
     });
-    console.log(11);
     await fetchData(
       reqLogin,
       { username, password },
@@ -105,3 +104,5 @@ export default function Login() {
     </View>
   );
 };
+// noinspection JSUnusedGlobalSymbols
+export default Login;

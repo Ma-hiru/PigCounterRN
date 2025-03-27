@@ -14,4 +14,5 @@ export const Feedback: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default Feedback;
