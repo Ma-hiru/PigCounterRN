@@ -12,9 +12,9 @@ import { AreaItem } from "@/types/task";
 import { cloneDeep } from "lodash";
 import { showNewToast } from "@/utils/toast";
 import { useToast } from "@/components/ui/toast";
-import ImagePreview from "@/components/ImagePreview";
-import UploadPagesPreviewCard from "@/components/UploadPagesPreviewCard";
-import UploadPagesOptionsCard from "@/components/UploadPagesOptionsCard";
+import ImagePreview from "@/components/upload/ImagePreview";
+import UploadPagesPreviewCard from "@/components/upload/UploadPagesPreviewCard";
+import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import Logger from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 

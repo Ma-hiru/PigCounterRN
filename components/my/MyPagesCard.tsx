@@ -8,7 +8,7 @@ interface props {
   cardStyle?: StyleProp<ViewStyle>;
 }
 
-export const MyPagesCard: FC<props> = ({ title, children, contentStyle, cardStyle }) => {
+const MyPagesCard: FC<props> = ({ title, children, contentStyle, cardStyle }) => {
   return (
     <>
       <View className="w-full bg-white" style={[cardStyle, styles.container]}>

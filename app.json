@@ -2,7 +2,7 @@
   "expo": {
     "name": "猪只计数",
     "slug": "PigCounter",
-    "version": "1.0.1",
+    "version": "1.0.22",
     "orientation": "portrait",
     "icon": "./assets/images/icons/icon.png",
     "scheme": "pigcounter",
@@ -36,7 +36,14 @@
         }
       ],
       "expo-secure-store",
-      "expo-video"
+      "expo-video",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "允许访问相册以上传文件",
+          "cameraPermission": "允许访问相机以拍摄照片"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

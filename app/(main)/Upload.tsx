@@ -3,7 +3,7 @@ import { View, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import { useRouter } from "expo-router";
-import UploadPagesList from "@/components/UploadPagesList";
+import UploadPagesList from "@/components/upload/UploadPagesList";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { uploadSelector, useAppSelector } from "@/stores";
 

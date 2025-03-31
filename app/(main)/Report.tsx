@@ -9,16 +9,16 @@ import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 
 
-const Report= ()=> {
+const Report = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { token } = useAppSelector(userSelector);
-  const { setToken } = userActions;
+  const { setLogout } = userActions;
   const goToLogin = () => {
     router.push("/Login");
   };
   const clearToken = () => {
-    dispatch(setToken(""));
+    dispatch(setLogout());
   };
   const toast = useToast();
   const { topInset } = useSafeArea();

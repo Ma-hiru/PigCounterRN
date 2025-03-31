@@ -8,7 +8,7 @@ import { Text as TextInline } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
 import { ImagePickerAsset } from "expo-image-picker";
 import { VideoSource } from "expo-video";
-import PreviewVideo from "@/components/PreviewVideo";
+import PreviewVideo from "@/components/upload/PreviewVideo";
 
 interface props {
   previewImg: ImagePickerAsset | undefined;

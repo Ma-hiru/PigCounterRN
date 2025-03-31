@@ -10,7 +10,7 @@ interface props {
   iconSize?: number;
 }
 
-export const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => {
+const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => {
   const [scale, setScale] = useState(1);
   return (
     <>

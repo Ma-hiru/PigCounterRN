@@ -1,54 +1,40 @@
+import LoginPagesForm from "@/components/login/LoginPagesForm";
 import LoginPagesMoreBtn from "@/components/LoginPagesMoreBtn";
 import { View, Text } from "react-native";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Input, InputField } from "@/components/ui/input";
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorText,
-  FormControlErrorIcon
-} from "@/components/ui/form-control";
-import { AlertCircleIcon } from "@/components/ui/icon";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { reqLogin } from "@/api";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { fetchData } from "@/utils/fetchData";
 import { useToast } from "@/components/ui/toast";
-import { debounce } from "lodash";
 import { useRouter } from "expo-router";
-import MyBlueBtn from "@/components/MyBlueBtn";
 import { flushSync } from "react-dom";
 
+const { setLogin } = userActions;
 const Login = () => {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isInvalidUsername, setIsInvalidUsername] = useState(false);
-  const [isInvalidPassword, setIsInvalidPassword] = useState(false);
   const { token } = useAppSelector(userSelector);
-  const { setToken } = userActions;
   const dispatch = useAppDispatch();
   const toast = useToast();
-  const handleSubmit = debounce(async () => {
-    if (password.length < 4) return setIsInvalidPassword(true);
-    else flushSync(() => {
-      setIsInvalidPassword(false);
-    });
-    if (username.length < 4) return setIsInvalidUsername(true);
-    else flushSync(() => {
-      setIsInvalidUsername(false);
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = useCallback(async (username: string, password: string) => {
+    if (loading) return;
+    flushSync(() => {
+      setLoading(true);
     });
     await fetchData(
       reqLogin,
       { username, password },
       (res) => {
-        dispatch(setToken(res.data.token));
+        dispatch(setLogin(res.data));
       },
       (res, createToast) => {
-        createToast(toast, "请求出错！", res?.message);
+        createToast("请求出错！", res?.message);
       }, toast);
-  }, 1000);
+    flushSync(() => {
+      setLoading(false);
+    });
+  }, [loading, dispatch, toast]);
   useEffect(() => {
     if (token !== "") {
       router.push("/Home");
@@ -64,38 +50,7 @@ const Login = () => {
           <Text className="color-[#c38b95] text-3xl">猪只</Text>
           <Text className="color-[#409eff] text-3xl">计数</Text>
         </View>
-        <FormControl isInvalid={isInvalidUsername} size="md" className="w-full mb-4">
-          <Input variant="outline" size="lg">
-            <InputField
-              placeholder="请输入用户名"
-              returnKeyType="next"
-              value={username}
-              onChangeText={(text) => setUsername(text)}
-            />
-          </Input>
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>用户名至少需要四位字符</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-        <FormControl isInvalid={isInvalidPassword} size="md" className="w-full mb-6">
-          <Input size="lg">
-            <InputField
-              type="password"
-              placeholder="请输入密码"
-              value={password}
-              returnKeyType="done"
-              onChangeText={(text) => setPassword(text)}
-            />
-          </Input>
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>密码至少需要六位字符</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-        <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-4">
-          登录
-        </MyBlueBtn>
+        <LoginPagesForm handleLogin={handleSubmit} loading={loading} />
         <LoginPagesMoreBtn />
       </View>
     </View>

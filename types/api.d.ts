@@ -21,13 +21,15 @@ export type LoginResponseData = {
 };
 /**`registry`*/
 export type registryInfo = {
+  id?: number;
   username: string,
   password: string,
-  organization: string;
-  picture: string;
-  isAdmin: boolean;
   name: string;
   sex: string;
+  phone?: string;
+  organization: string;
+  picture: Blob;
+  admin: boolean;
 }
 
 export interface RegistryResponseData {

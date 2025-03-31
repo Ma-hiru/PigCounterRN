@@ -10,7 +10,7 @@ interface props {
   onPress?: (e: GestureResponderEvent) => void;
 }
 
-export const MyPagesCardIcon: FC<props> = ({ text, img, onPress }) => {
+const MyPagesCardIcon: FC<props> = ({ text, img, onPress }) => {
   const [scale, setScale] = useState(1);
 
   return (
