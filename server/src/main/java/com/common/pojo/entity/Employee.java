@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -30,7 +31,7 @@ public class Employee implements Serializable {
 
     private String phone;
 
-    private String createTime;
+    private LocalDateTime createTime;
 
     private String profilePicture;
 

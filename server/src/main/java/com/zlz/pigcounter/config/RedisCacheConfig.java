@@ -1,5 +1,6 @@
 package com.zlz.pigcounter.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -14,10 +15,12 @@ import java.time.Duration;
 
 @Configuration
 public class RedisCacheConfig {
+    @Value("${zlz.redis.ttlMin}")
+    int redisTtl;
     @Bean
     public RedisCacheManager redisCacheManager (RedisConnectionFactory redisConnectionFactory ) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(20))//设置缓存有效期20分钟
+                .entryTtl(Duration.ofMinutes(redisTtl))//设置缓存有效期
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));
         return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(redisCacheConfiguration).build();
     }
