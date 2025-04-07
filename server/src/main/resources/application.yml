@@ -17,15 +17,13 @@ spring:
       host: ${zlz.redis.host}
       database: ${zlz.redis.database}
       password: ${zlz.redis.password}
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zlz.entity
   configuration:
     map-underscore-to-camel-case: true
-zlz:
-  jwt:
-    admin-secret-key: PigCounteraaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    admin-token-name: token
+jwt:
+  admin-secret-key: ${zlz.jwt.admin-secret-key}
+  admin-token-name: ${zlz.jwt.admin-token-name}
     #过期时间
-    admin-ttl: 86400000
+  admin-ttl: ${zlz.jwt.admin-ttl}

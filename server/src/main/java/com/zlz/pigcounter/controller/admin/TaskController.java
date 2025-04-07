@@ -1,6 +1,8 @@
 package com.zlz.pigcounter.controller.admin;
 
 import com.common.pojo.dto.TaskDTO;
+import com.common.pojo.dto.PenPictureUploadDTO;
+import com.common.pojo.vo.PenPictureVO;
 import com.common.result.PageResult;
 import com.common.result.Result;
 import com.zlz.pigcounter.service.TaskService;
@@ -11,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @Slf4j
@@ -69,6 +72,20 @@ public class TaskController {
     public Result<TaskDTO> getTaskDetail(@PathVariable Long taskId){
         log.info("查询任务详情：{}",taskId);
         return Result.success(taskService.getTaskDetail(taskId));
+    }
+
+    /**
+     * 上传猪圈图片并交由ai处理
+     *
+     * @param uploadDTO
+     * @return
+     */
+    @PostMapping("/upload")
+    public Mono<Result<PenPictureVO>> upload(@ModelAttribute PenPictureUploadDTO uploadDTO){
+       log.info("上传图片：{}",uploadDTO);
+        return taskService.upload(uploadDTO)
+                .map(Result::success)
+                .onErrorReturn(Result.error("上传失败"));
     }
 
 }

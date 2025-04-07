@@ -113,6 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
              filePath= imageSavePath+"/"+fileName;
         }
         employee.setProfilePicture(filePath);
+        employee.setCreateTime(LocalDateTime.now());
         employeeMapper.insert(employee);
 
         ProfilePicture profilePictureHistory = ProfilePicture.builder()

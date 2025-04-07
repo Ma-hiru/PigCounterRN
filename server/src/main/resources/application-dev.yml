@@ -5,9 +5,9 @@ zlz:
     port: 3306
     database: pig_counter
     username: root
-    password: 0514+
+    password: 123456
   image:
-    save-path: ${working.dir}/images
+    save-path: ${working.dir}/profilePicture
   password:
     salt: PigCounter
   redis:
@@ -15,3 +15,10 @@ zlz:
     port: 6379
     password: 123456
     database: 0
+    ttlMin: 30
+  jwt:
+    admin-secret-key: PigCounteraaaaaaaaaaaaaaaaaaaaaaa
+    admin-token-name: Authorization
+    #过期时间
+    admin-ttl: 86400000
+  AI: http://localhost:8000
