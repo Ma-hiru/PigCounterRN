@@ -65,7 +65,7 @@ const MainLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="Report"
+        name="More"
         options={{
           tabBarIcon: ({ color }) => (
             <AntDesign name="bells" size={24} color={color} />

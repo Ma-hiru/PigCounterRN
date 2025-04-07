@@ -13,12 +13,13 @@ export enum tokenTypePrefix {
 }
 
 /** The prefix of token in this project. */
-export const tokenPrefix = tokenTypePrefix.Bearer;
+export const tokenPrefix = tokenTypePrefix.None;
 
 export enum API {
   // LOGIN_URL = "https://shiina-mahiru.cn/sub/pigcounter/api/login",
   LOGIN_URL = "/api/user/login",
   REGISTRY_URL = "/api/user/register",
+  UPLOAD_URL = "/api/task/upload",
   // GET_USERINFO_URL = "/api/getUserInfo",
   // LOGOUT_URL = "/logout",
 }

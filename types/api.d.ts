@@ -32,8 +32,20 @@ export type registryInfo = {
   admin: boolean;
 }
 
-export interface RegistryResponseData {
+export type RegistryResponseData = {
   data: null;
+}
+
+export type uploadInfo = {
+  penId: number;
+  files: Blob[];
+}
+
+export type UploadResponseData = {
+  picturePath: string[];
+  outputPicturePath: string[]
+  time: string;
+  count: number[];
 }
 
 /**

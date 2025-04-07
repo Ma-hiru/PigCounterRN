@@ -15,178 +15,172 @@ const uploadSlice = createSlice({
   initialState: {
     TasksList: [
       {
-        id: 1,
-        startTime: "2025-04-17 14:00",
-        endTime: "2025-04-17 16:00",
-        validation: true,
-        area: [
+        id: 0,
+        employeeId: 0,
+        startTime: "2025-04-17 8:00",
+        endTime: "2025-04-17 12:00",
+        buildings: [
           {
-            id: 1,
-            name: "楼栋一",
-            children: [
+            buildingId: 0,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: 0,
-                path: ""
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           },
           {
-            id: 2,
-            name: "楼栋二",
-            children: [
+            buildingId: 1,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
-                path: "",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           },
           {
-            id: 3,
-            name: "楼栋三",
-            children: [
+            buildingId: 2,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
-                path: "",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           }
         ]
       },
       {
-        id: 2,
-        startTime: "2025-04-17 8:00",
-        endTime: "2025-04-17 12:00",
-        validation: false,
-        area: [
+        id: 1,
+        employeeId: 0,
+        startTime: "2025-04-17 14:00",
+        endTime: "2025-04-17 18:00",
+        buildings: [
           {
-            id: 1,
-            name: "楼栋一",
-            children: [
+            buildingId: 3,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
-                path: "",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           },
           {
-            id: 2,
-            name: "楼栋二",
-            children: [
+            buildingId: 4,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
-                path: "",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           },
           {
-            id: 3,
-            name: "楼栋三",
-            children: [
+            buildingId: 5,
+            pens: [
               {
-                id: 1,
-                name: "栏舍1",
-                path: "",
+                penId: 0,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 2,
-                name: "栏舍2",
-                path: "",
+                penId: 1,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               },
               {
-                id: 3,
-                name: "栏舍3",
-                path: "",
+                penId: 2,
+                penNum: -1,
                 type: "",
-                res: -1
+                path: "",
+                picturePath: ""
               }
             ]
           }

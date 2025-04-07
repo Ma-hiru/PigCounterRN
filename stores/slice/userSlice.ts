@@ -43,7 +43,8 @@ const userSlice = createSlice({
         username: "",
         name: "",
         organization: "",
-        token: ""
+        token: "",
+        admin: false
       };
     }
   }

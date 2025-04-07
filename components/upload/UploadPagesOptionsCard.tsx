@@ -8,7 +8,8 @@ interface props {
   previewImg?: ImagePickerAsset;
   cachePath: { path: string; type: string },
   clearImg: () => Promise<void>,
-  takeAssets: (mode: "images" | "videos",method:"take"|"pick") => () => Promise<void>,
+  takeAssets: (mode: "images" | "videos", method: "take" | "pick") => () => Promise<void>,
+  submitFile: () => Promise<void>
 }
 
 const UploadPagesOptionsCard: FC<props> = (
@@ -16,7 +17,8 @@ const UploadPagesOptionsCard: FC<props> = (
     previewImg,
     cachePath,
     clearImg,
-    takeAssets
+    takeAssets,
+    submitFile
   }) => {
   const router = useRouter();
   return (
@@ -24,35 +26,35 @@ const UploadPagesOptionsCard: FC<props> = (
       <Card>
         {
           (previewImg || cachePath.path) ?
-            (
-              <>
-                <Button onPress={clearImg} className="mt-4" action="negative">
-                  <ButtonText>重新选择</ButtonText>
-                </Button>
-                <Button onPress={router.back} className="mt-4" action="primary">
-                  <ButtonText>暂时保存</ButtonText>
-                </Button>
-                <Button className="mt-4" action="positive">
-                  <ButtonText>上传文件</ButtonText>
-                </Button>
-              </>
-            ) :
-            (
-              <>
-                <Button onPress={takeAssets("images","take")} className="mt-4">
-                  <ButtonText>拍照上传</ButtonText>
-                </Button>
-                <Button onPress={takeAssets("videos","take")} className="mt-4">
-                  <ButtonText>录像上传</ButtonText>
-                </Button>
-                <Button onPress={takeAssets("images","pick")} className="mt-4">
-                  <ButtonText>本地图片</ButtonText>
-                </Button>
-                <Button onPress={takeAssets("videos","pick")} className="mt-4">
-                  <ButtonText>本地视频</ButtonText>
-                </Button>
-              </>
-            )
+          (
+            <>
+              <Button onPress={clearImg} className="mt-4" action="negative">
+                <ButtonText>重新选择</ButtonText>
+              </Button>
+              <Button onPress={router.back} className="mt-4" action="primary">
+                <ButtonText>暂时保存</ButtonText>
+              </Button>
+              <Button onPress={submitFile} className="mt-4" action="positive">
+                <ButtonText>上传文件</ButtonText>
+              </Button>
+            </>
+          ) :
+          (
+            <>
+              <Button onPress={takeAssets("images", "take")} className="mt-4">
+                <ButtonText>拍照上传</ButtonText>
+              </Button>
+              <Button onPress={takeAssets("videos", "take")} className="mt-4">
+                <ButtonText>录像上传</ButtonText>
+              </Button>
+              <Button onPress={takeAssets("images", "pick")} className="mt-4">
+                <ButtonText>本地图片</ButtonText>
+              </Button>
+              <Button onPress={takeAssets("videos", "pick")} className="mt-4">
+                <ButtonText>本地视频</ButtonText>
+              </Button>
+            </>
+          )
         }
       </Card>
     </>

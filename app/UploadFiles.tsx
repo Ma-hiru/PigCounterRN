@@ -1,14 +1,16 @@
+import { reqUpload } from "@/api/moudule/uploadAPI";
+import { fetchData } from "@/utils/fetchData";
+import { pickImgFile } from "@/utils/pickImgFile";
 import { VideoSource } from "expo-video";
 import { FC, useCallback, useMemo, useState } from "react";
 import { Alert, ScrollView } from "react-native";
 import {
   ImagePickerAsset, ImagePickerResult, launchCameraAsync,
   launchImageLibraryAsync, requestCameraPermissionsAsync,
-  requestMediaLibraryPermissionsAsync,
+  requestMediaLibraryPermissionsAsync
 } from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { uploadActions, uploadSelector, useAppDispatch, useAppSelector } from "@/stores";
-import { AreaItem } from "@/types/task";
 import { cloneDeep } from "lodash";
 import { showNewToast } from "@/utils/toast";
 import { useToast } from "@/components/ui/toast";
@@ -36,32 +38,28 @@ const UploadFiles: FC = () => {
     TasksList,
     DEFAULT_UPLOAD_PATH,
     DEFAULT_UPLOAD_RES,
-    DEFAULT_UPLOAD_TYPE,
+    DEFAULT_UPLOAD_TYPE
   } = useAppSelector(uploadSelector);
   const dispatch = useAppDispatch();
   /** 获取路由参数 */
   const toast = useToast();
-  const [TaskIndex, ItemIndex, ChildIndex] = useGetRouteParam<RouteParams, number[]>((params) => params.taskIndex.split(",").map(Number));
+  const [TaskIndex, BuildingIndex, PenIndex] = useGetRouteParam<RouteParams, number[]>((params) => params.taskIndex.split(",").map(Number));
   /** 获取缓存 */
   const cachePath = useMemo(() => {
-    const item = (TasksList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
-    const path = item.path ?? "";
-    const type = item.type ?? "";
-    return {
-      path,
-      type,
-    };
-  }, [ChildIndex, ItemIndex, TaskIndex, TasksList]);
+    const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
+    return { path: pen.path ?? "", type: pen.type ?? "" };
+  }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
+  const penId = useMemo(() => TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex].penId, [BuildingIndex, PenIndex, TaskIndex]);
   /** 选择、缓存图片 */
   const updateStore = useCallback((newPath?: string, newType?: "videos" | "images" | typeof DEFAULT_UPLOAD_TYPE, newRes?: number) => {
     const newTaskList = cloneDeep(TasksList);
-    const item = (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex];
-    newPath !== undefined && (item.path = newPath);
-    newRes && (item.res = newRes);
-    newType !== undefined && (item.type = newType);
-    (newTaskList[TaskIndex].area[ItemIndex] as AreaItem).children[ChildIndex] = item;
+    const pen = newTaskList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
+    newPath !== undefined && (pen.path = newPath);
+    newRes && (pen.res = newRes);
+    newType !== undefined && (pen.type = newType);
+    // newTaskList[TaskIndex].buildings[BuildingIndex].pens[PenIndex] = pen;
     dispatch(setTasksList(newTaskList));
-  }, [ChildIndex, ItemIndex, TaskIndex, TasksList, dispatch]);
+  }, [BuildingIndex, PenIndex, TaskIndex, TasksList, dispatch]);
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos") => {
     switch (mode) {
       case "save":
@@ -70,7 +68,7 @@ const UploadFiles: FC = () => {
         try {
           await FileSystem.copyAsync({
             from: tempUri,
-            to: cachePath,
+            to: cachePath
           });
           updateStore(cachePath, type);
         } catch (err) {
@@ -100,7 +98,7 @@ const UploadFiles: FC = () => {
         allowsEditing: false,
         quality: 0.8,
         base64: false,
-        selectionLimit: 1,
+        selectionLimit: 1
       });
     } else {
       const { status } = await requestMediaLibraryPermissionsAsync();
@@ -110,7 +108,7 @@ const UploadFiles: FC = () => {
         allowsEditing: false,
         quality: 0.8,
         base64: false,
-        selectionLimit: 1,
+        selectionLimit: 1
       });
     }
     if (!result.canceled) {
@@ -131,10 +129,19 @@ const UploadFiles: FC = () => {
     setPreviewVideo(undefined);
     await resolveTemp(previewImg?.uri || cachePath.path, "delete");
   }, [cachePath.path, previewImg?.uri, resolveTemp]);
+  const submitFile = useCallback(async () => {
+    const file = await pickImgFile();
+    const res = await fetchData(reqUpload, {
+      penId: penId,
+      files: [file!]
+    }, () => {
+    }, () => {
+    }, toast);
+  }, [penId, toast]);
   return (
     <>
       <ScrollView className="pl-4 pr-4 mt-4 flex-1"
-                  key={TaskIndex << 23 + ItemIndex << 16 + ChildIndex}
+                  key={TaskIndex << 23 + BuildingIndex << 16 + PenIndex}
       >
         <UploadPagesPreviewCard
           setPreviewVisible={setPreviewVisible}
@@ -149,6 +156,7 @@ const UploadFiles: FC = () => {
           cachePath={cachePath}
           clearImg={clearImg}
           takeAssets={takeAssets}
+          submitFile={submitFile}
         />
       </ScrollView>
       <ImagePreview

@@ -1,17 +1,20 @@
-export type Area = {
-  id: number;
-  name: string;
-} & (
-  | { path: string; res: number; type: string; }
-  | { children: Area[]; }
-  )
-export type AreaItem = Area & { children: AreaChild[] }
-export type AreaChild = Area & { path: string; res: number; type: "images" | "videos" | ""; }
+type Pen = {
+  penId: number;
+  penNum: number;
+  picturePath: string;
+  path: string;
+  res: number;
+  type: "" | "videos" | "images";
+}
+type Building = {
+  buildingId: number;
+  pens: Pen[];
+}
 export type Task = {
-  id: number,
-  startTime: string,
-  endTime: string,
-  validation: boolean,
-  area: Area[]
+  id: number;
+  employeeId: number;
+  startTime: string;
+  endTime: string;
+  buildings: Building[]
 }
 export type TaskList = Task[]
