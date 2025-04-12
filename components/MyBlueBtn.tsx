@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
-import { Button, View } from "react-native";
-
+import { View } from "react-native";
+import { Button } from "@rneui/themed";
 
 interface props {
   children?: string;

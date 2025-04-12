@@ -2,7 +2,7 @@
   "expo": {
     "name": "猪只计数",
     "slug": "PigCounter",
-    "version": "1.0.22",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icons/icon.png",
     "scheme": "pigcounter",

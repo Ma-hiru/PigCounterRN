@@ -1,15 +1,5 @@
-type Pen = {
-  penId: number;
-  penNum: number;
-  picturePath: string;
-  path: string;
-  res: number;
-  type: "" | "videos" | "images";
-}
-type Building = {
-  buildingId: number;
-  pens: Pen[];
-}
+import { DEFAULT_UPLOAD_TYPE } from "@/settings";
+
 export type Task = {
   id: number;
   employeeId: number;
@@ -17,4 +7,14 @@ export type Task = {
   endTime: string;
   buildings: Building[]
 }
-export type TaskList = Task[]
+export type Building = {
+  buildingId: number;
+  pens: Pen[];
+}
+export type Pen = {
+  penId: number;
+  penNum: number;
+  picturePath: string;
+  type: typeof DEFAULT_UPLOAD_TYPE | "videos" | "images";
+}
+export type TaskList = Task[];

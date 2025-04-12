@@ -6,13 +6,11 @@ import { setImageScale } from "@/utils/setImageScale";
 import NoData from "@/assets/images/upload/logout.svg";
 import { Text as TextInline } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
-import { ImagePickerAsset } from "expo-image-picker";
-import { VideoSource } from "expo-video";
 import PreviewVideo from "@/components/upload/PreviewVideo";
 
 interface props {
-  previewImg: ImagePickerAsset | undefined;
-  previewVideo: VideoSource | undefined;
+  previewImg: RNFile | undefined;
+  previewVideo: RNFile | undefined;
   cachePath: { path: string; type: "images" | "videos" | "" };
   setPreviewVisible: (previewVisible: boolean) => any;
   scale: number;
@@ -68,7 +66,7 @@ const UploadPagesPreviewCard: FC<props> = (
 export default memo(UploadPagesPreviewCard);
 const styles = StyleSheet.create({
   previewCard: {
-    height: 180,
+    height: 200,
     backgroundColor: "rgba(0,0,0,0.1)",
   },
   icon: {

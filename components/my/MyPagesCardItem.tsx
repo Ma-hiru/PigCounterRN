@@ -5,7 +5,7 @@ import { setImageScale } from "@/utils/setImageScale";
 
 interface props {
   text: string;
-  img: ImageSource;
+  img: ImageSource | number;
   onPress?: (e: GestureResponderEvent) => void;
   iconSize?: number;
 }

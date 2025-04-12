@@ -3,8 +3,8 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { FC } from "react";
 import { View } from "react-native";
-import { Menu, MenuItem, MenuItemLabel, MenuSeparator } from "./ui/menu";
-import { ButtonText, Button } from "./ui/button";
+import { Menu, MenuItem, MenuItemLabel, MenuSeparator } from "../ui/menu";
+import { ButtonText, Button } from "../ui/button";
 
 interface props {
   /* empty */

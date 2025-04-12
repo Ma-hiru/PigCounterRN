@@ -1,13 +1,14 @@
+import { DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE } from "@/settings";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TaskList } from "@/types/task";
+import { TaskList } from "@/types/task.d";
 import { RootStateType } from "@/stores";
 
 
 interface initialType {
   TasksList: TaskList;
-  DEFAULT_UPLOAD_RES: number;
-  DEFAULT_UPLOAD_PATH: string;
-  DEFAULT_UPLOAD_TYPE: "";
+  DEFAULT_UPLOAD_RES: typeof DEFAULT_UPLOAD_RES;
+  DEFAULT_UPLOAD_PATH: typeof DEFAULT_UPLOAD_PATH;
+  DEFAULT_UPLOAD_TYPE: typeof DEFAULT_UPLOAD_TYPE;
 }
 
 const uploadSlice = createSlice({
@@ -27,21 +28,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -53,21 +51,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -79,21 +74,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -113,21 +105,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -139,21 +128,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -165,21 +151,18 @@ const uploadSlice = createSlice({
                 penId: 0,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 1,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               },
               {
                 penId: 2,
                 penNum: -1,
                 type: "",
-                path: "",
                 picturePath: ""
               }
             ]
@@ -187,9 +170,9 @@ const uploadSlice = createSlice({
         ]
       }
     ],
-    DEFAULT_UPLOAD_RES: -1,
-    DEFAULT_UPLOAD_PATH: "",
-    DEFAULT_UPLOAD_TYPE: ""
+    DEFAULT_UPLOAD_PATH,
+    DEFAULT_UPLOAD_RES,
+    DEFAULT_UPLOAD_TYPE
   } as initialType,
   reducers: {
     setTasksList: (state, action: PayloadAction<TaskList>) => {

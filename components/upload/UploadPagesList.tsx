@@ -1,5 +1,5 @@
-import CountDown from "@/components/CountDown";
-import { FC, Fragment, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import CountDown from "@/components/upload/CountDown";
+import { FC, Fragment, useSyncExternalStore } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -46,28 +46,42 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
         className="items-center w-[90%] shadow-2xl"
         style={{
           ...styles.CardStyle,
-          backgroundColor: validation ? styles.CardStyle.backgroundColor : "#999"
+          backgroundColor: validation ? styles.CardStyle.backgroundColor : GlobalStyles.DisabledColor
         }}
       >
-        <View className="w-screen mt-4">
-          <Text style={styles.HeadText} className="text-xl font-bold">
-            任务编号:{taskIndex + 1}
-          </Text>
-          <Text style={{
-            ...styles.HeadText,
-            color: validation ? GlobalStyles.PositiveColor : "#666666",
-            marginBottom: 5
-          }}>
-            {validation ? "已开放" : "未开放"}
-          </Text>
-          {
-            validation &&
-            <Text style={styles.HeadText}>
-              剩余时间：<CountDown endTime={endTime.getTime()} format={format} />
-            </Text>
-          }
-          <Text style={styles.HeadText}>任务起始：{task.startTime}</Text>
-          <Text style={styles.HeadText}>任务结束：{task.endTime}</Text>
+        <View style={styles.Header} className="mb-4">
+          <View>
+            <View style={styles.Head}>
+              <Text style={styles.Tags}>任务</Text>
+              <Text style={{ ...styles.HeadText, ...styles.HeadTitle }}
+                    className="text-2xl font-bold justify-center items-center">
+                编号 {taskIndex + 1}
+              </Text>
+            </View>
+            {
+              validation ?
+              <Text style={{ ...styles.HeadText, textAlign: "left" }}>
+                <CountDown endTime={endTime.getTime()} format={format} />
+              </Text> :
+              <Text style={{
+                ...styles.HeadText,
+                color: validation ? GlobalStyles.PositiveColor : GlobalStyles.NegativeColor,
+                textAlign: "left"
+              }}>
+                未开放
+              </Text>
+            }
+          </View>
+          <View>
+            <Text style={{
+              ...styles.HeadText,
+              color: GlobalStyles.ThemeColor3
+            }}>任务起始：{task.startTime}</Text>
+            <Text style={{
+              ...styles.HeadText,
+              color: GlobalStyles.ThemeColor3
+            }}>任务结束：{task.endTime}</Text>
+          </View>
         </View>
         <Accordion
           size="md" variant="filled" type="multiple"
@@ -75,7 +89,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
           className="mt-4 border border-outline-200"
         >
           {
-            task.buildings.map((building, buildingIndex) =>
+            task.buildings?.map((building, buildingIndex) =>
               <Fragment key={buildingIndex}>
                 <AccordionItem
                   value={String(building.buildingId)}
@@ -100,8 +114,8 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                     {
                       building.pens.map((pen, penIndex) => {
                           let action: btnAction = "negative";
-                          if ("path" in pen && "res" in pen && pen.path !== "")
-                            action = pen.res >= 0 ? "positive" : "secondary";
+                          if (pen.picturePath !== "")
+                            action = pen.penNum >= 0 ? "positive" : "secondary";
                           return (
                             <Button
                               key={pen.penId}
@@ -110,8 +124,9 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                 {
                                   pathname: "/UploadFiles",
                                   params: {
-                                    title: building.buildingId + "·" + pen.penId,
-                                    taskIndex: [taskIndex, buildingIndex, penIndex]
+                                    title: `楼栋${building.buildingId} · 栏舍${pen.penId}`,
+                                    taskIndex: [taskIndex, buildingIndex, penIndex],
+                                    penId: pen.penId
                                   }
                                 },
                                 "FN"
@@ -141,15 +156,38 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
 export default UploadPagesList;
 const styles = StyleSheet.create({
   CardStyle: {
-    backgroundColor: GlobalStyles.ThemeColor,
-    marginTop: 40,
+    backgroundColor: GlobalStyles.UploadCardBg,
+    marginBottom: 30,
     borderWidth: 1,
-    borderColor: "#ffffff",
+    borderColor: GlobalStyles.UploadCardBg,
     borderRadius: 10,
     padding: 10
   },
   HeadText: {
-    textAlign: "center",
-    color: "#ffffff"
+    textAlign: "left",
+    color: GlobalStyles.UploadCardColor,
+    width: "auto"
+  },
+  HeadTitle: {
+    textAlign: "left"
+  },
+  Tags: {
+    backgroundColor: GlobalStyles.ThemeColor,
+    color: GlobalStyles.TagsText,
+    padding: 2,
+    fontWeight: 500,
+    marginRight: 5
+  },
+  Head: {
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "auto"
+  },
+  Header: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%"
   }
 });

@@ -4,7 +4,6 @@ import { useSafeArea } from "@/hooks/useSafeArea";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { showNewToast } from "@/utils/toast";
 import { useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { FC } from "react";
 import { Text, View } from "react-native";
 
@@ -30,7 +29,6 @@ const Report: FC<props> = () => {
   };
   return (
     <>
-      <StatusBar style="auto" translucent={true} backgroundColor="transparent" />
       <View className="flex-1 w-screen h-screen justify-center items-center bg-gray-50"
             style={{ paddingTop: topInset }}>
         <Button onPress={showToast}>

@@ -4,8 +4,8 @@ import CryptoJS from "crypto-js";
 import { LOCAL_SECRET_KEY } from "@/settings";
 
 
-const localStore = {
-  async setItem(key: string, value: string): Promise<boolean> {
+class localStore {
+  static async setItem(key: string, value: string): Promise<boolean> {
     try {
       if (Platform.OS === "web") {
         if (typeof window === "undefined") return false;
@@ -18,8 +18,9 @@ const localStore = {
       console.error(`"${key}"存储失败:`, error);
       return false;
     }
-  },
-  async getItem(key: string): Promise<string> {
+  }
+
+  static async getItem(key: string): Promise<string> {
     try {
       if (Platform.OS === "web") {
         if (typeof window === "undefined") return "";
@@ -35,6 +36,6 @@ const localStore = {
       return "";
     }
   }
-};
+}
 export default localStore;
 

@@ -8,20 +8,26 @@ declare global {
       uri: string,
       width: number,
       height: number
-    };
+    } | number;
   }
   declare module "*.webp" {
     export default {
       uri: string,
       width: number,
       height: number
-    };
+    } | number;
   }
   declare module "*.svg" {
     export default {
       uri: string,
       width: number,
       height: number
-    };
+    } | number;
+  }
+
+  interface RNFile {
+    uri: string;
+    name: string;
+    type: string;
   }
 }

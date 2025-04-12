@@ -1,6 +1,6 @@
 import checkIcon from "@/assets/images/my/check.svg";
 import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
-import headBg from "@/assets/images/my/user_bg.webp";
+import headBg from "@/assets/images/my/user_bg01.png";
 import { useLogin } from "@/hooks/useLogin";
 import { DEFAULT_MY_BG_SCALE } from "@/settings";
 import { userSelector } from "@/stores";
