@@ -1,15 +1,17 @@
-import { memo } from "react";
-import { View, Text } from "react-native";
-import { showNewToast } from "@/utils/toast";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
-import { StatusBar } from "expo-status-bar";
 import { useSafeArea } from "@/hooks/useSafeArea";
-import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
+import { showNewToast } from "@/utils/toast";
+import { useRouter } from "expo-router";
+import { FC } from "react";
+import { Text, View } from "react-native";
 
+interface props {
+  /* empty */
+}
 
-const Report = () => {
+const Report: FC<props> = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { token } = useAppSelector(userSelector);
@@ -27,7 +29,6 @@ const Report = () => {
   };
   return (
     <>
-      <StatusBar style="auto" translucent={true} backgroundColor="transparent" />
       <View className="flex-1 w-screen h-screen justify-center items-center bg-gray-50"
             style={{ paddingTop: topInset }}>
         <Button onPress={showToast}>
@@ -44,5 +45,4 @@ const Report = () => {
     </>
   );
 };
-// noinspection JSUnusedGlobalSymbols
-export default memo(Report);
+export default Report;

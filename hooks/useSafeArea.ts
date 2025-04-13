@@ -1,7 +1,7 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Platform, StatusBar } from "react-native";
+import { Dimensions, Platform, StatusBar } from "react-native";
 
-
+const { width, height, scale, fontScale } = Dimensions.get("window");
 export const useSafeArea = () => {
   const insets = useSafeAreaInsets();
   return {
@@ -9,6 +9,10 @@ export const useSafeArea = () => {
       android: StatusBar.currentHeight,
       ios: insets.top
     }) ?? 0,
-    bottomInset: insets.bottom
+    bottomInset: insets.bottom,
+    screenWidth: width,
+    screenHeight: height,
+    scale,
+    fontScale
   };
 };

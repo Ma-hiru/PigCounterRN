@@ -1,3 +1,4 @@
+import { validateRules } from "@/components/registry/validate";
 import {
   FormControl,
   FormControlError,
@@ -7,7 +8,7 @@ import {
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { registryInfo } from "@/types/api";
-import { FC, memo } from "react";
+import { FC, memo, useMemo } from "react";
 import { Updater } from "use-immer";
 import {
   Select,
@@ -31,6 +32,7 @@ interface props {
 }
 
 const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }) => {
+  const Text = useMemo(() => validateRules(registryInfo), [registryInfo]);
   return (
     <>
       <FormControl isInvalid={invalid.username} size="md" className="w-full mb-4">
@@ -46,7 +48,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Input>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>用户名至少需要四位字符</FormControlErrorText>
+          <FormControlErrorText>{Text.get("username")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
       <FormControl isInvalid={invalid.password} size="md" className="w-full mb-6">
@@ -63,7 +65,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Input>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>密码至少八位，且有一个大小写字母和数字</FormControlErrorText>
+          <FormControlErrorText>{Text.get("password")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
       <FormControl isInvalid={invalid.name} size="md" className="w-full mb-4">
@@ -79,7 +81,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Input>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>姓名至少需要两位字符</FormControlErrorText>
+          <FormControlErrorText>{Text.get("name")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
       <FormControl isInvalid={invalid.phone} size="md" className="w-full mb-4">
@@ -95,7 +97,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Input>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>电话格式错误</FormControlErrorText>
+          <FormControlErrorText>{Text.get("phone")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
       <FormControl isInvalid={invalid.sex} size="md" className="w-full mb-4">
@@ -123,7 +125,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Select>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>性别不能为空</FormControlErrorText>
+          <FormControlErrorText>{Text.get("sex")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
       <FormControl isInvalid={invalid.organization} size="md" className="w-full mb-4">
@@ -156,7 +158,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         </Select>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>组织不能为空</FormControlErrorText>
+          <FormControlErrorText>{Text.get("organization")}</FormControlErrorText>
         </FormControlError>
       </FormControl>
     </>

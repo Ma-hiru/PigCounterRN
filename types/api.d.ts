@@ -18,6 +18,7 @@ export type LoginResponseData = {
   profilePicture: string;
   token: string;
   organization: string;
+  admin: boolean;
 };
 /**`registry`*/
 export type registryInfo = {
@@ -28,12 +29,24 @@ export type registryInfo = {
   sex: string;
   phone?: string;
   organization: string;
-  picture: Blob;
+  picture: Blob | RNFile;
   admin: boolean;
 }
 
-export interface RegistryResponseData {
+export type RegistryResponseData = {
   data: null;
+}
+
+export type uploadInfo = {
+  penId: number;
+  files: (Blob | RNFile)[];
+}
+
+export type UploadResponseData = {
+  picturePath: string[];
+  outputPicturePath: string[];
+  time: string;
+  count: number[];
 }
 
 /**
@@ -127,4 +140,13 @@ export type WeatherType = {
     /**数据许可或版权声明，可能为空*/
     license: [string];
   };
+};
+/** `获取天气数据hook 返回类型` */
+export type WeatherData = {
+  city: CityType;
+  weather: WeatherType;
+  cityName: string;
+  weatherData: string;
+  temp: string;
+  icon: string;
 };

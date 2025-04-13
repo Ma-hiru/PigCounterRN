@@ -1,12 +1,11 @@
 import { FC, memo, useState } from "react";
-import { View, Text,StyleSheet, Pressable, GestureResponderEvent } from "react-native";
-import { Text as TextInline } from "@/components/ui/text";
+import { View, Text, StyleSheet, Pressable, GestureResponderEvent } from "react-native";
 import { Image, ImageSource } from "expo-image";
 import { setImageScale } from "@/utils/setImageScale";
 
 interface props {
   text: string;
-  img: ImageSource;
+  img: ImageSource | number;
   onPress?: (e: GestureResponderEvent) => void;
 }
 
