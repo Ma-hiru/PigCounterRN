@@ -1,6 +1,7 @@
 package com.zlz.pigcounter.service.impl;
 
 import com.common.exception.NotFoundTaskException;
+import com.common.pojo.dto.PenDTO;
 import com.common.pojo.dto.PenPictureUploadDTO;
 import com.common.pojo.dto.TaskDTO;
 import com.common.pojo.entity.PenPicture;
@@ -25,6 +26,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +84,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO getTaskDetail(Long taskId) {
 
         TaskDTO taskDetail = taskBuildingPenMapper.getTaskDetail(taskId);
+
         if (taskDetail==null){
             throw new NotFoundTaskException();
         }
@@ -103,7 +109,9 @@ public class TaskServiceImpl implements TaskService {
             for (PenPicture penPicture : result) {
                 penPicture.setTime(LocalDateTime.now());
                 penPicture.setPenId(uploadDTO.getPenId());
+                penPicture.setTaskId(uploadDTO.getTaskId());
             }
+
            penPictureMapper.insertBatch(result);
 
             // 提取信息并构建 penPictureVO
@@ -120,10 +128,31 @@ public class TaskServiceImpl implements TaskService {
             PenPictureVO penPictureVO = PenPictureVO.builder()
                 .picturePath(picturePaths)
                 .outputPicturePath(outputPicturePaths)
-                .time(LocalDateTime.now())
+                .taskId(uploadDTO.getTaskId())
                 .count(counts)
                 .build();
             return Mono.just(penPictureVO);
         });
+    }
+
+    @Override
+    public void deletePicture(Long taskId, Long penId) {
+        PenDTO picturePath = penPictureMapper.getPicturePath(taskId, penId);
+        if (picturePath==null){
+            throw new NotFoundTaskException();
+        }
+        Path picturePath1 = Paths.get(picturePath.getPicturePath());
+        Path outputPicturePath = Paths.get(picturePath.getOutputPicturePath());
+        try {
+            Files.delete(picturePath1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Files.delete(outputPicturePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        penPictureMapper.deletePicture(taskId,penId);
     }
 }

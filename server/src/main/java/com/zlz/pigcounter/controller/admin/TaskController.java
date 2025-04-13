@@ -85,7 +85,17 @@ public class TaskController {
        log.info("上传图片：{}",uploadDTO);
         return taskService.upload(uploadDTO)
                 .map(Result::success)
+                .doOnError(throwable -> {
+                    log.error("上传图片时发生异常: ", throwable);
+                })
                 .onErrorReturn(Result.error("上传失败"));
+    }
+    @DeleteMapping("/deletePicture")
+    @CacheEvict(cacheNames = "task_detail",key = "#taskId")
+    public Result deletePicture(@RequestParam Long taskId,@RequestParam Long penId){
+        log.info("删除图片：{}",taskId);
+        taskService.deletePicture(taskId,penId);
+        return Result.success();
     }
 
 }

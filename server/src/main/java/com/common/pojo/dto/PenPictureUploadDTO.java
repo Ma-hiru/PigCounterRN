@@ -9,7 +9,9 @@ import java.io.Serializable;
 
 @Data
 public class PenPictureUploadDTO implements Serializable {
-    @NotNull(message = "ID不能为空")
+    @NotNull(message = "任务ID不能为空")
+    Long taskId;
+    @NotNull(message = "猪圈ID不能为空")
     Long penId;
     @NotEmpty(message = "至少上传一张图片")
     private MultipartFile[] files;

@@ -17,4 +17,6 @@ public class EmployeeVO {
     private String token;
 
     private String organization;
+
+    private Boolean admin;
 }

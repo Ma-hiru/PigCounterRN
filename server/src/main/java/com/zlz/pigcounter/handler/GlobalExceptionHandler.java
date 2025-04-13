@@ -2,6 +2,7 @@ package com.zlz.pigcounter.handler;
 
 import com.common.exception.BaseException;
 import com.common.result.Result;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,8 +31,10 @@ public class GlobalExceptionHandler {
 
         return Result.error(sb.toString());
     }
-    @ExceptionHandler Result <String> exceptionHandler(Exception e) {
-        log.info( e.getCause().getMessage());
-        return Result.error( e.getCause().getMessage());
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public Result<String> handleExpiredJwtException(ExpiredJwtException ex) {
+        log.error("JWT令牌已过期: {}", ex.getMessage());
+        return Result.error(ex.getMessage());
     }
 }

@@ -3,9 +3,10 @@ package com.zlz.pigcounter.interceptor;
 
 import com.common.constant.JwtClaimsConstant;
 import com.common.context.BaseContext;
-import com.zlz.pigcounter.properties.JwtProperties;
+import com.common.properties.JwtProperties;
 import com.zlz.pigcounter.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +45,10 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("当前员工id：{}", empId);
             //通过，放行
             return true;
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception ex) {
-            //不通过，响应401状态码
-            response.setStatus(401);
-            return false;
+            throw ex;
         }
     }
 }

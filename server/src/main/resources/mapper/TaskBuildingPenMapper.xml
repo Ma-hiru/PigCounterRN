@@ -12,7 +12,7 @@
 
     <resultMap id="BuildingsDTOResultMap" type="com.common.pojo.dto.BuildingDTO">
         <id property="buildingId" column="building_id"/>
-        <collection property="pens" ofType="com.common.pojo.dto.PenDTO" column="building_id"
+        <collection property="pens" ofType="com.common.pojo.dto.PenDTO" column="building_id,task_id"
                     javaType="ArrayList" select="getPensByBuildingId"/>
     </resultMap>
 
@@ -30,9 +30,19 @@
     </select>
 
     <select id="getBuildingsByTaskId" resultMap="BuildingsDTOResultMap">
-        select building_id from task_building_pen where task_id = #{taskId}
+        select building_id ,#{taskId} AS task_id from task_building_pen where task_id = #{taskId}
     </select>
     <select id="getPensByBuildingId" resultType="com.common.pojo.dto.PenDTO">
-        select pen_id from task_building_pen where building_id = #{buildingId}
+        SELECT
+        t.pen_id,
+        pp.output_picture_path,
+        pp.count,
+        pp.picture_path
+        FROM task_building_pen t
+        LEFT JOIN pen_picture pp
+        ON pp.pen_id = t.pen_id
+        AND pp.task_id = #{task_id}
+        WHERE t.building_id = #{building_id}
     </select>
+
 </mapper>
