@@ -17,4 +17,6 @@ public interface TaskService {
     TaskDTO getTaskDetail(Long taskId);
 
     Mono<PenPictureVO> upload(PenPictureUploadDTO uploadDTO);
+
+    void deletePicture(Long taskId, Long penId);
 }

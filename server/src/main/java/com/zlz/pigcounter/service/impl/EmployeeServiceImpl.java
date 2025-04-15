@@ -12,7 +12,7 @@ import com.github.pagehelper.PageHelper;
 import com.zlz.pigcounter.mapper.EmployeeMapper;
 import com.common.pojo.dto.EmployeeLoginDTO;
 import com.zlz.pigcounter.mapper.ProfilePictureHistoryMapper;
-import com.zlz.pigcounter.properties.JwtProperties;
+import com.common.properties.JwtProperties;
 import com.zlz.pigcounter.service.EmployeeService;
 import com.zlz.pigcounter.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .token(token)
                 .profilePicture(employee.getProfilePicture())
                 .organization(employee.getOrganization())
+                .admin(employee.getAdmin())
                 .build();
 
 
@@ -187,15 +188,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         //只有管理员和自己能删除自己的账号
         if(!BaseContext.getCurrentId().equals(id)&&!employeeMapper.getById(BaseContext.getCurrentId()).getAdmin()){
             throw new UnauthorizedModificationException();
         }
-
         deleteProfilePicture(id);
-
         employeeMapper.deleteById(id);
 
     }
@@ -223,6 +221,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         for (Long id : ids) {
             deleteProfilePicture(id);
         }
+        profilePictureHistoryMapper.deleteByEmployeeIds(ids);
         employeeMapper.deleteBatch(ids);
     }
 
@@ -274,6 +273,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     throw new ProfilePictureDeleteException();
                 };
             }
+            profilePictureHistoryMapper.deleteByProfilePicture(profilePicture);
         }
     }
 }

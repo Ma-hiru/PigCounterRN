@@ -1,10 +1,7 @@
 package com.zlz.pigcounter.mapper;
 
 import com.common.pojo.entity.ProfilePicture;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -18,4 +15,9 @@ public interface ProfilePictureHistoryMapper {
 
     @Select("select profile_picture from profile_picture_history where employee_id = #{id}")
     List<String> getByEmployeeId(Long id);
+
+    void deleteByEmployeeIds(Long[] ids);
+
+    @Delete("delete from profile_picture_history where profile_picture=#{profilePicture} ")
+    void deleteByProfilePicture(String profilePicture);
 }

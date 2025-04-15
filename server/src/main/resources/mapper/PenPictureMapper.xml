@@ -6,9 +6,9 @@
 <mapper namespace="com.zlz.pigcounter.mapper.PenPictureMapper">
 
     <insert id="insertBatch">
-        insert into pen_picture (pen_id, picture_path, output_picture_path, id, time, count) VALUE
+        insert into pen_picture (pen_id, picture_path, output_picture_path, id, time, count, task_id) VALUE
         <foreach collection="result" item="item" separator=",">
-            (#{item.penId},#{item.picturePath},#{item.outputPicturePath},#{item.id},#{item.time},#{item.count})
+            (#{item.penId},#{item.picturePath},#{item.outputPicturePath},#{item.id},#{item.time},#{item.count},#{item.taskId})
         </foreach>
     </insert>
 </mapper>

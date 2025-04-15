@@ -13,6 +13,6 @@ import java.util.List;
 public class PenPictureVO implements Serializable {
     List<String> picturePath;
     List<String> outputPicturePath;
-    LocalDateTime time;
+    Long taskId;
     List <Integer> count;
 }

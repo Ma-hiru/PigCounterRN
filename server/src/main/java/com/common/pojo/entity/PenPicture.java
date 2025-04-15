@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class PenPicture implements Serializable {
     Long id;
     Long penId;
+    Long taskId;
     String picturePath;
     String outputPicturePath;
     LocalDateTime time;

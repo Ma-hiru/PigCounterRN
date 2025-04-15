@@ -1,4 +1,4 @@
-package com.zlz.pigcounter.properties;
+package com.common.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
