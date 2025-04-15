@@ -1,21 +1,21 @@
 import { reqRegistry } from "@/api";
 import BigHeader from "@/components/BigHeader";
 import MyBlueBtn from "@/components/MyBlueBtn";
-import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
+import defaultAvatar from "@/assets/images/logo_1.jpg";
 import { validate, validateType } from "@/components/registry/validate";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
 import { useToast } from "@/components/ui/toast";
-import { registryInfo } from "@/types/api";
 import { fetchData } from "@/utils/fetchData";
 import { pickImgFile } from "@/utils/pickImgFile";
 import { FC, memo, useState } from "react";
-import { ImageURISource, Pressable, View, Text, StatusBar,ScrollView } from "react-native";
+import { ImageURISource, Pressable, View, Text, StatusBar, ScrollView } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
+import { APP_NAME, GlobalStyles } from "@/settings";
+import background from "@/assets/images/login/login_bg.png";
+import { Image } from "expo-image";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const Registry: FC<props> = () => {
   const [registryInfo, setRegistryInfo] = useImmer<registryInfo>({
@@ -44,7 +44,7 @@ const Registry: FC<props> = () => {
     if (!validate(registryInfo, setInvalid)) return;
     await fetchData(
       reqRegistry,
-      registryInfo,
+      [registryInfo],
       (_, createToast) => {
         createToast("注册成功", "注册成功，请登录");
       },
@@ -64,35 +64,48 @@ const Registry: FC<props> = () => {
   };
   return (
     <>
-      <ScrollView className="flex-1 w-screen h-screen bg-white">
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-        <BigHeader title="注册" info={
-          <>
-            <Text className="text-left text-[#999999]">注册</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
-            <Text className="text-left text-[#999999]">系统</Text>
-          </>
-        } />
-        <View className="flex-1 justify-start items-center mt-16">
-          <View className="flex justify-center items-center w-[80%]">
-            <Pressable onPress={pickAvatar} className="mb-8 justify-center items-center">
-              <Avatar size="xl">
-                <AvatarImage source={avatar} />
-              </Avatar>
-              {avatar === defaultAvatar && <Text className="text-sm mt-2">点击选择头像</Text>}
-            </Pressable>
-            <RegistryPagesForm
-              setRegistryInfo={setRegistryInfo}
-              invalid={invalid}
-              registryInfo={registryInfo}
-            />
-            <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-4">
-              {"注册"}
-            </MyBlueBtn>
+      <View className="flex-1 relative">
+        <Image
+          source={background}
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            inset: 0
+          }}
+          contentFit={"cover"}
+        />
+        <ScrollView className="flex-1 w-screen h-screen">
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+          <BigHeader title="注册" info={
+            <>
+              <Text className="text-left text-[#999999]">注册</Text>
+              <Text className="text-left"
+                    style={{ color: GlobalStyles.ThemeColor1 }}>{APP_NAME}
+              </Text>
+              <Text className="text-left text-[#999999]">系统</Text>
+            </>
+          } containerStyle={{ backgroundColor: "none" }} />
+          <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
+            <View className="flex justify-center items-center w-[80%]">
+              <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
+                <Avatar size="xl">
+                  <AvatarImage source={avatar} />
+                </Avatar>
+                {avatar === defaultAvatar && <Text className="text-sm mt-2">点击选择头像</Text>}
+              </Pressable>
+              <RegistryPagesForm
+                setRegistryInfo={setRegistryInfo}
+                invalid={invalid}
+                registryInfo={registryInfo}
+              />
+              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
+                {"注册"}
+              </MyBlueBtn>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </>
   );
 };

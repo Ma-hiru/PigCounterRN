@@ -1,8 +1,6 @@
 import { FC } from "react";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const MyPagesUpload: FC<props> = () => {
   return (

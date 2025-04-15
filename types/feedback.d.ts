@@ -1,4 +1,4 @@
-export type FeedbackInfo = {
+type FeedbackInfo = {
   taskId: number;
   feedback: string;
   feedbackImg: RNFile[];

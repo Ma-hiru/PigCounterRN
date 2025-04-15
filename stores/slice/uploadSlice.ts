@@ -1,6 +1,5 @@
 import { DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE } from "@/settings";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TaskList } from "@/types/task.d";
 import { RootStateType } from "@/stores";
 
 

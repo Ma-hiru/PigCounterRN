@@ -1,36 +1,43 @@
-import { useAsync } from "@/hooks/useAsync";
+import { getLocation } from "@/utils/getLocation";
 import logger from "@/utils/logger";
-import {
-  Accuracy,
-  getCurrentPositionAsync,
-  LocationObject,
-  requestForegroundPermissionsAsync
-} from "expo-location";
-import { Alert, Linking, ToastAndroid } from "react-native";
+import { LocationObject } from "expo-location";
+import { useEffect } from "react";
+import { ToastAndroid } from "react-native";
+import { useImmer } from "use-immer";
 
-export const getLocation = async (): Promise<LocationObject | null> => {
-  const { status } = await requestForegroundPermissionsAsync();
-  if (status !== "granted") {
-    Alert.alert("权限被拒绝", "请前往设置开启位置权限", [
-      { text: "取消", style: "cancel" },
-      { text: "去设置", onPress: () => Linking.openSettings() }
-    ]);
-    return null;
-  }
-  try {
-    return await getCurrentPositionAsync({ accuracy: Accuracy.Low });
-  } catch (e) {
-    logger("console", e);
-    throw e;
-  }
+type ReturnType = {
+  location: LocationObject | null;
+  loading: boolean;
+  err: any;
 };
 export const useLocation = () => {
-  const [data, loading, err] = useAsync(getLocation, true);
-  if (err) {
-    logger("console", err);
-    ToastAndroid.showWithGravity("定位失败，请检查网络或权限", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
-    return null;
-  }
-  if (loading || !data) return null;
-  return data;
+  const [status, setStatus] = useImmer<ReturnType>({
+    location: null,
+    loading: false,
+    err: null
+  });
+  useEffect(() => {
+    setStatus(draft => {
+      draft.loading = true;
+    });
+    getLocation()
+      .then((location) => {
+        setStatus(draft => {
+          draft.location = location;
+        });
+      })
+      .catch((error) => {
+        setStatus(draft => {
+          draft.err = error;
+        });
+        logger("console", error);
+        ToastAndroid?.showWithGravity("获取位置失败，请检查网络或权限", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+      })
+      .finally(() => {
+        setStatus(draft => {
+          draft.loading = false;
+        });
+      });
+  }, [setStatus]);
+  return status;
 };

@@ -1,8 +1,6 @@
 import { FC } from "react";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const MyPagesTask: FC<props> = () => {
   return (

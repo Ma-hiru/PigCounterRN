@@ -1,10 +1,13 @@
-import { debounce } from "lodash-es";
 import { FC, memo, useCallback, useMemo } from "react";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { Updater } from "use-immer";
+import Feather from "@expo/vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import { GlobalStyles } from "@/settings";
 
 interface props {
   previewImg?: RNFile;
@@ -43,17 +46,25 @@ const UploadPagesOptionsCard: FC<props> = (
   const router = useRouter();
   const NoDataRender = useMemo(() => (
     <>
-      <Button onPress={takeAssets("images", "take")} className="mt-4">
-        <ButtonText>拍照上传</ButtonText>
+      <Button onPress={takeAssets("images", "take")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Feather name="camera" color="white" />
+        <ButtonText style={{ color: "white" }}>拍照上传</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "take")} className="mt-4">
-        <ButtonText>录像上传</ButtonText>
+      <Button onPress={takeAssets("videos", "take")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Feather name="video" color="white" />
+        <ButtonText style={{ color: "white" }}>录像上传</ButtonText>
       </Button>
-      <Button onPress={takeAssets("images", "pick")} className="mt-4">
-        <ButtonText>本地图片</ButtonText>
+      <Button onPress={takeAssets("images", "pick")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <AntDesign name="picture" color="white" />
+        <ButtonText style={{ color: "white" }}>本地图片</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "pick")} className="mt-4">
-        <ButtonText>本地视频</ButtonText>
+      <Button onPress={takeAssets("videos", "pick")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Entypo name="folder-video" color="white" />
+        <ButtonText style={{ color: "white" }}>本地视频</ButtonText>
       </Button>
     </>
   ), [takeAssets]);
@@ -102,27 +113,27 @@ const UploadPagesOptionsCard: FC<props> = (
   };
   return (
     <>
-      <Card>
+      <Card style={{ backgroundColor: "rgba(255,255,255,0.6)", marginTop: 15 }}>
         {isUpload &&
-         (
-           <View className="w-full flex-col justify-center items-center mb-4">
-             <Text className="font-bold text-2xl">
-               识别数量:
-               <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>
-             </Text>
-             <View className="flex-row justify-center items-center">
-               <Text className="font-bold text-2xl h-auto">
-                 人工计数:
-               </Text>
-               <TextInput
-                 value={String(count.peopleCount)}
-                 style={{ height: "auto", width: "auto" }}
-                 className="text-2xl text-[red]"
-                 onChangeText={inputCount}
-               />
-             </View>
-           </View>
-         )
+          (
+            <View className="w-full flex-col justify-center items-center mb-4">
+              <Text className="font-bold text-2xl">
+                识别数量:
+                <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>
+              </Text>
+              <View className="flex-row justify-center items-center">
+                <Text className="font-bold text-2xl h-auto">
+                  人工计数:
+                </Text>
+                <TextInput
+                  value={String(count.peopleCount)}
+                  style={{ height: "auto", width: "auto" }}
+                  className="text-2xl text-[red]"
+                  onChangeText={inputCount}
+                />
+              </View>
+            </View>
+          )
         }
         {Render()}
       </Card>

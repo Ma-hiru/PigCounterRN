@@ -17,32 +17,34 @@ const Upload = () => {
   };
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <Header title="上传" />
-      <ScrollView
-        className="flex-1 bg-gray-50"
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={GlobalStyles.ThemeColor}
-            colors={[GlobalStyles.ThemeColor1]}
-          />
-        }
-      >
-        <View className="w-full items-center" style={{ paddingTop: 30 }}>
-          {
-            TasksList.map((task, index) =>
-              <UploadPagesList
-                task={task}
-                key={index}
-                router={router}
-                taskIndex={index}
-              />
-            )
+      <View className="flex-1 bg-gray-50">
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+        <Header title="计数" />
+        <ScrollView
+          className="flex-1 bg-gray-50"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={GlobalStyles.ThemeColor}
+              colors={[GlobalStyles.ThemeColor1]}
+            />
           }
-        </View>
-      </ScrollView>
+        >
+          <View className="w-full items-center mt-[30]">
+            {
+              TasksList.map((task: Task, index: number) =>
+                <UploadPagesList
+                  task={task}
+                  key={index}
+                  router={router}
+                  taskIndex={index}
+                />
+              )
+            }
+          </View>
+        </ScrollView>
+      </View>
     </>
   );
 };

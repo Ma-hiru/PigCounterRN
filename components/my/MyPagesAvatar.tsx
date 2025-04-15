@@ -1,5 +1,5 @@
 import checkIcon from "@/assets/images/my/check.svg";
-import defaultAvatar from "@/assets/images/my/defaultAvatar.png";
+import defaultAvatar from "@/assets/images/logo_1.jpg";
 import headBg from "@/assets/images/my/user_bg01.png";
 import { useLogin } from "@/hooks/useLogin";
 import { DEFAULT_MY_BG_SCALE } from "@/settings";
@@ -11,9 +11,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const MyPagesAvatar: FC<props> = () => {
   const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);

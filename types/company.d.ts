@@ -1,1 +1,1 @@
-type CompanyProfile = {}
+type CompanyProfile = object

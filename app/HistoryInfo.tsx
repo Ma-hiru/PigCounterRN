@@ -1,10 +1,9 @@
 import BigHeader from "@/components/BigHeader";
 import { FC } from "react";
 import { View, Text, StatusBar } from "react-native";
+import { APP_NAME, GlobalStyles } from "@/settings";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 export const HistoryInfo: FC<props> = () => {
   return (
@@ -14,8 +13,10 @@ export const HistoryInfo: FC<props> = () => {
         <BigHeader title="历史记录" info={
           <>
             <Text className="text-left text-[#999999]">查看</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
+            <Text className="text-left"
+                  style={{ color: GlobalStyles.ThemeColor1 }}>
+              {APP_NAME}
+            </Text>
             <Text className="text-left text-[#999999]">系统</Text>
             <Text className="text-left text-[#999999]">历史记录信息</Text>
           </>

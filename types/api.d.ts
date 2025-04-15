@@ -1,4 +1,4 @@
-export type ResponseData<T> = {
+type ResponseData<T> = {
   ok: boolean;
   code: number;
   message: string;
@@ -6,22 +6,14 @@ export type ResponseData<T> = {
 }
 
 /**`login`*/
-export type loginInfo = {
+type loginInfo = {
   username: string,
   password: string,
 }
 
-export type LoginResponseData = {
-  id: number;
-  username: string;
-  name: string;
-  profilePicture: string;
-  token: string;
-  organization: string;
-  admin: boolean;
-};
+type LoginResponseData = UserProfile;
 /**`registry`*/
-export type registryInfo = {
+type registryInfo = {
   id?: number;
   username: string,
   password: string,
@@ -32,27 +24,52 @@ export type registryInfo = {
   picture: Blob | RNFile;
   admin: boolean;
 }
-
-export type RegistryResponseData = {
-  data: null;
-}
-
-export type uploadInfo = {
+/**`upload`*/
+type uploadInfo = {
   penId: number;
   files: (Blob | RNFile)[];
 }
 
-export type UploadResponseData = {
+type UploadResponseData = {
   picturePath: string[];
   outputPicturePath: string[];
   time: string;
   count: number[];
 }
+/** `getEmployeeList` */
+type getEmployeeQuery = {
+  pageNum: number;
+  pageSize: number;
+  organization: string;
+}
 
+type GetEmployeeListResponseData = {
+  total: number;
+  list: unknown[]
+}
+/** `getTask` */
+type GetTaskResponseData = {
+  total: number;
+  list: unknown[]
+}
+/** `GetTaskList` */
+type getTaskQuery = {
+  pageNum: number;
+  pageSize: number;
+}
+type GetTaskListResponseData = {
+  total: number;
+  list: unknown[]
+}
+/** `addBuilding` */
+type addBuildingInfo = {
+  buildingName: string,
+  orgId: string
+}
 /**
  * @description `城市信息类型`
  * */
-export type CityType = {
+type CityType = {
   /**请参考状态码*/
   code: string;
   location: [
@@ -95,7 +112,7 @@ export type CityType = {
 /**
  * @description `获取本地天气数据`
  * */
-export type WeatherType = {
+type WeatherType = {
   /** 请参考状态码*/
   code: string;
   /** 当前API的最近更新时间*/
@@ -142,7 +159,7 @@ export type WeatherType = {
   };
 };
 /** `获取天气数据hook 返回类型` */
-export type WeatherData = {
+type WeatherData = {
   city: CityType;
   weather: WeatherType;
   cityName: string;

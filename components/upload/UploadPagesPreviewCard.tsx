@@ -24,40 +24,40 @@ const UploadPagesPreviewCard: FC<props> = (
     cachePath,
     setPreviewVisible,
     scale,
-    setScale,
+    setScale
   }) => {
-   console.log("------------------------");
+  console.log("------------------------");
   Logger("console", "cachePath--PreviewCard", cachePath);
   Logger("console", "previewImg--PreviewCard", previewImg);
   Logger("console", "previewVideo--PreviewCard", previewVideo);
-   console.log("------------------------");
+  console.log("------------------------");
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mb-4" style={{ backgroundColor: "rgba(255,255,255,0.6)",backdropFilter:"blur(10)"  }}>
         {
           (previewImg || cachePath.path)
-          ?
-          <Pressable onPress={() => setPreviewVisible(true)}>
-            {
-              cachePath.type === "images" ?
-              <Image source={previewImg || { uri: cachePath.path }}
-                     style={{ width: "100%", aspectRatio: scale }}
-                     onLoad={setImageScale(scale, setScale)}
-              /> :
-              <PreviewVideo
-                ContainerStyle={styles.videoContainer}
-                videoStyle={styles.video}
-                cachePath={cachePath}
-                previewVideo={previewVideo}
-              />
-            }
-          </Pressable>
-          :
-          <View className="flex flex-row justify-center items-center"
-                style={styles.previewCard}>
-            <Image source={NoData} style={styles.icon} />
-            <TextInline>暂无预览</TextInline>
-          </View>
+            ?
+            <Pressable onPress={() => setPreviewVisible(true)}>
+              {
+                cachePath.type === "images" ?
+                  <Image source={previewImg || { uri: cachePath.path }}
+                         style={{ width: "100%", aspectRatio: scale }}
+                         onLoad={setImageScale(scale, setScale)}
+                  /> :
+                  <PreviewVideo
+                    ContainerStyle={styles.videoContainer}
+                    videoStyle={styles.video}
+                    cachePath={cachePath}
+                    previewVideo={previewVideo}
+                  />
+              }
+            </Pressable>
+            :
+            <View className="flex flex-row justify-center items-center"
+                  style={styles.previewCard}>
+              <Image source={NoData} style={styles.icon} />
+              <TextInline>暂无预览</TextInline>
+            </View>
         }
       </Card>
     </>
@@ -67,25 +67,24 @@ export default memo(UploadPagesPreviewCard);
 const styles = StyleSheet.create({
   previewCard: {
     height: 200,
-    backgroundColor: "rgba(0,0,0,0.1)",
   },
   icon: {
     width: 20,
     height: 20,
-    marginRight: 5,
+    marginRight: 5
   },
   videoContainer: {
     flex: 1,
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 50,
+    paddingHorizontal: 50
   },
   video: {
     width: 350,
-    height: 275,
+    height: 275
   },
   controlsContainer: {
-    padding: 10,
-  },
+    padding: 10
+  }
 });

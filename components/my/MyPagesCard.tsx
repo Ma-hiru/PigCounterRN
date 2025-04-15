@@ -1,3 +1,4 @@
+import { useNavigation } from "expo-router";
 import { FC, memo, ReactNode } from "react";
 import { View, Text, StyleProp, ViewStyle, StyleSheet } from "react-native";
 
@@ -9,9 +10,11 @@ interface props {
 }
 
 const MyPagesCard: FC<props> = ({ title, children, contentStyle, cardStyle }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const navigation = useNavigation();
   return (
     <>
-      <View className="w-full bg-white" style={[cardStyle, styles.container]}>
+      <View className="w-full bg-white shadow-hard-2" style={[cardStyle, styles.container]}>
         {
           title &&
           <Text

@@ -8,6 +8,7 @@ interface props {
 }
 
 const Item: FC<props> = ({ children, title }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigation = useNavigation();
   return (
     <>

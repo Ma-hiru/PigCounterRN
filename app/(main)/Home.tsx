@@ -1,7 +1,8 @@
-import Header from "@/components/Header";
+import Task from "@/components/home/Task";
 import Weather from "@/components/home/Weather";
-import { View, Text, BackHandler, ToastAndroid, Platform, StatusBar } from "react-native";
-import { Button } from "@rneui/themed";
+import MyPagesCard from "@/components/my/MyPagesCard";
+import { Avatar } from "@/components/ui/avatar";
+import { View, Text, BackHandler, ToastAndroid, Platform } from "react-native";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { memo } from "react";
 
@@ -32,12 +33,30 @@ const Home = () => {
   useFocusEffect(ExitApp(navigation));
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <Header title="首页" />
-      <Weather></Weather>
-      <View className="flex-1 flex justify-center items-center bg-gray-50">
-        <Text>Home1</Text>
-        <Button>123</Button>
+      <View className="flex-1 bg-gray-50">
+        <Weather />
+        <View className=" flex-1 bg-gray-50" style={{
+          paddingLeft: 12,
+          paddingRight: 12,
+          position: "relative",
+          top: -15,
+          borderRadius: 15
+        }}>
+          <MyPagesCard cardStyle={{ marginBottom: 15, marginTop: 15 }}>
+            <View className="justify-between flex-row items-center">
+              <Text className="text-left">Username</Text>
+              <Avatar></Avatar>
+            </View>
+          </MyPagesCard>
+          <MyPagesCard cardStyle={{ marginBottom: 15, paddingBottom: 15 }} title={"今日任务"}>
+            <Task />
+          </MyPagesCard>
+          <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"未处理上传"}>
+            <View className="mb-4">
+              <Text style={{ textAlign: "center" }}>暂无数据</Text>
+            </View>
+          </MyPagesCard>
+        </View>
       </View>
     </>
   );

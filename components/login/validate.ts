@@ -1,4 +1,3 @@
-import { loginInfo } from "@/types/api";
 import { Updater } from "use-immer";
 
 const rulesGenerate = (loginInfo: loginInfo) => ({

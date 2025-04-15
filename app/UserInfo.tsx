@@ -6,10 +6,10 @@ import { userSelector } from "@/stores";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { useSelector } from "react-redux";
+import { APP_NAME } from "@/settings";
+import DefaultAvatar from "@/assets/images/logo_1.jpg";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 export const UserInfo: FC<props> = () => {
   const { profile } = useSelector(userSelector);
@@ -22,7 +22,11 @@ export const UserInfo: FC<props> = () => {
     <View className="flex justify-center items-center w-[80%]">
       <Item title="头像">
         <Avatar>
-          <AvatarImage source={{ uri: profile.profilePicture }} />
+          {profile.profilePicture ?
+            <AvatarImage source={{ uri: profile.profilePicture }} /> :
+            <AvatarImage source={DefaultAvatar} />
+          }
+
         </Avatar>
       </Item>
       <Item title="用户名">
@@ -52,11 +56,9 @@ export const UserInfo: FC<props> = () => {
       <View className="flex-1 bg-white">
         <BigHeader title="用户信息" info={
           <>
-            <Text className="text-left text-[#999999]">查看登陆在</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
-            <Text className="text-left text-[#999999]">系统的</Text>
-            <Text className="text-left text-[#999999]">用户信息</Text>
+            <Text className="text-left text-[#999999]">
+              查看登陆在{APP_NAME}系统的用户信息
+            </Text>
           </>
         }>
         </BigHeader>

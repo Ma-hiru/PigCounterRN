@@ -5,7 +5,6 @@ import Logger from "@/utils/logger";
 
 const { setToken } = userActions;
 const { dispatch } = RootState;
-const { token } = RootState.getState().userStore;
 
 /** axios实例 */
 const request = axios.create({
@@ -13,10 +12,15 @@ const request = axios.create({
 });
 /** 请求拦截器 */
 request.interceptors.request.use(config => {
-  config.headers.Authorization = tokenPrefix + token;
-  if (config.url)
+  const { token } = RootState.getState().userStore;
+  // config.headers.Authorization = tokenPrefix + token;
+  config.headers.setAuthorization(tokenPrefix + token);
+  if (config.url) {
     if (!(config.url.startsWith("http")))
       config.url = new URL(config.url, baseUrl).href;
+  }
+  if (config.data instanceof FormData)
+    config.headers.setContentType("application/x-www-form-urlencoded");
   return config;
 });
 /** 响应拦截器 */

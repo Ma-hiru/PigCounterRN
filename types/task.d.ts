@@ -1,20 +1,18 @@
-import { DEFAULT_UPLOAD_TYPE } from "@/settings";
-
-export type Task = {
+type Task = {
   id: number;
   employeeId: number;
   startTime: string;
   endTime: string;
   buildings: Building[]
 }
-export type Building = {
+type Building = {
   buildingId: number;
   pens: Pen[];
 }
-export type Pen = {
+type Pen = {
   penId: number;
   penNum: number;
   picturePath: string;
-  type: typeof DEFAULT_UPLOAD_TYPE | "videos" | "images";
+  type: "" | "videos" | "images";
 }
-export type TaskList = Task[];
+type TaskList = Task[];

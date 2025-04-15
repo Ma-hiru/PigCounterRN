@@ -1,21 +1,26 @@
 {
   "expo": {
-    "name": "猪只计数",
+    "name": "牧豕云鉴",
     "slug": "PigCounter",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icons/icon.png",
     "scheme": "pigcounter",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "需要访问您的位置以提供服务"
+      }
     },
     "android": {
       "permissions": [
         "INTERNET",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ],
       "package": "com.mahiru.pigcounter"
     },
@@ -42,6 +47,28 @@
         {
           "photosPermission": "允许访问相册以上传文件",
           "cameraPermission": "允许访问相机以拍摄照片"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Light.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Bold.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Black.ttf",
+            "./assets/fonts/HarmonyOS_Sans_Thin.ttf",
+            "./assets/fonts/ShiQiu.ttf",
+            "./assets/fonts/ink.ttf",
+            "./assets/fonts/YUNFENGJINGLONGXINGSHU-.ttf",
+            "./assets/fonts/FlyFlowerSong-Regular.ttf"
+          ]
         }
       ]
     ],

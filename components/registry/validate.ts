@@ -1,4 +1,3 @@
-import { registryInfo } from "@/types/api.d";
 import { curryFirst } from "@/utils/curryFirst";
 import { Updater } from "use-immer";
 

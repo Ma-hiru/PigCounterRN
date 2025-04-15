@@ -4,6 +4,8 @@ import { baseUrl } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { DownloadFile } from "@/utils/downloadFile";
 import { fetchData } from "@/utils/fetchData";
+import { removeFile, saveFile } from "@/utils/saveFile";
+import { TaskIndexTuple, updateTaskList } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { Alert, ScrollView, StatusBar, Text, View } from "react-native";
 import {
@@ -11,19 +13,16 @@ import {
   launchImageLibraryAsync, requestCameraPermissionsAsync,
   requestMediaLibraryPermissionsAsync
 } from "expo-image-picker";
-import { copyAsync, cacheDirectory, getInfoAsync, deleteAsync } from "expo-file-system";
-import { uploadActions, uploadSelector, useAppDispatch, useAppSelector } from "@/stores";
-import { cloneDeep } from "lodash-es";
-import { showNewToast } from "@/utils/toast";
+import { uploadSelector, useAppSelector } from "@/stores";
 import { useToast } from "@/components/ui/toast";
 import ImagePreview from "@/components/upload/ImagePreview";
 import UploadPagesPreviewCard from "@/components/upload/UploadPagesPreviewCard";
 import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
-import Logger from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import { useImmer } from "use-immer";
+import background from "@/assets/images/bg_1.jpg";
+import { Image } from "expo-image";
 
-const { setTasksList } = uploadActions;
 const _ = undefined;
 type RouteParams = {
   title: string;
@@ -43,7 +42,6 @@ const UploadFiles: FC = () => {
     DEFAULT_UPLOAD_RES,
     DEFAULT_UPLOAD_TYPE
   } = useAppSelector(uploadSelector);
-  const dispatch = useAppDispatch();
   /** 获取路由参数 */
   const toast = useToast();
   const routeTitle = useRef("");
@@ -53,6 +51,11 @@ const UploadFiles: FC = () => {
     data.push(params.penId);
     return data.map(Number);
   });
+  const TaskIndexTuple: TaskIndexTuple = useMemo(() => ({
+    TaskIndex,
+    BuildingIndex,
+    PenIndex
+  } satisfies  TaskIndexTuple), [BuildingIndex, PenIndex, TaskIndex]);
   /** 获取缓存 */
   const cachePath = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
@@ -63,43 +66,22 @@ const UploadFiles: FC = () => {
     return pen.penNum;
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
   /** 选择、缓存图片 */
-  const updateStore = useCallback((newPath?: string, newType?: "videos" | "images" | typeof DEFAULT_UPLOAD_TYPE, newRes?: number) => {
-    const newTaskList = cloneDeep(TasksList);
-    const pen = newTaskList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    newPath !== undefined && (pen.picturePath = newPath);
-    newRes && (pen.penNum = newRes);
-    newType !== undefined && (pen.type = newType);
-    // newTaskList[TaskIndex].buildings[BuildingIndex].pens[PenIndex] = pen;
-    dispatch(setTasksList(newTaskList));
-  }, [BuildingIndex, PenIndex, TaskIndex, TasksList, dispatch]);
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos" | "") => {
     switch (mode) {
       case "save":
-        const fileName = `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`;
-        const cachePath = `${cacheDirectory}${fileName}`;
-        try {
-          await copyAsync({
-            from: tempUri,
-            to: cachePath
+        await saveFile(
+          tempUri,
+          `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`,
+          (file) => {
+            updateTaskList(TaskIndexTuple, file.uri, type);
           });
-          updateStore(cachePath, type);
-        } catch (err) {
-          Logger("console", err);
-          Alert.alert("资源存储失败", "请检查权限！");
-        }
         break;
       case "delete":
-        try {
-          const { exists } = await getInfoAsync(tempUri);
-          exists && await deleteAsync(tempUri, { idempotent: true });
-        } catch (err) {
-          Logger("console", err);
-          showNewToast(toast, "缓存清除失败", "可能缓存已被删除。");
-        } finally {
-          updateStore(DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES);
-        }
+        await removeFile(tempUri, (_) => {
+          updateTaskList(TaskIndexTuple, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES);
+        });
     }
-  }, [DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE, toast, updateStore]);
+  }, [DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE, TaskIndexTuple]);
   const takeAssets = useCallback((mode: "images" | "videos", method: "take" | "pick") => async () => {
     let result: ImagePickerResult;
     if (method === "take") {
@@ -166,10 +148,10 @@ const UploadFiles: FC = () => {
     if (file.uri === "") return;
     const res = await fetchData(
       reqUpload,
-      {
+      [{
         penId: PenId,
         files: [file]
-      },
+      }],
       async (res) => {
         const file = await DownloadFile(baseUrl + res.data.outputPicturePath[0]);
         switch (cachePath.type) {
@@ -179,7 +161,7 @@ const UploadFiles: FC = () => {
           case "videos":
             setPreviewVideo(file);
         }
-        updateStore(_, _, res.data.count[0]);
+        updateTaskList(TaskIndexTuple, _, _, res.data.count[0]);
         await resolveTemp(file.uri, "save", cachePath.type);
         setIsUpload(true);
         setCount((draft) => {
@@ -191,7 +173,7 @@ const UploadFiles: FC = () => {
       },
       toast
     );
-  }, [cachePath.path, cachePath.type, PenId, toast, updateStore, resolveTemp, setCount]);
+  }, [cachePath.path, cachePath.type, setCount, PenId, toast, TaskIndexTuple, resolveTemp]);
   const confirmData = useCallback(() => {
   }, []);
   const addArtifact = useCallback(() => {
@@ -199,37 +181,50 @@ const UploadFiles: FC = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 bg-white">
-        <BigHeader title="上传" info={
+      <View className="flex-1 relative">
+        <Image
+          source={background}
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            inset: 0
+          }}
+          contentFit={"cover"}
+        />
+        <BigHeader title="计数" info={
           <>
             <Text className="text-left">对应区域：</Text>
             <Text className="text-left color-[#409eff]">{routeTitle.current}</Text>
           </>
-        } />
-        <ScrollView className="pl-8 pr-8 mt-4 flex-1"
+        } containerStyle={{ backgroundColor: "none" }} />
+        <ScrollView className="pl-8 pr-8 flex-1 "
                     key={TaskIndex << 23 + BuildingIndex << 16 + PenIndex}
+                    style={{ marginTop: 30 }}
         >
-          <UploadPagesPreviewCard
-            setPreviewVisible={setPreviewVisible}
-            previewImg={previewImg}
-            previewVideo={previewVideo}
-            setScale={setScale}
-            cachePath={cachePath}
-            scale={scale}
-          />
-          <UploadPagesOptionsCard
-            previewImg={previewImg}
-            previewVideo={previewVideo}
-            cachePath={cachePath}
-            clearImg={clearImg}
-            takeAssets={takeAssets}
-            submitFile={submitFile}
-            clearUpload={clearUpload}
-            isUpload={isUpload}
-            confirmData={confirmData}
-            addArtifact={addArtifact}
-            useCount={[count, setCount]}
-          />
+          <View className="flex-1">
+            <UploadPagesPreviewCard
+              setPreviewVisible={setPreviewVisible}
+              previewImg={previewImg}
+              previewVideo={previewVideo}
+              setScale={setScale}
+              cachePath={cachePath}
+              scale={scale}
+            />
+            <UploadPagesOptionsCard
+              previewImg={previewImg}
+              previewVideo={previewVideo}
+              cachePath={cachePath}
+              clearImg={clearImg}
+              takeAssets={takeAssets}
+              submitFile={submitFile}
+              clearUpload={clearUpload}
+              isUpload={isUpload}
+              confirmData={confirmData}
+              addArtifact={addArtifact}
+              useCount={[count, setCount]}
+            />
+          </View>
         </ScrollView>
         <ImagePreview
           isPreviewVisible={previewVisible}

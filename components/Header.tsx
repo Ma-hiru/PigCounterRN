@@ -14,7 +14,7 @@ const Header: FC<props> = ({ height = 45, title, className }) => {
   const { topInset } = useSafeArea();
   return (
     <>
-      <Shadow style={{ marginBottom: 10 }} containerStyle={{ backgroundColor: "#fff" }}>
+      <Shadow  containerStyle={{ backgroundColor: "#fff" }}>
         <View className="h-auto justify-center items-start w-screen pl-8"
               style={{ height: height + topInset, paddingTop: topInset }}>
           <Text className="text-2xl font-bold"
@@ -23,6 +23,7 @@ const Header: FC<props> = ({ height = 45, title, className }) => {
           </Text>
         </View>
       </Shadow>
+      <View style={{ marginBottom: 10 }} />
     </>
   );
 };

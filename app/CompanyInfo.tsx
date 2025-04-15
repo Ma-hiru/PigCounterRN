@@ -3,10 +3,9 @@ import Item from "@/components/userInfo/Item";
 import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
+import { APP_NAME, GlobalStyles } from "@/settings";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 export const CompanyInfo: FC<props> = () => {
   const { hasToken } = useLogin();
@@ -45,8 +44,10 @@ export const CompanyInfo: FC<props> = () => {
           <>
             <Text className="text-left text-[#999999]">查看</Text>
             <Text className="text-left text-[#999999]">登录在</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
+            <Text className="text-left"
+                  style={{ color: GlobalStyles.ThemeColor1 }}>
+              {APP_NAME}
+            </Text>
             <Text className="text-left text-[#999999]">系统</Text>
             <Text className="text-left text-[#999999]">的组织信息</Text>
           </>

@@ -1,14 +1,16 @@
 import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
 import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
-import { loginInfo } from "@/types/api";
-import { Text, StatusBar, InteractionManager } from "react-native";
+import { Text, StatusBar, StyleSheet, InteractionManager, View } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { reqLogin } from "@/api";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { fetchData } from "@/utils/fetchData";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "expo-router";
+import { Image } from "expo-image";
+import background from "@/assets/images/login/login_bg.png";
+import { APP_NAME, GlobalStyles } from "@/settings";
 
 const { setLogin } = userActions;
 const Login = () => {
@@ -22,7 +24,7 @@ const Login = () => {
     InteractionManager.runAfterInteractions(async () => {
       await fetchData(
         reqLogin,
-        loginInfo,
+        [loginInfo],
         (res) => {
           dispatch(setLogin(res.data));
         },
@@ -39,20 +41,76 @@ const Login = () => {
   }, [router, token]);
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <BigHeader title="登录" info={
-        <>
-          <Text className="text-left text-[#999999]">登陆到</Text>
-          <Text className="text-left color-[#c38b95]">猪只</Text>
-          <Text className="text-left color-[#409eff]">计数</Text>
-          <Text className="text-left text-[#999999]">系统</Text>
-        </>
-      } containerStyle={{ height: "100%" }}>
-        <LoginPagesForm handleLogin={handleSubmit} loading={loading} />
-        <LoginPagesMoreBtn />
-      </BigHeader>
+      <View className="flex-1 relative">
+        <Image
+          source={background}
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            inset: 0
+          }}
+          contentFit={"cover"}
+        />
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+        <BigHeader
+          title={APP_NAME}
+          info={
+            <>
+              <Text className="text-left text-[#999999]">
+                欢迎使用
+              </Text>
+              <Text className="text-left"
+                    style={{ color: GlobalStyles.ThemeColor1 }}>
+                {APP_NAME}
+              </Text>
+              <Text className="text-left text-[#999999]">
+                ！
+              </Text>
+            </>
+
+          }
+          font="ShiQiu"
+          containerStyle={styles.HeaderContainer}
+          titleContainerStyle={styles.HeaderTitleContainer}
+          infoContainerStyle={styles.HeaderInfoContainer}
+          titleStyle={styles.HeaderTitle}
+          backContainerStyle={styles.HeaderBackContainer}
+          contentStyle={styles.HeaderContent}
+          hasBackIcon={false}
+        >
+          <LoginPagesForm handleLogin={handleSubmit} loading={loading} />
+          <LoginPagesMoreBtn />
+        </BigHeader>
+      </View>
     </>
   );
 };
 // noinspection JSUnusedGlobalSymbols
 export default Login;
+const styles = StyleSheet.create({
+  HeaderContainer: {
+    backgroundColor: "none",
+    height: "100%",
+    justifyContent: "center"
+  },
+  HeaderTitleContainer: {
+    justifyContent: "center"
+  },
+  HeaderTitle: {
+    fontWeight: "normal",
+    fontSize: 60,
+    lineHeight: 60,
+    color: GlobalStyles.ThemeColor,
+  },
+  HeaderInfoContainer: {
+    justifyContent: "center",
+    marginBottom: 40,
+    paddingBottom: 0,
+
+  },
+  HeaderBackContainer: {},
+  HeaderContent: {
+    paddingTop: 0
+  }
+});

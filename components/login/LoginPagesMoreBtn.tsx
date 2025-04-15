@@ -6,9 +6,7 @@ import { View } from "react-native";
 import { Menu, MenuItem, MenuItemLabel, MenuSeparator } from "../ui/menu";
 import { ButtonText, Button } from "../ui/button";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const LoginPagesMoreBtn: FC<props> = () => {
   const router = useRouter();
