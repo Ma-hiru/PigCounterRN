@@ -53,16 +53,7 @@ export const Feedback: FC<props> = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 bg-white" style={{ paddingBottom: 25 }}>
         <BigHeader title="问题反馈" info={
-          <>
-            <Text className="text-left text-[#999999]">反馈</Text>
-            <Text className="text-left text-[#999999]">使用</Text>
-            <Text className="text-left"
-                  style={{ color: GlobalStyles.ThemeColor1 }}>
-              {APP_NAME}
-            </Text>
-            <Text className="text-left text-[#999999]">系统</Text>
-            <Text className="text-left text-[#999999]">的问题信息</Text>
-          </>
+          <BigHeader.InfoText content={`反馈使用{${APP_NAME}}系统的问题信息`} />
         }>
         </BigHeader>
         {Render()}

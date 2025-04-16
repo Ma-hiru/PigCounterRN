@@ -12,6 +12,7 @@ import {
 import backIcon from "@/assets/images/back.svg";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import BigHeaderInfoText from "@/components/BigHeaderInfoText";
 
 interface props {
   children?: ReactNode;
@@ -24,11 +25,11 @@ interface props {
   backIconStyle?: StyleProp<RNImageStyle>;
   hasBackIcon?: boolean;
   font?: Fonts,
-  title: string;
+  title: ((defaultStyle: StyleProp<TextStyle>) => ReactNode) | ReactNode;
   info: ReactNode;
 }
 
-const BigHeader: FC<props> = (
+const BigHeader: FC<props> & { InfoText: typeof BigHeaderInfoText } = (
   {
     children,
     containerStyle,
@@ -43,9 +44,9 @@ const BigHeader: FC<props> = (
     hasBackIcon = true,
     font = "HarmonyOS_Sans_Medium"
   }) => {
+
   const { topInset } = useSafeArea();
   const { back } = useRouter();
-
   return (
     <>
       <View className="flex justify-start items-center w-screen bg-white" style={containerStyle}>
@@ -63,13 +64,25 @@ const BigHeader: FC<props> = (
             className="w-full justify-start items-center flex-row select-none font-bold"
             style={titleContainerStyle}
           >
-            <Text style={{
-              fontSize: 45,
-              fontWeight: "bold",
-              fontFamily: font, ...titleStyle as object,
-            }}>
-              {title}
-            </Text>
+            {
+              typeof title === "string" ? (
+                <Text style={{
+                  fontSize: 45,
+                  fontWeight: "bold",
+                  fontFamily: font, ...titleStyle as object
+                }}>
+                  {title}
+                </Text>
+              ) : typeof title === "function" ?
+                <>
+                  {title({
+                    fontSize: 45,
+                    fontWeight: "bold",
+                    fontFamily: font, ...titleStyle as object
+                  })}
+                </> :
+                <>{title}</>
+            }
           </View>
           <View className="flex-row justify-start items-center w-full" style={infoContainerStyle}>
             {info}
@@ -80,4 +93,5 @@ const BigHeader: FC<props> = (
     </>
   );
 };
+BigHeader.InfoText = BigHeaderInfoText;
 export default BigHeader;

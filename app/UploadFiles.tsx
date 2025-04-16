@@ -1,6 +1,6 @@
 import { reqUpload } from "@/api/moudule/uploadAPI";
 import BigHeader from "@/components/BigHeader";
-import { baseUrl } from "@/settings";
+import { baseUrl, GlobalStyles } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { DownloadFile } from "@/utils/downloadFile";
 import { fetchData } from "@/utils/fetchData";
@@ -192,14 +192,35 @@ const UploadFiles: FC = () => {
           }}
           contentFit={"cover"}
         />
-        <BigHeader title="计数" info={
-          <>
-            <Text className="text-left">对应区域：</Text>
-            <Text className="text-left color-[#409eff]">{routeTitle.current}</Text>
-          </>
-        } containerStyle={{ backgroundColor: "none" }} />
+        <BigHeader
+          title={(defaultStyle) => {
+            return (
+              <>
+                <Text className="text-left" style={defaultStyle}>计数</Text>
+                <Text className="text-right"
+                      style={{
+                        ...defaultStyle as object,
+                        color: GlobalStyles.PositiveColor
+                      }}>{isUpload && cacheCount}
+                </Text>
+              </>
+            );
+          }
+          }
+          titleContainerStyle={{
+            justifyContent: "space-between",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+          info={
+            <BigHeader.InfoText
+              content={`对应区域：{${routeTitle.current}}`}
+              emphasizeColor="#409eff"
+              normalColor="#333"
+            />
+          } containerStyle={{ backgroundColor: "none" }} />
         <ScrollView className="pl-8 pr-8 flex-1 "
-                    key={TaskIndex << 23 + BuildingIndex << 16 + PenIndex}
+                    key={TaskIndex << 20 + BuildingIndex << 10 + PenIndex}
                     style={{ marginTop: 30 }}
         >
           <View className="flex-1">

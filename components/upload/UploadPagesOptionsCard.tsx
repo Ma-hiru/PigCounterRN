@@ -114,27 +114,27 @@ const UploadPagesOptionsCard: FC<props> = (
   return (
     <>
       <Card style={{ backgroundColor: "rgba(255,255,255,0.6)", marginTop: 15 }}>
-        {isUpload &&
-          (
-            <View className="w-full flex-col justify-center items-center mb-4">
-              <Text className="font-bold text-2xl">
-                识别数量:
-                <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>
-              </Text>
-              <View className="flex-row justify-center items-center">
-                <Text className="font-bold text-2xl h-auto">
-                  人工计数:
-                </Text>
-                <TextInput
-                  value={String(count.peopleCount)}
-                  style={{ height: "auto", width: "auto" }}
-                  className="text-2xl text-[red]"
-                  onChangeText={inputCount}
-                />
-              </View>
-            </View>
-          )
-        }
+        {/*{isUpload &&*/}
+        {/*  (*/}
+        {/*    <View className="w-full flex-col justify-center items-center mb-4">*/}
+        {/*      <Text className="font-bold text-2xl">*/}
+        {/*        识别数量:*/}
+        {/*        <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>*/}
+        {/*      </Text>*/}
+        {/*      <View className="flex-row justify-center items-center">*/}
+        {/*        <Text className="font-bold text-2xl h-auto">*/}
+        {/*          人工计数:*/}
+        {/*        </Text>*/}
+        {/*        <TextInput*/}
+        {/*          value={String(count.peopleCount)}*/}
+        {/*          style={{ height: "auto", width: "auto" }}*/}
+        {/*          className="text-2xl text-[red]"*/}
+        {/*          onChangeText={inputCount}*/}
+        {/*        />*/}
+        {/*      </View>*/}
+        {/*    </View>*/}
+        {/*  )*/}
+        {/*}*/}
         {Render()}
       </Card>
     </>

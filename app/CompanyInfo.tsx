@@ -4,6 +4,7 @@ import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { APP_NAME, GlobalStyles } from "@/settings";
+import BigHeaderInfoText from "@/components/BigHeaderInfoText";
 
 type props = object
 
@@ -41,16 +42,7 @@ export const CompanyInfo: FC<props> = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 bg-white">
         <BigHeader title="组织信息" info={
-          <>
-            <Text className="text-left text-[#999999]">查看</Text>
-            <Text className="text-left text-[#999999]">登录在</Text>
-            <Text className="text-left"
-                  style={{ color: GlobalStyles.ThemeColor1 }}>
-              {APP_NAME}
-            </Text>
-            <Text className="text-left text-[#999999]">系统</Text>
-            <Text className="text-left text-[#999999]">的组织信息</Text>
-          </>
+          <BigHeader.InfoText content={`查看登录在{${APP_NAME}}系统的组织信息`} />
         }>
         </BigHeader>
         {Render()}

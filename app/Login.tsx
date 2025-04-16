@@ -55,21 +55,7 @@ const Login = () => {
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <BigHeader
           title={APP_NAME}
-          info={
-            <>
-              <Text className="text-left text-[#999999]">
-                欢迎使用
-              </Text>
-              <Text className="text-left"
-                    style={{ color: GlobalStyles.ThemeColor1 }}>
-                {APP_NAME}
-              </Text>
-              <Text className="text-left text-[#999999]">
-                ！
-              </Text>
-            </>
-
-          }
+          info={<BigHeader.InfoText content={`欢迎使用{${APP_NAME}}！`} />}
           font="ShiQiu"
           containerStyle={styles.HeaderContainer}
           titleContainerStyle={styles.HeaderTitleContainer}
@@ -101,12 +87,12 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     fontSize: 60,
     lineHeight: 60,
-    color: GlobalStyles.ThemeColor,
+    color: GlobalStyles.ThemeColor
   },
   HeaderInfoContainer: {
     justifyContent: "center",
     marginBottom: 40,
-    paddingBottom: 0,
+    paddingBottom: 0
 
   },
   HeaderBackContainer: {},

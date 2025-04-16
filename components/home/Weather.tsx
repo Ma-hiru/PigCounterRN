@@ -1,12 +1,12 @@
 import WeatherBg from "@/assets/images/weather_bg4.png";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import { useWeather } from "@/hooks/useWeather";
-import { GetWeatherIconUrl, GlobalStyles } from "@/settings";
+import { APP_NAME, GetWeatherIconUrl, GlobalStyles } from "@/settings";
 import logger from "@/utils/logger";
 import { setImageScale } from "@/utils/setImageScale";
 import { FC, useState } from "react";
 import { Image, ImageLoadEventData } from "expo-image";
-import { StatusBar, View, Text } from "react-native";
+import { View, Text } from "react-native";
 
 
 type props = object
@@ -24,13 +24,13 @@ const Weather: FC<props> = () => {
   };
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
       <Image source={WeatherBg} style={{ width: "100%", aspectRatio: bgScale }}
              contentFit="cover" onLoad={onImgLoad} />
       <View className="absolute left-0 flex-row justify-between w-full"
             style={{ top: topInset, height: boxHeight }}>
         <View className="w-auto justify-end pl-8" style={{ height: boxHeight }}>
-          <Text className="text-4xl font-bold mb-4" style={{ color: "#ffffff" }}>首页</Text>
+          <Text className="text-4xl font-bold mb-4"
+                style={{ color: GlobalStyles.ThemeColor }}>{APP_NAME}</Text>
         </View>
         <View className="w-auto items-center" style={{ height: boxHeight, marginRight: 20 }}>
           <Image

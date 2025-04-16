@@ -2,7 +2,7 @@ import Task from "@/components/home/Task";
 import Weather from "@/components/home/Weather";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import { Avatar } from "@/components/ui/avatar";
-import { View, Text, BackHandler, ToastAndroid, Platform } from "react-native";
+import { View, Text, BackHandler, ToastAndroid, Platform, StatusBar } from "react-native";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { memo } from "react";
 
@@ -33,6 +33,7 @@ const Home = () => {
   useFocusEffect(ExitApp(navigation));
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 bg-gray-50">
         <Weather />
         <View className=" flex-1 bg-gray-50" style={{

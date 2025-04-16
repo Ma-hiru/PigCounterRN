@@ -77,15 +77,9 @@ const Registry: FC<props> = () => {
         />
         <ScrollView className="flex-1 w-screen h-screen">
           <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-          <BigHeader title="注册" info={
-            <>
-              <Text className="text-left text-[#999999]">注册</Text>
-              <Text className="text-left"
-                    style={{ color: GlobalStyles.ThemeColor1 }}>{APP_NAME}
-              </Text>
-              <Text className="text-left text-[#999999]">系统</Text>
-            </>
-          } containerStyle={{ backgroundColor: "none" }} />
+          <BigHeader title="注册"
+                     info={<BigHeader.InfoText content={`注册{${APP_NAME}}系统`} />}
+                     containerStyle={{ backgroundColor: "none" }} />
           <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
             <View className="flex justify-center items-center w-[80%]">
               <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">

@@ -55,11 +55,7 @@ export const UserInfo: FC<props> = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 bg-white">
         <BigHeader title="用户信息" info={
-          <>
-            <Text className="text-left text-[#999999]">
-              查看登陆在{APP_NAME}系统的用户信息
-            </Text>
-          </>
+          <BigHeader.InfoText content={`查看登陆在{${APP_NAME}}系统的用户信息`} />
         }>
         </BigHeader>
         {Render()}

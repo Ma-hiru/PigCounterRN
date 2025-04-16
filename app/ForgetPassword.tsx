@@ -23,19 +23,9 @@ const ForgetPassword: FC<props> = () => {
         />
         <ScrollView className="flex-1 w-screen h-screen">
           <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-          <BigHeader title="找回密码" info={
-            <>
-              <Text className="text-left text-[#999999]">
-                找回
-              </Text>
-              <Text className="text-left"
-                    style={{ color: GlobalStyles.ThemeColor1 }}>{APP_NAME}
-              </Text>
-              <Text className="text-left text-[#999999]">
-                系统密码
-              </Text>
-            </>
-          } containerStyle={{ backgroundColor: "none" }}>
+          <BigHeader title="找回密码"
+                     info={<BigHeader.InfoText content={`找回{${APP_NAME}}系统密码`} />}
+                     containerStyle={{ backgroundColor: "none" }}>
             <View></View>
           </BigHeader>
         </ScrollView>
