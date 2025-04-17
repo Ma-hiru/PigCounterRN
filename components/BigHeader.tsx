@@ -42,7 +42,7 @@ const BigHeader: FC<props> & { InfoText: typeof BigHeaderInfoText } = (
     backIconStyle,
     contentStyle,
     hasBackIcon = true,
-    font = "HarmonyOS_Sans_Medium"
+    font = "FlyFlowerSongRegular"
   }) => {
 
   const { topInset } = useSafeArea();
@@ -68,7 +68,7 @@ const BigHeader: FC<props> & { InfoText: typeof BigHeaderInfoText } = (
               typeof title === "string" ? (
                 <Text style={{
                   fontSize: 45,
-                  fontWeight: "bold",
+                  fontWeight: "normal",
                   fontFamily: font, ...titleStyle as object
                 }}>
                   {title}
@@ -77,7 +77,7 @@ const BigHeader: FC<props> & { InfoText: typeof BigHeaderInfoText } = (
                 <>
                   {title({
                     fontSize: 45,
-                    fontWeight: "bold",
+                    fontWeight: "normal",
                     fontFamily: font, ...titleStyle as object
                   })}
                 </> :

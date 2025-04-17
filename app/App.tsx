@@ -1,7 +1,12 @@
 import { Stack } from "expo-router";
 import { memo } from "react";
+import { useFonts, getLoadedFonts } from "expo-font";
+import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
+import baigetianxingtiRegular from "@/assets/fonts/zihun50hao-baigetianxingti-Regular.ttf";
 
 const App = () => {
+  useFonts({ FlyFlowerSongRegular, baigetianxingtiRegular });
+  console.log(getLoadedFonts());
   return (
     <Stack>
       <Stack.Screen name="(main)" options={{ headerShown: false }} />
@@ -15,6 +20,7 @@ const App = () => {
       <Stack.Screen name="Registry" options={{ headerShown: false }} />
       <Stack.Screen name="ForgetPassword" options={{ headerShown: false }} />
       <Stack.Screen name="Settings" options={{ headerShown: false }} />
+      <Stack.Screen name="Notice" options={{ headerShown: true }} />
     </Stack>
   );
 };

@@ -53,12 +53,13 @@ export const GetWeatherIconUrl = (iconIndex: string | null | undefined, style: "
 export const GlobalStyles = {
   ...StyleSheet.create({}),
   WeatherIcon: {
-    style: "line",
+    style: "fill",
     color: "white",
     defaultIcon: 100
   },
   ThemeColor: "#409eff",
   SecondColor: "rgba(248,248,0,0.98)",
+  SecondColor2: "#f4c743",
   PressColorBlue: "#1280f2",
   PositiveColor: "rgb(52,131,82)",
   NegativeColor: "#ffffff",

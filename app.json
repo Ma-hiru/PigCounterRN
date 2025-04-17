@@ -59,15 +59,8 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/HarmonyOS_Sans_Medium.ttf",
-            "./assets/fonts/HarmonyOS_Sans_Light.ttf",
-            "./assets/fonts/HarmonyOS_Sans_Bold.ttf",
-            "./assets/fonts/HarmonyOS_Sans_Black.ttf",
-            "./assets/fonts/HarmonyOS_Sans_Thin.ttf",
-            "./assets/fonts/ShiQiu.ttf",
-            "./assets/fonts/ink.ttf",
-            "./assets/fonts/YUNFENGJINGLONGXINGSHU-.ttf",
-            "./assets/fonts/FlyFlowerSong-Regular.ttf"
+            "assets/fonts/ShiQiu.ttf",
+            "assets/fonts/FlyFlowerSong-Regular.ttf"
           ]
         }
       ]

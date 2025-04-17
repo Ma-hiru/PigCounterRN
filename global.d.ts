@@ -1,4 +1,5 @@
 import { FC } from "react";
+import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
 
 
 declare global {
@@ -49,14 +50,7 @@ declare global {
   }
 
   type Fonts =
-    | "HarmonyOS_Sans_Medium"
-    | "HarmonyOS_Sans_Light"
-    | "HarmonyOS_Sans_Bold"
-    | "HarmonyOS_Sans_Black"
-    | "HarmonyOS_Sans_Thin"
-    | "ShiQiu"
-    | "ink"
-    | "YUNFENGJINGLONGXINGSHU-"
-    | "FlyFlowerSong-Regular"
+    | "FlyFlowerSongRegular"
+    | "baigetianxingtiRegular"
 
 }

@@ -1,6 +1,4 @@
 import { Tabs } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Feather from "@expo/vector-icons/Feather";
 import { GlobalStyles } from "@/settings";
 import { memo } from "react";
 import { ImageStyle as RNImageStyle, Platform, Pressable, StyleProp, View } from "react-native";

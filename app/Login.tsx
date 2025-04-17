@@ -1,7 +1,7 @@
 import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
 import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
-import { Text, StatusBar, StyleSheet, InteractionManager, View } from "react-native";
+import { StatusBar, StyleSheet, InteractionManager, View } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { reqLogin } from "@/api";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
@@ -55,8 +55,10 @@ const Login = () => {
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <BigHeader
           title={APP_NAME}
-          info={<BigHeader.InfoText content={`欢迎使用{${APP_NAME}}！`} />}
-          font="ShiQiu"
+          info={
+            <BigHeader.InfoText content={`一拍即“数”，“牧”养无忧`} />
+          }
+          font="baigetianxingtiRegular"
           containerStyle={styles.HeaderContainer}
           titleContainerStyle={styles.HeaderTitleContainer}
           infoContainerStyle={styles.HeaderInfoContainer}
@@ -81,12 +83,14 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   HeaderTitleContainer: {
-    justifyContent: "center"
+    justifyContent: "center",
+    fontSize: 30,
+    marginBottom: 5
   },
   HeaderTitle: {
     fontWeight: "normal",
     fontSize: 60,
-    lineHeight: 60,
+    lineHeight: 75,
     color: GlobalStyles.ThemeColor
   },
   HeaderInfoContainer: {
