@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import background from "@/assets/images/login/login_bg.png";
 import { APP_NAME, GlobalStyles } from "@/settings";
+import logger from "@/utils/logger";
 
 const { setLogin } = userActions;
 const Login = () => {
@@ -39,6 +40,7 @@ const Login = () => {
       router.push("/Home");
     }
   }, [router, token]);
+  logger("console","loginstart")
   return (
     <>
       <View className="flex-1 relative">

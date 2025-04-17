@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Text, View, InteractionManager } from "react-native";
+import { View, InteractionManager } from "react-native";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import SingleIcon from "@/assets/images/home/single.svg";
 import PigIcon from "@/assets/images/home/pig.svg";
@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import { uploadSelector } from "@/stores";
 import { useImmer } from "use-immer";
 import News from "@/components/home/News";
-import ModalWindow from "@/components/ModalWindow";
 
 type props = object;
 
@@ -75,7 +74,7 @@ const Options: FC<props> = () => {
             title="查看公告"
             icon={NoticeIcon}
             iconStyle={{ width: 40, height: 40 }}
-            onPress={goToPages(router, "Notice", "FN")}
+            onPress={goToPages(router, "/Notice", "FN")}
           />
           <IconOptionItem
             title="开始计数"

@@ -20,7 +20,8 @@ const App = () => {
       <Stack.Screen name="Registry" options={{ headerShown: false }} />
       <Stack.Screen name="ForgetPassword" options={{ headerShown: false }} />
       <Stack.Screen name="Settings" options={{ headerShown: false }} />
-      <Stack.Screen name="Notice" options={{ headerShown: true }} />
+      <Stack.Screen name="Notice" options={{ headerShown: false }} />
+      <Stack.Screen name="NewsDetail" options={{ headerShown: false }} />
     </Stack>
   );
 };

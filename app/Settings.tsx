@@ -23,7 +23,7 @@ export const Settings: FC<props> = () => {
           </>
         }>
           <MyPagesCard
-            cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
+            cardStyle={{ marginBottom: 15, paddingBottom: 15, marginTop: 30 }}
           >
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <Text>修改密码</Text>

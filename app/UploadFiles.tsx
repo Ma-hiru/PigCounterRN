@@ -22,6 +22,7 @@ import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import { useImmer } from "use-immer";
 import background from "@/assets/images/bg_1.jpg";
 import { Image } from "expo-image";
+import { useMyState } from "@/hooks/useMyState";
 
 const _ = undefined;
 type RouteParams = {

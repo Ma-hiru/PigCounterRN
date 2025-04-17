@@ -12,18 +12,22 @@ import {
 import { Text } from "@/components/ui/text";
 import { Icon, CloseIcon } from "@/components/ui/icon";
 import { FC, ReactNode } from "react";
+import { MyState } from "@/hooks/useMyState";
+import logger from "@/utils/logger";
 
 type props = {
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
-  children: ReactNode;
+  show: MyState<boolean>;
+  title: ReactNode;
+  children?: ReactNode;
+  confirm: (() => void) | (() => Promise<void>);
 }
-const ModalWindow: FC<props> = ({ showModal, setShowModal, children }) => {
+const ModalWindow: FC<props> = ({ show, children, title, confirm }) => {
+  logger("console","modalstart","show:",show.get())
   return (
     <Modal
-      isOpen={showModal}
+      isOpen={show.get()}
       onClose={() => {
-        setShowModal(false);
+        show.set(false);
       }}
       size="md"
     >
@@ -31,7 +35,9 @@ const ModalWindow: FC<props> = ({ showModal, setShowModal, children }) => {
       <ModalContent>
         <ModalHeader>
           <Heading size="md" className="text-typography-950">
-            Invite your team
+            {
+              typeof title === "string" ? <Text>{title}</Text> : title
+            }
           </Heading>
           <ModalCloseButton>
             <Icon as={CloseIcon} size="md"
@@ -39,11 +45,6 @@ const ModalWindow: FC<props> = ({ showModal, setShowModal, children }) => {
           </ModalCloseButton>
         </ModalHeader>
         <ModalBody>
-          <Text size="sm" className="text-typography-500">
-            Elevate user interactions with our versatile modals. Seamlessly
-            integrate notifications, forms, and media displays. Make an impact
-            effortlessly.
-          </Text>
           {children}
         </ModalBody>
         <ModalFooter>
@@ -51,14 +52,17 @@ const ModalWindow: FC<props> = ({ showModal, setShowModal, children }) => {
             variant="outline"
             action="secondary"
             onPress={() => {
-              setShowModal(false);
+              show.set(false);
             }}
           >
             <ButtonText>取消</ButtonText>
           </Button>
           <Button
-            onPress={() => {
-              setShowModal(false);
+            onPress={async () => {
+              const res = confirm();
+              if (res && typeof res.then === "function")
+                await confirm();
+              show.set(false);
             }}
           >
             <ButtonText>确定</ButtonText>

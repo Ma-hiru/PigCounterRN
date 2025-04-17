@@ -8,6 +8,9 @@ import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import { GlobalStyles } from "@/settings";
+import ModalWindow from "@/components/ModalWindow";
+import { useMyState } from "@/hooks/useMyState";
+import logger from "@/utils/logger";
 
 interface props {
   previewImg?: RNFile;
@@ -44,6 +47,11 @@ const UploadPagesOptionsCard: FC<props> = (
   }) => {
   const [count, setCount] = useCount;
   const router = useRouter();
+  const showModal = useMyState(false);
+  const changeArtifact = useCallback(() => {
+    addArtifact();
+    showModal.set(true);
+  }, [addArtifact, showModal]);
   const NoDataRender = useMemo(() => (
     <>
       <Button onPress={takeAssets("images", "take")} className="mt-4" variant="link"
@@ -86,14 +94,14 @@ const UploadPagesOptionsCard: FC<props> = (
       <Button onPress={clearUpload} className="mt-4" action="negative">
         <ButtonText>重新上传</ButtonText>
       </Button>
-      <Button onPress={addArtifact} className="mt-4" action="primary">
+      <Button onPress={changeArtifact} className="mt-4" action="primary">
         <ButtonText>修改数据</ButtonText>
       </Button>
       <Button onPress={confirmData} className="mt-4" action="positive">
         <ButtonText>确认</ButtonText>
       </Button>
     </>
-  ), [addArtifact, clearUpload, confirmData]);
+  ), [changeArtifact, clearUpload, confirmData]);
   const Render = useCallback(() => {
     if (previewVideo || previewImg || cachePath.path) {
       if (isUpload) return UploadDataRender;
@@ -111,30 +119,15 @@ const UploadPagesOptionsCard: FC<props> = (
       draft.peopleCount = num;
     });
   };
+  logger("console","uploadoptionstart","show",showModal.get())
   return (
     <>
+      <ModalWindow
+        title="修改数据"
+        confirm={() => {
+        }} show={showModal}
+      />
       <Card style={{ backgroundColor: "rgba(255,255,255,0.6)", marginTop: 15 }}>
-        {/*{isUpload &&*/}
-        {/*  (*/}
-        {/*    <View className="w-full flex-col justify-center items-center mb-4">*/}
-        {/*      <Text className="font-bold text-2xl">*/}
-        {/*        识别数量:*/}
-        {/*        <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>*/}
-        {/*      </Text>*/}
-        {/*      <View className="flex-row justify-center items-center">*/}
-        {/*        <Text className="font-bold text-2xl h-auto">*/}
-        {/*          人工计数:*/}
-        {/*        </Text>*/}
-        {/*        <TextInput*/}
-        {/*          value={String(count.peopleCount)}*/}
-        {/*          style={{ height: "auto", width: "auto" }}*/}
-        {/*          className="text-2xl text-[red]"*/}
-        {/*          onChangeText={inputCount}*/}
-        {/*        />*/}
-        {/*      </View>*/}
-        {/*    </View>*/}
-        {/*  )*/}
-        {/*}*/}
         {Render()}
       </Card>
     </>

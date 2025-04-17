@@ -47,6 +47,7 @@ const Header: FC<props> = (
                     color: GlobalStyles.HeaderText,
                     fontFamily: "FlyFlowerSongRegular" as Fonts,
                     fontWeight: "normal",
+                    lineHeight: 40,
                     ...titleStyle as object
                   }}
             >

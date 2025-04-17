@@ -5,10 +5,12 @@ import Head from "@/components/home/Head";
 import Carousel from "@/components/home/Carousel";
 import Options from "@/components/home/Options";
 import { ExitApp } from "@/utils/exitAPP";
+import logger from "@/utils/logger";
 
 const Home = () => {
   const navigation = useNavigation();
   useFocusEffect(ExitApp(navigation));
+  logger("console","HomeStart.")
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />

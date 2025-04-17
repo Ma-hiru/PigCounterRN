@@ -59,7 +59,7 @@
         "expo-font",
         {
           "fonts": [
-            "assets/fonts/ShiQiu.ttf",
+            "assets/fonts/zihun50hao-baigetianxingti-Regular.ttf",
             "assets/fonts/FlyFlowerSong-Regular.ttf"
           ]
         }

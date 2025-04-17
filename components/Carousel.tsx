@@ -3,7 +3,10 @@ import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
 import { ImageSource } from "expo-image";
 import { FC, useCallback, useEffect, useRef } from "react";
-
+import { Image } from "expo-image";
+import wait from "@/assets/ad/wait.jpg";
+import { GlobalStyles } from "@/settings";
+import { useNavigation } from "expo-router";
 
 type props = {
   data: (ImageSource | number)[];
@@ -12,6 +15,7 @@ type props = {
   containerStyle?: StyleProp<ViewStyle>
 }
 const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
+  const navigation = useNavigation();
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
   const onPressPagination = useCallback((index: number) => {
@@ -23,7 +27,7 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       onPressPagination((progress.get() + 1) % data.length);
-    }, 2000);
+    }, 18000);
     return () => {
       clearInterval(timer);
     };
@@ -37,23 +41,30 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
         height={height}
         data={data}
         onProgressChange={progress}
-        renderItem={({ index }) => (
+        renderItem={({ index, item }) => (
           <View
             style={{
               flex: 1,
-              borderWidth: 1,
-              justifyContent: "center"
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: GlobalStyles.ThemeColor2,
+              borderRadius: 10,
+              overflow: "hidden"
             }}
           >
-            <Text style={{ textAlign: "center", fontSize: 30 }}>{index}</Text>
+            <Image source={wait}
+                   style={{ width: "100%", height: "100%" }}
+                   contentFit={"cover"}
+            />
           </View>
         )}
       />
       <Pagination.Basic
         progress={progress}
         data={data}
-        dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
-        containerStyle={{ gap: 5, marginTop: 10 }}
+        dotStyle={{ backgroundColor: "rgba(255,255,255,0.5)", borderRadius: 50 }}
+        containerStyle={{ gap: 5, marginTop: -15 }}
         onPress={onPressPagination}
       />
     </>
