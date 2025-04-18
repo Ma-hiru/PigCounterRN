@@ -1,5 +1,5 @@
 import { DraftFunction, useImmer } from "use-immer";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 export type MyState<T> = {
   get: () => T;
@@ -9,7 +9,7 @@ export type MyState<T> = {
 export const useMyState = <T>(initialState: T): MyState<T> => {
   const initial = useRef(initialState);
   const [data, updater] = useImmer<T>(initialState);
-  return {
+  return useMemo(() => ({
     get() {
       return data;
     },
@@ -19,5 +19,5 @@ export const useMyState = <T>(initialState: T): MyState<T> => {
     clear() {
       updater(initial.current);
     }
-  };
+  }), [data, updater]);
 };

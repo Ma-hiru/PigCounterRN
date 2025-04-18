@@ -14,20 +14,23 @@ import { Icon, CloseIcon } from "@/components/ui/icon";
 import { FC, ReactNode } from "react";
 import { MyState } from "@/hooks/useMyState";
 import logger from "@/utils/logger";
+import { GlobalStyles } from "@/settings";
 
 type props = {
   show: MyState<boolean>;
   title: ReactNode;
   children?: ReactNode;
-  confirm: (() => void) | (() => Promise<void>);
+  confirm?: (() => void) | (() => Promise<void>);
+  cancel?: () => void;
 }
-const ModalWindow: FC<props> = ({ show, children, title, confirm }) => {
-  logger("console","modalstart","show:",show.get())
+const ModalWindow: FC<props> = ({ show, children, title, confirm, cancel }) => {
+  logger("console", "modalstart", "show:", show.get());
   return (
     <Modal
       isOpen={show.get()}
       onClose={() => {
         show.set(false);
+        cancel && cancel();
       }}
       size="md"
     >
@@ -59,13 +62,20 @@ const ModalWindow: FC<props> = ({ show, children, title, confirm }) => {
           </Button>
           <Button
             onPress={async () => {
-              const res = confirm();
-              if (res && typeof res.then === "function")
-                await confirm();
+              if (confirm) {
+                const res = confirm();
+                if (res && typeof res?.then === "function")
+                  await res;
+              }
               show.set(false);
             }}
+            variant="outline"
+            style={{
+              backgroundColor: GlobalStyles.ThemeColor1,
+              borderColor: GlobalStyles.ThemeColor1
+            }}
           >
-            <ButtonText>确定</ButtonText>
+            <ButtonText style={{ color: "white" }}>确定</ButtonText>
           </Button>
         </ModalFooter>
       </ModalContent>

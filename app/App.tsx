@@ -22,6 +22,8 @@ const App = () => {
       <Stack.Screen name="Settings" options={{ headerShown: false }} />
       <Stack.Screen name="Notice" options={{ headerShown: false }} />
       <Stack.Screen name="NewsDetail" options={{ headerShown: false }} />
+      <Stack.Screen name="Banner" options={{ headerShown: true }} />
+      <Stack.Screen name="ChangeProfile" options={{ headerShown: false }} />
     </Stack>
   );
 };

@@ -2,15 +2,15 @@ import { FC, memo, useCallback, useMemo } from "react";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, TextInput } from "react-native";
-import { Updater } from "use-immer";
 import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import { GlobalStyles } from "@/settings";
 import ModalWindow from "@/components/ModalWindow";
-import { useMyState } from "@/hooks/useMyState";
+import { MyState, useMyState } from "@/hooks/useMyState";
 import logger from "@/utils/logger";
+import { View, Text } from "react-native";
+import { Input, InputField } from "@/components/ui/input";
 
 interface props {
   previewImg?: RNFile;
@@ -23,14 +23,13 @@ interface props {
   isUpload: boolean;
   confirmData: () => void;
   addArtifact: () => void;
-  useCount: [count: count, setCount: setCount];
+  count: MyState<count>;
 }
 
 type count = {
   aiCount: number
   peopleCount: number
 }
-type setCount = Updater<count>;
 const UploadPagesOptionsCard: FC<props> = (
   {
     previewImg,
@@ -43,9 +42,8 @@ const UploadPagesOptionsCard: FC<props> = (
     isUpload,
     confirmData,
     addArtifact,
-    useCount
+    count
   }) => {
-  const [count, setCount] = useCount;
   const router = useRouter();
   const showModal = useMyState(false);
   const changeArtifact = useCallback(() => {
@@ -109,24 +107,30 @@ const UploadPagesOptionsCard: FC<props> = (
     }
     return NoDataRender;
   }, [NoDataRender, PreViewDataRender, UploadDataRender, cachePath.path, isUpload, previewImg, previewVideo]);
+
+  const inputNum = useMyState(0);
   const inputCount = (text: string) => {
     const num = Number.parseInt(text);
-    if (Number.isNaN(num))
-      setCount((draft) => {
-        draft.peopleCount = 0;
-      });
-    else setCount((draft) => {
-      draft.peopleCount = num;
-    });
+    if (Number.isNaN(num)) inputNum.set(0);
+    else inputNum.set(num);
   };
-  logger("console","uploadoptionstart","show",showModal.get())
+  logger("console", "uploadoptionstart", "show", showModal.get());
   return (
     <>
       <ModalWindow
         title="修改数据"
         confirm={() => {
+          count.set((draft) => {
+            draft.peopleCount = inputNum.get();
+          });
         }} show={showModal}
-      />
+      >
+        <View>
+          <Input>
+            <InputField placeholder={String(count.get().aiCount)} onChangeText={inputCount} />
+          </Input>
+        </View>
+      </ModalWindow>
       <Card style={{ backgroundColor: "rgba(255,255,255,0.6)", marginTop: 15 }}>
         {Render()}
       </Card>
@@ -134,8 +138,4 @@ const UploadPagesOptionsCard: FC<props> = (
   );
 };
 export default memo(UploadPagesOptionsCard);
-const styles = StyleSheet.create({
-  CountText: {
-    color: "red"
-  }
-});
+

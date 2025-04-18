@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import Header from "@/components/Header";
 import { APP_NAME, GetWeatherIconUrl, GlobalStyles } from "@/settings";
 import { Text, View } from "react-native";
@@ -6,12 +6,14 @@ import { Image } from "expo-image";
 import WeatherBg from "@/assets/images/bg_2(1).jpg";
 import { setImageScale } from "@/utils/setImageScale";
 import { useWeather } from "@/hooks/useWeather";
+import logger from "@/utils/logger";
 
 type props = object;
 
 const Head: FC<props> = () => {
   const weatherData = useWeather();
   const [bgScale, setBgScale] = useState(1);
+  logger("console","HomeHeadShow.")
   return (
     <>
       <Header
@@ -75,4 +77,4 @@ const Head: FC<props> = () => {
     </>
   );
 };
-export default Head;
+export default memo(Head);

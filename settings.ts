@@ -1,9 +1,21 @@
 import { StyleSheet } from "react-native";
+import localStore from "@/utils/localStore";
 
 /** baseURL */
-// export const baseUrl = "https://shiina-mahiru.cn:4000";
-export const baseUrl = "http://127.0.0.1:8080";
+export const DEFAULT_BASE_URL = "http://127.0.0.1:8080";
+export let baseUrl = DEFAULT_BASE_URL;
+localStore.getItem("baseUrl").then((data) => {
+  if (data !== "") {
+    baseUrl = data;
+  } else {
+    localStore.setItem("baseUrl", DEFAULT_BASE_URL);
+  }
+});
 const weatherUrl = "https://shiina-mahiru.cn/weatherIcon";
+export const ChangeAppBaseUrl = async (url: string) => {
+  baseUrl = url;
+  await localStore.setItem("baseUrl", url)
+};
 
 export enum tokenTypePrefix {
   /** Basic */

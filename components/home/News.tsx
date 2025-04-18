@@ -1,27 +1,37 @@
-import { FC, useState } from "react";
-import { View, Text } from "react-native";
-import NewCover from "@/assets/images/new2.png";
+import { FC, memo } from "react";
+import { View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
-import { setImageScale } from "@/utils/setImageScale";
+import { NewsList } from "@/types/news";
+import { useImageLoadedScale } from "@/hooks/useImageScale";
+import { goToPages } from "@/utils/goToPages";
+import { useRouter } from "expo-router";
 
-type props = object;
 
-const News: FC<props> = () => {
-  const [scale, setScale] = useState(1);
+type props = {
+  news: NewsList[number];
+}
+
+const News: FC<props> = ({ news }) => {
+  const CoverProps = useImageLoadedScale(news.cover);
+  const router = useRouter();
   return (
     <>
-      <View className="w-full">
-        <Image source={NewCover} style={{ width: "100%", aspectRatio: scale }}
-               onLoad={setImageScale(scale, setScale)} contentFit={"contain"} />
+      <Pressable className="w-full" onPress={goToPages(router, {
+        pathname: "/NewsDetail",
+        params: {
+          id: news.id
+        }
+      }, "FN")}>
+        <Image {...CoverProps} />
         <Text style={{
           marginTop: 10,
           fontWeight: "bold",
           fontSize: 16
         }}>
-          这家养殖巨头扭亏为盈，“猪周期”黄金时间来了？
+          {news.title}
         </Text>
-      </View>
+      </Pressable>
     </>
   );
 };
-export default News;
+export default memo(News);

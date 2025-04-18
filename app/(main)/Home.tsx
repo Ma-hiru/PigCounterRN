@@ -10,7 +10,7 @@ import logger from "@/utils/logger";
 const Home = () => {
   const navigation = useNavigation();
   useFocusEffect(ExitApp(navigation));
-  logger("console","HomeStart.")
+  logger("console","HomeShow.")
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />

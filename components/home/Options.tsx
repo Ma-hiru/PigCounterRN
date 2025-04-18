@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, memo, useEffect } from "react";
 import { View, InteractionManager } from "react-native";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import SingleIcon from "@/assets/images/home/single.svg";
@@ -12,13 +12,16 @@ import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import { uploadSelector } from "@/stores";
 import { useImmer } from "use-immer";
+import logger from "@/utils/logger";
+import { newsSelector } from "@/stores/slice/newSlice";
 import News from "@/components/home/News";
 
 type props = object;
-
 const Options: FC<props> = () => {
   const router = useRouter();
   const { TasksList } = useSelector(uploadSelector);
+  const { NewsList } = useSelector(newsSelector);
+  logger("console", "OptionsStart");
   const [LastCount, setLastCount] = useImmer({
     taskIndex: 0,
     buildingIndex: 0,
@@ -35,7 +38,6 @@ const Options: FC<props> = () => {
             if (pen.penNum === -1) {
               //TODO Name
               return setLastCount({
-                ...LastCount,
                 taskIndex,
                 buildingIndex,
                 penIndex,
@@ -48,7 +50,7 @@ const Options: FC<props> = () => {
         }
       }
     });
-  }, [LastCount, TasksList, setLastCount]);
+  }, [TasksList, setLastCount]);
   return (
     <>
       <View className=" flex-1 bg-gray-50" style={{
@@ -97,11 +99,14 @@ const Options: FC<props> = () => {
           </MyPagesCard>
 
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"热门新闻"}>
-            <News />
+            {
+              NewsList.map((news) =>
+                <News news={news} key={news.id} />)
+            }
           </MyPagesCard>
         </View>
       </View>
     </>
   );
 };
-export default Options;
+export default memo(Options);

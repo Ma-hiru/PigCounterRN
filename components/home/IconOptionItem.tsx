@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
 import { Image, ImageSource, ImageStyle } from "expo-image";
 import MyPagesCard from "@/components/my/MyPagesCard";
@@ -37,7 +37,7 @@ const IconOptionItem: FC<props> = ({ icon, title, iconStyle, titleStyle, onPress
     </>
   );
 };
-export default IconOptionItem;
+export default memo(IconOptionItem);
 const styles = StyleSheet.create({
   Shadow: {
     backgroundColor: "rgba(153,153,153,0.17)",

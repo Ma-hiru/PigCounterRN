@@ -8,11 +8,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import logger from "@/utils/logger";
 
 const RootLayout = () => {
-  useEffect(() => {
-    PersistedRootState.purge().then(() => {
-      console.log("初始清除持久化成功");
-    });
-  });
+  // useEffect(() => {
+  //   PersistedRootState.purge().then(() => {
+  //     console.log("初始清除持久化成功");
+  //   });
+  // });
   logger("console","App Start.")
   return (
     <GluestackUIProvider mode="light">

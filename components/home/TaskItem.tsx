@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     textAlign: "left"
   },
   Tags: {
-    backgroundColor: GlobalStyles.SecondColor,
-    color: "#000",
+    backgroundColor: GlobalStyles.ThemeColor,
+    color: "#fff",
     padding: 2,
     fontWeight: 500,
     marginRight: 5

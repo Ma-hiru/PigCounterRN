@@ -1,15 +1,15 @@
-import { StyleProp, Text, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, ViewStyle } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
-import { ImageSource } from "expo-image";
-import { FC, useCallback, useEffect, useRef } from "react";
+import { FC, memo, useCallback, useEffect, useRef } from "react";
 import { Image } from "expo-image";
-import wait from "@/assets/ad/wait.jpg";
 import { GlobalStyles } from "@/settings";
 import { useNavigation } from "expo-router";
+import logger from "@/utils/logger";
+import { AD } from "@/types/ad";
 
 type props = {
-  data: (ImageSource | number)[];
+  data: AD[];
   width: number;
   height: number;
   containerStyle?: StyleProp<ViewStyle>
@@ -25,6 +25,7 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
     });
   }, [progress]);
   useEffect(() => {
+    logger("console", "carousel timer");
     const timer = setInterval(() => {
       onPressPagination((progress.get() + 1) % data.length);
     }, 18000);
@@ -32,6 +33,7 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
       clearInterval(timer);
     };
   }, [progress, data.length, onPressPagination]);
+  logger("console", "ImageCarouselShow.");
   return (
     <>
       <Carousel
@@ -41,8 +43,8 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
         height={height}
         data={data}
         onProgressChange={progress}
-        renderItem={({ index, item }) => (
-          <View
+        renderItem={({ item }) => (
+          <Pressable
             style={{
               flex: 1,
               flexDirection: "row",
@@ -52,12 +54,15 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
               borderRadius: 10,
               overflow: "hidden"
             }}
+            onPress={() => {
+              item?.handler && item.handler(item);
+            }}
           >
-            <Image source={wait}
+            <Image source={item.cover}
                    style={{ width: "100%", height: "100%" }}
                    contentFit={"cover"}
             />
-          </View>
+          </Pressable>
         )}
       />
       <Pagination.Basic
@@ -71,4 +76,4 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
   );
 };
 
-export default ImageCarousel;
+export default memo(ImageCarousel);

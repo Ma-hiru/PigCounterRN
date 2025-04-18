@@ -1,6 +1,6 @@
 import TaskItem from "@/components/home/TaskItem";
 import { uploadSelector, useAppSelector } from "@/stores";
-import { FC } from "react";
+import { FC, memo } from "react";
 import { View } from "react-native";
 
 type props = object
@@ -19,4 +19,4 @@ const Task: FC<props> = () => {
     </>
   );
 };
-export default Task;
+export default memo(Task);

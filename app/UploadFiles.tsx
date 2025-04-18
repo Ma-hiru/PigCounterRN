@@ -19,7 +19,6 @@ import ImagePreview from "@/components/upload/ImagePreview";
 import UploadPagesPreviewCard from "@/components/upload/UploadPagesPreviewCard";
 import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
-import { useImmer } from "use-immer";
 import background from "@/assets/images/bg_1.jpg";
 import { Image } from "expo-image";
 import { useMyState } from "@/hooks/useMyState";
@@ -134,7 +133,7 @@ const UploadFiles: FC = () => {
   /** 上传预览 */
   const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES);
   /** 提交 */
-  const [count, setCount] = useImmer({
+  const count = useMyState({
     //TODO 修改字段
     aiCount: DEFAULT_UPLOAD_RES as number,
     peopleCount: DEFAULT_UPLOAD_RES as number
@@ -143,8 +142,8 @@ const UploadFiles: FC = () => {
     const file = await UriToRNFile(cachePath.path);
     // TODO check const file2 = await UriToBlob(cachePath.path);
     setIsUpload(true);
-    setCount((draft) => {
-      draft.aiCount = draft.peopleCount = 20;
+    count.set((draft) => {
+      draft.aiCount = draft.peopleCount = 9;
     });
     if (file.uri === "") return;
     const res = await fetchData(
@@ -165,7 +164,7 @@ const UploadFiles: FC = () => {
         updateTaskList(TaskIndexTuple, _, _, res.data.count[0]);
         await resolveTemp(file.uri, "save", cachePath.type);
         setIsUpload(true);
-        setCount((draft) => {
+        count.set((draft) => {
           draft.aiCount = draft.peopleCount = res.data.count[0];
         });
       },
@@ -174,7 +173,7 @@ const UploadFiles: FC = () => {
       },
       toast
     );
-  }, [cachePath.path, cachePath.type, setCount, PenId, toast, TaskIndexTuple, resolveTemp]);
+  }, [cachePath.path, cachePath.type, count, PenId, toast, TaskIndexTuple, resolveTemp]);
   const confirmData = useCallback(() => {
   }, []);
   const addArtifact = useCallback(() => {
@@ -201,8 +200,10 @@ const UploadFiles: FC = () => {
                 <Text className="text-right"
                       style={{
                         ...defaultStyle as object,
-                        color: GlobalStyles.PositiveColor
-                      }}>{isUpload && cacheCount}
+                        color: GlobalStyles.PositiveColor,
+                        fontFamily:""
+                      }}>
+                  {isUpload && count.get().peopleCount}
                 </Text>
               </>
             );
@@ -244,7 +245,7 @@ const UploadFiles: FC = () => {
               isUpload={isUpload}
               confirmData={confirmData}
               addArtifact={addArtifact}
-              useCount={[count, setCount]}
+              count={count}
             />
           </View>
         </ScrollView>

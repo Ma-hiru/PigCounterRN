@@ -1,14 +1,49 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import ImageCarousel from "@/components/Carousel";
 import { Dimensions, View } from "react-native";
-import AD1 from "@/assets/ad/ad1.jpg";
 import { Shadow } from "react-native-shadow-2";
 import logger from "@/utils/logger";
+import { AD } from "@/types/ad";
+import wait from "@/assets/ad/wait.jpg";
+import { goToPages } from "@/utils/goToPages";
+import { useRouter } from "expo-router";
+
 
 type props = object;
 
+
 const Carousel: FC<props> = () => {
-  logger("console","CarouselStart.")
+  logger("console", "HomeCarouselStart.");
+  const router = useRouter();
+  const handler = goToPages(router, {
+    pathname: "/Banner",
+    params: {
+      url: "https://www.baidu.com",
+      title: "广告位招租"
+    }
+  }, "FN");
+  const ADList: AD[] = [
+    {
+      cover: wait,
+      url: "https://www.baidu.com",
+      title: "广告位招租",
+      handler
+    }, {
+      cover: wait,
+      url: "https://www.baidu.com",
+      title: "广告位招租",
+      handler
+    }, {
+      cover: wait,
+      url: "https://www.baidu.com",
+      title: "广告位招租",
+      handler
+    }, {
+      cover: wait,
+      url: "https://www.baidu.com",
+      title: "广告位招租",
+      handler
+    }];
   return (
     <>
       <View className=""
@@ -17,7 +52,7 @@ const Carousel: FC<props> = () => {
                 corners={{ bottomEnd: true }} paintInside={false} stretch={false}
                 safeRender={false}>
           <ImageCarousel
-            data={[AD1, ...new Array(6).keys()]}
+            data={ADList}
             width={Dimensions.get("window").width * 0.84}
             height={Dimensions.get("window").width / 2}
           />
@@ -26,4 +61,4 @@ const Carousel: FC<props> = () => {
     </>
   );
 };
-export default Carousel;
+export default memo(Carousel);
