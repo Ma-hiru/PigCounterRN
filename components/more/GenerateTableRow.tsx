@@ -32,7 +32,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex }) => {
               key={`${taskIndex}-${buildingIndex}-${penIndex}`}>
               <Row buildingName={String(buildingIndex)}
                    penName={String(penIndex)}
-                   res={pen.penNum}
+                   res={pen.peopleNum || pen.penNum}
                    key={`${taskIndex}-${buildingIndex}-${penIndex}`}
                    gotoEdit={gotoEdit(buildingIndex, penIndex, building, pen)}
               />

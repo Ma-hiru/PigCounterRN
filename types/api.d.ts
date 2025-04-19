@@ -21,12 +21,13 @@ type registryInfo = {
   sex: string;
   phone?: string;
   organization: string;
-  picture: Blob | RNFile;
+  picture: RNFile | Blob;
   admin: boolean;
 }
 /**`upload`*/
 type uploadInfo = {
   penId: number;
+  taskId: number;
   files: (Blob | RNFile)[];
 }
 

@@ -1,6 +1,6 @@
 import { reqUpload } from "@/api/moudule/uploadAPI";
 import BigHeader from "@/components/BigHeader";
-import { baseUrl, GlobalStyles } from "@/settings";
+import { GlobalStyles } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { DownloadFile } from "@/utils/downloadFile";
 import { fetchData } from "@/utils/fetchData";
@@ -21,6 +21,9 @@ import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import background from "@/assets/images/bg_1.jpg";
 import { Image } from "expo-image";
+import logger from "@/utils/logger";
+import { handleUploadURL } from "@/utils/handleServerURL";
+import MyPortal from "@/components/MyPortal";
 import { useMyState } from "@/hooks/useMyState";
 
 const _ = undefined;
@@ -61,10 +64,11 @@ const UploadFiles: FC = () => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
     return { path: pen.picturePath ?? "", type: pen.type ?? "" };
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
-  const cacheCount = useMemo(() => {
+  const [cacheCount, peopleCacheCount] = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    return pen.penNum;
+    return [pen.penNum, pen?.peopleNum ?? -1];
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
+
   /** 选择、缓存图片 */
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos" | "") => {
     switch (mode) {
@@ -132,52 +136,53 @@ const UploadFiles: FC = () => {
   }, [clearImg]);
   /** 上传预览 */
   const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES);
+
   /** 提交 */
-  const count = useMyState({
-    //TODO 修改字段
-    aiCount: DEFAULT_UPLOAD_RES as number,
-    peopleCount: DEFAULT_UPLOAD_RES as number
-  });
+  const loading = useMyState(false);
   const submitFile = useCallback(async () => {
     const file = await UriToRNFile(cachePath.path);
     // TODO check const file2 = await UriToBlob(cachePath.path);
-    setIsUpload(true);
-    count.set((draft) => {
-      draft.aiCount = draft.peopleCount = 9;
-    });
     if (file.uri === "") return;
-    const res = await fetchData(
-      reqUpload,
-      [{
-        penId: PenId,
-        files: [file]
-      }],
-      async (res) => {
-        const file = await DownloadFile(baseUrl + res.data.outputPicturePath[0]);
-        switch (cachePath.type) {
-          case "images":
-            setPreviewImg(file);
-            break;
-          case "videos":
-            setPreviewVideo(file);
-        }
-        updateTaskList(TaskIndexTuple, _, _, res.data.count[0]);
-        await resolveTemp(file.uri, "save", cachePath.type);
-        setIsUpload(true);
-        count.set((draft) => {
-          draft.aiCount = draft.peopleCount = res.data.count[0];
-        });
-      },
-      (res, createToast) => {
-        createToast("处理出错！", res?.message);
-      },
-      toast
-    );
-  }, [cachePath.path, cachePath.type, count, PenId, toast, TaskIndexTuple, resolveTemp]);
+    loading.set(true);
+    try {
+      await fetchData(
+        reqUpload,
+        [{
+          taskId: TaskIndex,
+          penId: PenId,
+          files: [file]
+        }],
+        async (res) => {
+          logger("console", "uploadResponse", res);
+          const resURL = handleUploadURL(res.data.outputPicturePath[0]);
+          logger("console", "resURL", resURL);
+          const file = await DownloadFile(resURL);
+          logger("console", "downloadFile", file);
+          switch (cachePath.type) {
+            case "images":
+              setPreviewImg(file);
+              break;
+            case "videos":
+              setPreviewVideo(file);
+          }
+          updateTaskList(TaskIndexTuple, file.uri, cachePath.type, res.data.count[0], res.data.count[0]);
+          setIsUpload(true);
+        },
+        (res, createToast) => {
+          createToast("处理出错！", res?.message);
+        },
+        toast
+      );
+    } finally {
+      loading.set(false);
+    }
+  }, [cachePath.path, cachePath.type, loading, TaskIndex, PenId, toast, TaskIndexTuple]);
   const confirmData = useCallback(() => {
+
   }, []);
-  const addArtifact = useCallback(() => {
-  }, []);
+  const addArtifact = useCallback((res: number) => {
+    updateTaskList(TaskIndexTuple, _, _, _, res);
+  }, [TaskIndexTuple]);
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
@@ -201,9 +206,9 @@ const UploadFiles: FC = () => {
                       style={{
                         ...defaultStyle as object,
                         color: GlobalStyles.PositiveColor,
-                        fontFamily:""
+                        fontFamily: ""
                       }}>
-                  {isUpload && count.get().peopleCount}
+                  {isUpload && peopleCacheCount}
                 </Text>
               </>
             );
@@ -245,8 +250,9 @@ const UploadFiles: FC = () => {
               isUpload={isUpload}
               confirmData={confirmData}
               addArtifact={addArtifact}
-              count={count}
+              count={cacheCount}
             />
+            <MyPortal visible={loading.get()} text="分析中" />
           </View>
         </ScrollView>
         <ImagePreview

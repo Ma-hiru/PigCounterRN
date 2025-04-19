@@ -14,5 +14,6 @@ type Pen = {
   penNum: number;
   picturePath: string;
   type: "" | "videos" | "images";
+  peopleNum?: number;
 }
 type TaskList = Task[];

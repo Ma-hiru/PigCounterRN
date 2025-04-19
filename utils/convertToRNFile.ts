@@ -1,6 +1,8 @@
 import Logger from "@/utils/logger";
 import { getInfoAsync } from "expo-file-system";
 import { ImagePickerAsset } from "expo-image-picker";
+import logger from "@/utils/logger";
+
 
 export const AssetsToRNFile = (file: ImagePickerAsset): RNFile => {
   {
@@ -22,16 +24,16 @@ export const UriToRNFile = async (uri: string): Promise<RNFile> => {
   if (!ok) return { uri: "", name: "", type: "" };
   return parseFileMeta(uri);
 };
-export const UriToBlob = async (file: string | RNFile): Promise<[null | Blob, boolean]> => {
-  let uri: string;
-  if (typeof file === "string") uri = file;
-  else uri = file.uri;
+export const UriToBlob = async (file: RNFile): Promise<Blob | null> => {
+  const { uri } = file;
   try {
     const response = await fetch(uri);
-    return [await response.blob(), true];
+    const blob = await response.blob();
+    logger("console", "blob",{...blob});
+    return blob;
   } catch (error) {
     Logger("console", error);
-    return [null, false];
+    return null;
   }
 };
 const checkFile = async (uri: string): Promise<boolean> => {

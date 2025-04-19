@@ -43,7 +43,7 @@ const rules = (registryInfo: registryInfo) =>
       text: "电话号码格式不正确",
     },
     sex: {
-      validate: registryInfo.sex === "male" || registryInfo.sex === "female",
+      validate: registryInfo.sex === "男" || registryInfo.sex === "女",
       text: "性别不能为空",
     },
     organization: {

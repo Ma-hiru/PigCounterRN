@@ -8,12 +8,22 @@ import { useToast } from "@/components/ui/toast";
 import { fetchData } from "@/utils/fetchData";
 import { pickImgFile } from "@/utils/pickImgFile";
 import { FC, memo, useState } from "react";
-import { ImageURISource, Pressable, View, Text, StatusBar, ScrollView } from "react-native";
+import {
+  ImageURISource,
+  Pressable,
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  ToastAndroid
+} from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
 import { APP_NAME, GlobalStyles } from "@/settings";
 import background from "@/assets/images/login/login_bg.png";
 import { Image } from "expo-image";
+import { goToPages } from "@/utils/goToPages";
+import { useRouter } from "expo-router";
 
 type props = object
 
@@ -25,7 +35,11 @@ const Registry: FC<props> = () => {
     sex: "",
     phone: "",
     organization: "",
-    picture: new Blob(),
+    picture: {
+      uri: "",
+      name: "",
+      type: ""
+    },
     admin: false
   });
   const [invalid, setInvalid] = useImmer<validateType>({
@@ -40,13 +54,16 @@ const Registry: FC<props> = () => {
   });
   const [avatar, setAvatar] = useState<ImageURISource | number>(defaultAvatar);
   const toast = useToast();
+  const router = useRouter();
   const handleSubmit = async () => {
     if (!validate(registryInfo, setInvalid)) return;
+    if (avatar === defaultAvatar) return ToastAndroid.showWithGravity("请选择头像", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
     await fetchData(
       reqRegistry,
       [registryInfo],
       (_, createToast) => {
         createToast("注册成功", "注册成功，请登录");
+        goToPages(router, "/Login", "MOVE");
       },
       (res, createToast) => {
         createToast("请求出错！", res?.message);

@@ -27,6 +27,7 @@ const Login = () => {
         reqLogin,
         [loginInfo],
         (res) => {
+          logger("console", "loginResponse=>", res.data);
           dispatch(setLogin(res.data));
         },
         (res, createToast) => {
@@ -40,7 +41,7 @@ const Login = () => {
       router.push("/Home");
     }
   }, [router, token]);
-  logger("console","loginstart")
+  logger("console", "loginstart");
   return (
     <>
       <View className="flex-1 relative">

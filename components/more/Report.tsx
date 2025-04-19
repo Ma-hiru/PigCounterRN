@@ -1,7 +1,6 @@
 import GenerateTableRow from "@/components/more/GenerateTableRow";
 import { DEFAULT_UPLOAD_RES, GlobalStyles } from "@/settings";
 import { uploadSelector } from "@/stores";
-import { useNavigation } from "expo-router";
 import { FC, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, View, Text } from "react-native";
 import {
@@ -26,7 +25,7 @@ const Report: FC<props> = () => {
     TasksList.forEach((task: Task) => {
       task.buildings.forEach((building) => {
         building.pens.forEach((pen) => {
-          if (pen.penNum > DEFAULT_UPLOAD_RES) countNum += pen.penNum;
+          if (pen.penNum > DEFAULT_UPLOAD_RES) countNum += pen.peopleNum || pen.penNum;
           pansNum++;
         });
       });

@@ -3,6 +3,7 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
+import { reqLogout } from "@/api";
 
 const { setLogout } = userActions;
 const { dispatch } = RootState;
@@ -17,12 +18,14 @@ interface returnType {
 export const useLogin = (): returnType => {
   const { token } = useSelector(userSelector);
   const router = useRouter();
-  const handleLogout = useCallback(() => {
+  const handleLogout = useCallback(async () => {
     dispatch(setLogout());
     goToPages(router, "/Login", "MOVE");
+    await reqLogout();
   }, [router]);
-  const safeLogout = useCallback(() => {
+  const safeLogout = useCallback(async () => {
     dispatch(setLogout());
+    await reqLogout();
   }, []);
   const handleLogin = useCallback(() => {
     goToPages(router, "/Login", "MOVE");

@@ -2,13 +2,15 @@ import checkIcon from "@/assets/images/my/check.svg";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import headBg from "@/assets/images/my/user_bg01.png";
 import { useLogin } from "@/hooks/useLogin";
-import { DEFAULT_MY_BG_SCALE } from "@/settings";
+import { baseUrl, DEFAULT_MY_BG_SCALE } from "@/settings";
 import { userSelector } from "@/stores";
 import { setImageScale } from "@/utils/setImageScale";
 import { Image } from "expo-image";
 import { FC, memo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
+import logger from "@/utils/logger";
+import { handleAvatarURL } from "@/utils/handleServerURL";
 
 
 type props = object
@@ -18,7 +20,9 @@ const MyPagesAvatar: FC<props> = () => {
   const { hasToken, handleLogin } = useLogin();
   const { profile } = useSelector(userSelector);
   const username = profile.name ? profile.name : "点击登录";
-  const avatar = profile.profilePicture ? profile.profilePicture : defaultAvatar;
+
+  const avatar = profile.profilePicture ? handleAvatarURL(profile.profilePicture) : defaultAvatar;
+  logger("console", "avatar", avatar);
   const organization = profile.organization;
   const handleAvatarPress = () => {
     if (!hasToken) {
@@ -83,10 +87,11 @@ const styles = StyleSheet.create({
   UserInfoText: {
     fontSize: 14,
     lineHeight: 20,
-    color: "#222"
+    color: "#fff",
+    marginLeft: 2
   },
   CheckIcon: {
-    width: 18,
-    height: 18
+    width: 15,
+    height: 15
   }
 });

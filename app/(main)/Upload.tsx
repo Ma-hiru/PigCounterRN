@@ -5,6 +5,7 @@ import { View, ScrollView, StatusBar, RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import UploadPagesList from "@/components/upload/UploadPagesList";
 import { uploadSelector, useAppSelector } from "@/stores";
+import MyPortal from "@/components/MyPortal";
 
 const Upload = () => {
   const router = useRouter();

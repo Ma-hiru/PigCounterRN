@@ -194,8 +194,8 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
               <SelectDragIndicatorWrapper>
                 <SelectDragIndicator />
               </SelectDragIndicatorWrapper>
-              <SelectItem label="男" value="male" />
-              <SelectItem label="女" value="female" />
+              <SelectItem label="男" value="男" />
+              <SelectItem label="女" value="女" />
             </SelectContent>
           </SelectPortal>
         </Select>
@@ -239,8 +239,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
                 <SelectDragIndicator />
               </SelectDragIndicatorWrapper>
               <SelectScrollView style={{ height: "auto", maxHeight: 500 }}>
-                <SelectItem label="公司一" value="male" />
-                <SelectItem label="公司二" value="female" />
+                <SelectItem label="湘潭大学" value="湘潭大学" />
               </SelectScrollView>
             </SelectContent>
           </SelectPortal>

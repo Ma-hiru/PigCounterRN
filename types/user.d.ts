@@ -11,5 +11,4 @@ type UserInfo = UserProfile & {
   sex: string;
   phone: string;
   createTime: string
-  password: string;
 }
