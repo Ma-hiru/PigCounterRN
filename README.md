@@ -18,3 +18,8 @@ npx expo install
 npx expo start
 ```
 
+## Build
+
+```bash
+eas build --platform android
+```
