@@ -3,7 +3,9 @@ import localStore from "@/utils/localStore";
 
 /** baseURL */
 export const DEFAULT_BASE_URL = "https://renmen321.cn:8080";
+export const DEFAULT_UPLOAD_QUALITY = 0.4;
 export let baseUrl = DEFAULT_BASE_URL;
+export let UPLOAD_QUALITY = DEFAULT_UPLOAD_QUALITY;
 localStore.getItem("baseUrl").then((data) => {
   if (data !== "") {
     baseUrl = data;
@@ -11,11 +13,24 @@ localStore.getItem("baseUrl").then((data) => {
     localStore.setItem("baseUrl", DEFAULT_BASE_URL);
   }
 });
-const weatherUrl = "https://shiina-mahiru.cn/weatherIcon";
+localStore.getItem("UPLOAD_QUALITY").then((data) => {
+  if (data !== "") {
+    const num = Number(data);
+    if (Number.isNaN(num)) UPLOAD_QUALITY = DEFAULT_UPLOAD_QUALITY;
+    else UPLOAD_QUALITY = num;
+  } else {
+    localStore.setItem("UPLOAD_QUALITY", String(DEFAULT_UPLOAD_QUALITY));
+  }
+});
 export const ChangeAppBaseUrl = async (url: string) => {
   baseUrl = url;
-  await localStore.setItem("baseUrl", url)
+  await localStore.setItem("baseUrl", url);
 };
+export const ChangeAppUploadQuality = async (quality: number) => {
+  UPLOAD_QUALITY = quality;
+  await localStore.setItem("UPLOAD_QUALITY", String(quality));
+};
+const weatherUrl = "https://shiina-mahiru.cn/weatherIcon";
 
 export enum tokenTypePrefix {
   /** Basic */
@@ -99,5 +114,5 @@ export const DEFAULT_UPLOAD_PATH = "";
 export const DEFAULT_UPLOAD_TYPE = "";
 export const APP_NAME = "牧豕云鉴";
 export const APP_VERSION = "1.1.1";
-
-
+export const APP_WELCOME = `一拍即“数”，“牧”养无忧`;
+export const RES_TIMEOUT = 20000;

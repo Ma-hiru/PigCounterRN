@@ -16,6 +16,7 @@ import { Divider } from "@/components/ui/divider";
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "@/settings";
+import { UploadFilesRouteParams } from "@/types/route";
 
 interface props {
   task: Task;
@@ -47,7 +48,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
             {
               validation ?
                 <Text style={{ ...styles.HeadText, textAlign: "left" }}>
-                  <CountDown endTime={endTime.getTime()} format={countdownFormat} />
+                  <CountDown endTime={endTime.getTime()} format={countdownFormat} endText="未开放"/>
                 </Text> :
                 <Text style={{
                   ...styles.HeadText,
@@ -112,8 +113,9 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                   params: {
                                     title: `楼栋${building.buildingId} · 栏舍${pen.penId}`,
                                     taskIndex: [taskIndex, buildingIndex, penIndex],
-                                    penId: pen.penId
-                                  }
+                                    penId: pen.penId,
+                                    once: "false"
+                                  } satisfies UploadFilesRouteParams
                                 },
                                 "FN"
                               )}

@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/toast";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import background from "@/assets/images/login/login_bg.png";
-import { APP_NAME, GlobalStyles } from "@/settings";
+import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import logger from "@/utils/logger";
 
 const { setLogin } = userActions;
@@ -59,7 +59,7 @@ const Login = () => {
         <BigHeader
           title={APP_NAME}
           info={
-            <BigHeader.InfoText content={`一拍即“数”，“牧”养无忧`} />
+            <BigHeader.InfoText content={APP_WELCOME} />
           }
           font="baigetianxingtiRegular"
           containerStyle={styles.HeaderContainer}

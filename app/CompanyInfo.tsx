@@ -3,8 +3,7 @@ import Item from "@/components/userInfo/Item";
 import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
-import { APP_NAME, GlobalStyles } from "@/settings";
-import { useSelector } from "react-redux";
+import { APP_NAME } from "@/settings";
 import { useAppSelector, userSelector } from "@/stores";
 
 type props = object
@@ -12,6 +11,8 @@ type props = object
 export const CompanyInfo: FC<props> = () => {
   const { hasToken } = useLogin();
   const { profile } = useAppSelector(userSelector);
+
+
   const NoDataRender = useMemo(() => <View
     className="flex-1 flex-row justify-center items-center">
     <Text style={{ textAlign: "center" }}>暂无数据</Text>

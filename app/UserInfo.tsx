@@ -34,7 +34,7 @@ export const UserInfo: FC<props> = () => {
     username: ""
   });
   useEffect(() => {
-    if(detailProfile.get().id===0){
+    if(detailProfile.get().id===0 && hasToken){
       fetchData(
         reqUserInfo,
         [profile.id],
@@ -49,6 +49,9 @@ export const UserInfo: FC<props> = () => {
       );
     }
   }, [detailProfile, profile.id, toast]);
+
+
+
   const NoDataRender = useMemo(() => <View
     className="flex-1 flex-row justify-center items-center">
     <Text style={{ textAlign: "center" }}>暂无数据</Text>

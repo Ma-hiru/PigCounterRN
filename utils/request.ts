@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl, tokenPrefix } from "@/settings";
+import { baseUrl, RES_TIMEOUT, tokenPrefix } from "@/settings";
 import RootState, { userActions } from "@/stores";
 import logger from "@/utils/logger";
 
@@ -8,7 +8,7 @@ const { dispatch } = RootState;
 
 /** axios实例 */
 const request = axios.create({
-  timeout: 5000,
+  timeout: RES_TIMEOUT,
 });
 /** 请求拦截器 */
 request.interceptors.request.use(config => {

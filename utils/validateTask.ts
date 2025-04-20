@@ -15,7 +15,7 @@ export const useValidateTask = (task: Task) => {
       const timer = setInterval(listener, 1000);
       return () => clearInterval(timer);
     },
-    () => !(startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
+    () => (startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
   );
   return { validation, startTime, endTime };
 };

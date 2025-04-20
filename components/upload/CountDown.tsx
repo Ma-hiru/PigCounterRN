@@ -3,10 +3,11 @@ import { Text, AppState } from "react-native";
 
 interface props {
   endTime: number;
-  format?: (time: number) => string;
+  format: (time: number) => string;
+  endText?: string;
 }
 
-const CountDown: FC<props> = ({ endTime, format }) => {
+const CountDown: FC<props> = ({ endTime, format, endText = "已过期" }) => {
   const [remaining, setRemaining] = useState(endTime - Date.now());
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const appStateRef = useRef(AppState.currentState);
@@ -35,10 +36,13 @@ const CountDown: FC<props> = ({ endTime, format }) => {
     };
 
   }, [endTime, update]);
-
+  const Render = () => {
+    if (remaining <= 0) return <Text>{endText}</Text>;
+    return <Text>{(format && format(remaining)) || remaining}</Text>;
+  };
   return (
     <>
-      <Text>{(format && format(remaining)) || remaining}</Text>
+      {Render()}
     </>
   );
 };

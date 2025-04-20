@@ -1,6 +1,6 @@
 import { reqUpload } from "@/api/moudule/uploadAPI";
 import BigHeader from "@/components/BigHeader";
-import { GlobalStyles } from "@/settings";
+import { GlobalStyles, UPLOAD_QUALITY } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { DownloadFile } from "@/utils/downloadFile";
 import { fetchData } from "@/utils/fetchData";
@@ -13,7 +13,11 @@ import {
   launchImageLibraryAsync, requestCameraPermissionsAsync,
   requestMediaLibraryPermissionsAsync
 } from "expo-image-picker";
-import { uploadSelector, useAppSelector } from "@/stores";
+import {
+  OnceTaskTemp,
+  uploadSelector,
+  useAppSelector
+} from "@/stores";
 import { useToast } from "@/components/ui/toast";
 import ImagePreview from "@/components/upload/ImagePreview";
 import UploadPagesPreviewCard from "@/components/upload/UploadPagesPreviewCard";
@@ -25,31 +29,23 @@ import logger from "@/utils/logger";
 import { handleUploadURL } from "@/utils/handleServerURL";
 import MyPortal from "@/components/MyPortal";
 import { useMyState } from "@/hooks/useMyState";
+import { UploadFilesRouteParams } from "@/types/route";
 
 const _ = undefined;
-type RouteParams = {
-  title: string;
-  taskIndex: string;
-  penId: string;
-}
+
 const UploadFiles: FC = () => {
   /** 预览 */
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImg, setPreviewImg] = useState<RNFile>();
   const [previewVideo, setPreviewVideo] = useState<RNFile>();
   const [scale, setScale] = useState(1);
-  /** store */
-  const {
-    TasksList,
-    DEFAULT_UPLOAD_PATH,
-    DEFAULT_UPLOAD_RES,
-    DEFAULT_UPLOAD_TYPE
-  } = useAppSelector(uploadSelector);
   /** 获取路由参数 */
   const toast = useToast();
   const routeTitle = useRef("");
-  const [TaskIndex, BuildingIndex, PenIndex, PenId] = useGetRouteParam<RouteParams, number[]>((params) => {
+  const isOnceUpload = useRef(false);
+  const [TaskIndex, BuildingIndex, PenIndex, PenId] = useGetRouteParam<Record<keyof UploadFilesRouteParams, string>, number[]>((params) => {
     routeTitle.current = params.title;
+    isOnceUpload.current = params.once === "true";
     const data = params.taskIndex.split(",");
     data.push(params.penId);
     return data.map(Number);
@@ -59,6 +55,19 @@ const UploadFiles: FC = () => {
     BuildingIndex,
     PenIndex
   } satisfies  TaskIndexTuple), [BuildingIndex, PenIndex, TaskIndex]);
+  /** store */
+  const {
+    DEFAULT_UPLOAD_PATH,
+    DEFAULT_UPLOAD_RES,
+    DEFAULT_UPLOAD_TYPE
+  } = useAppSelector(uploadSelector);
+  let {
+    TasksList
+  } = useAppSelector(uploadSelector);
+  if (isOnceUpload.current) {
+    TasksList = OnceTaskTemp;
+  }
+  logger("console", "TasksList", TasksList, "Index", TaskIndexTuple);
   /** 获取缓存 */
   const cachePath = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
@@ -94,7 +103,7 @@ const UploadFiles: FC = () => {
       result = await launchCameraAsync({
         mediaTypes: mode,
         allowsEditing: false,
-        quality: 0.8,
+        quality: UPLOAD_QUALITY,
         base64: false,
         selectionLimit: 1
       });
@@ -104,7 +113,7 @@ const UploadFiles: FC = () => {
       result = await launchImageLibraryAsync({
         mediaTypes: mode,
         allowsEditing: false,
-        quality: 0.8,
+        quality: UPLOAD_QUALITY,
         base64: false,
         selectionLimit: 1
       });
@@ -141,7 +150,6 @@ const UploadFiles: FC = () => {
   const loading = useMyState(false);
   const submitFile = useCallback(async () => {
     const file = await UriToRNFile(cachePath.path);
-    // TODO check const file2 = await UriToBlob(cachePath.path);
     if (file.uri === "") return;
     loading.set(true);
     try {
@@ -153,11 +161,20 @@ const UploadFiles: FC = () => {
           files: [file]
         }],
         async (res) => {
+
           logger("console", "uploadResponse", res);
           const resURL = handleUploadURL(res.data.outputPicturePath[0]);
           logger("console", "resURL", resURL);
           const file = await DownloadFile(resURL);
           logger("console", "downloadFile", file);
+          // Log.set(draft => {
+          //   draft.ResponseDataURL = res.data.outputPicturePath[0];
+          //   draft.HandledURL = resURL;
+          //   draft.DownloadFileURI = file.uri;
+          //   draft.FinalURL = file.uri || resURL;
+          // });
+          file.uri = file.uri || resURL;
+          logger("console", "SavedUploadURL=>", file.uri);
           switch (cachePath.type) {
             case "images":
               setPreviewImg(file);
@@ -176,7 +193,7 @@ const UploadFiles: FC = () => {
     } finally {
       loading.set(false);
     }
-  }, [cachePath.path, cachePath.type, loading, TaskIndex, PenId, toast, TaskIndexTuple]);
+  }, [PenId, TaskIndex, TaskIndexTuple, cachePath.path, cachePath.type, loading, toast]);
   const confirmData = useCallback(() => {
 
   }, []);
@@ -221,7 +238,7 @@ const UploadFiles: FC = () => {
           }}
           info={
             <BigHeader.InfoText
-              content={`对应区域：{${routeTitle.current}}`}
+              content={isOnceUpload.current ? `{${routeTitle.current}}` : `对应区域：{${routeTitle.current}}`}
               emphasizeColor="#409eff"
               normalColor="#333"
             />

@@ -65,6 +65,15 @@ const Options: FC<props> = () => {
             title="单次计数"
             icon={SingleIcon}
             iconStyle={{ width: 38, height: 38 }}
+            onPress={goToPages(router, {
+              pathname: "/UploadFiles",
+              params: {
+                title: `单次计数`,
+                taskIndex: [0, 0, 0],
+                penId: 114514,
+                once: "true"
+              } satisfies UploadFilesSendRouteParams
+            }, "FN")}
           />
           <IconOptionItem
             title="死猪统计"
@@ -95,7 +104,7 @@ const Options: FC<props> = () => {
         <View>
           <MyPagesCard cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
                        title={"今日任务"}>
-            <Task />
+            <Task TasksList={TasksList}/>
           </MyPagesCard>
 
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"热门新闻"}>

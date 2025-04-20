@@ -1,19 +1,30 @@
 import BigHeader from "@/components/BigHeader";
 import { FC } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
-import { APP_NAME, baseUrl, ChangeAppBaseUrl, DEFAULT_BASE_URL } from "@/settings";
+import { StatusBar, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import {
+  APP_NAME,
+  baseUrl,
+  ChangeAppBaseUrl, ChangeAppUploadQuality,
+  DEFAULT_BASE_URL,
+  DEFAULT_UPLOAD_QUALITY,
+  UPLOAD_QUALITY
+} from "@/settings";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import ModalWindow from "@/components/ModalWindow";
 import { useMyState } from "@/hooks/useMyState";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { Input, InputField } from "@/components/ui/input";
+import { useLogin } from "@/hooks/useLogin";
 
 type props = object
 
 export const Settings: FC<props> = () => {
   const showBaseUrlModal = useMyState(false);
   const configBaseUrl = useMyState(baseUrl);
+  const showQualityModal = useMyState(false);
+  const configQuality = useMyState(UPLOAD_QUALITY);
+  const { hasToken } = useLogin();
   const router = useRouter();
   return (
     <>
@@ -25,20 +36,37 @@ export const Settings: FC<props> = () => {
           <MyPagesCard cardStyle={[{ marginTop: 30 }, styles.Card]}>
             <MyPagesCard.CanPress
               containerStyle={styles.Press}
-              onPress={goToPages(router, {
-                pathname: "/ForgetPassword",
-                params: {
-                  HasBg: "false"
-                }
-              }, "FN")}
+              onPress={() => {
+                if (hasToken)
+                  goToPages(router, {
+                    pathname: "/ForgetPassword",
+                    params: {
+                      HasBg: "false"
+                    }
+                  }, "MOVE");
+                else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+              }}
             >
               <Text>找回密码</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
           <MyPagesCard cardStyle={styles.Card}>
             <MyPagesCard.CanPress containerStyle={styles.Press}
-                                  onPress={goToPages(router, "/ChangeProfile", "FN")}>
+                                  onPress={() => {
+                                    if (hasToken)
+                                      goToPages(router, "/ChangeProfile", "MOVE");
+                                    else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                                  }}>
               <Text>修改资料</Text>
+            </MyPagesCard.CanPress>
+          </MyPagesCard>
+          <MyPagesCard cardStyle={styles.Card}>
+            <MyPagesCard.CanPress
+              containerStyle={styles.Press}
+              onPress={() => showQualityModal.set(true)}
+            >
+              <Text>上传质量</Text>
+              <Text>{UPLOAD_QUALITY}</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
           <MyPagesCard cardStyle={styles.Card}>
@@ -61,6 +89,23 @@ export const Settings: FC<props> = () => {
             onChangeText={(text) =>
               configBaseUrl.set(text)
             }
+          />
+        </Input>
+      </ModalWindow>
+      <ModalWindow show={showQualityModal} title="上传质量" confirm={async () => {
+        await ChangeAppUploadQuality(configQuality.get());
+      }}>
+        <Input>
+          <InputField
+            placeholder={String(DEFAULT_UPLOAD_QUALITY)}
+            onChangeText={(text) => {
+              const num = Number(text);
+              if (Number.isNaN(num) || num > 1 || num < 0) {
+                configQuality.set(DEFAULT_UPLOAD_QUALITY);
+              } else {
+                configQuality.set(num);
+              }
+            }}
           />
         </Input>
       </ModalWindow>

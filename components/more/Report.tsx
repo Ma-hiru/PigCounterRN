@@ -13,25 +13,14 @@ import {
 } from "@/components/ui/table";
 import { useSelector } from "react-redux";
 import { Shadow } from "react-native-shadow-2";
+import { useMyState } from "@/hooks/useMyState";
 
 type props = object
 const Report: FC<props> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [refreshing, setRefreshing] = useState(false);
   const { TasksList } = useSelector(uploadSelector);
-  const [countNum, pansNum] = useMemo(() => {
-    let countNum = 0;
-    let pansNum = 0;
-    TasksList.forEach((task: Task) => {
-      task.buildings.forEach((building) => {
-        building.pens.forEach((pen) => {
-          if (pen.penNum > DEFAULT_UPLOAD_RES) countNum += pen.peopleNum || pen.penNum;
-          pansNum++;
-        });
-      });
-    });
-    return [countNum, pansNum];
-  }, [TasksList]);
+  const Total = useMyState({ countNum: 0, pensNum: 0 });
   const onRefresh = async () => {
     setRefreshing(true);
     setRefreshing(false);
@@ -71,7 +60,7 @@ const Report: FC<props> = () => {
               <TableBody>
                 {
                   TasksList.map((task: Task, taskIndex: number) => (
-                    <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex} />
+                    <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex} total={Total}/>
                   ))
                 }
               </TableBody>
@@ -81,10 +70,10 @@ const Report: FC<props> = () => {
                     <Text>总数</Text>
                   </TableHead>
                   <TableHead {...PositionStyle}>
-                    <Text>{pansNum}</Text>
+                    <Text>{Total.get().pensNum}</Text>
                   </TableHead>
                   <TableHead {...PositionStyle}>
-                    <Text>{countNum}</Text>
+                    <Text>{Total.get().countNum}</Text>
                   </TableHead>
                 </TableRow>
               </TableFooter>

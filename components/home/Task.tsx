@@ -3,10 +3,11 @@ import { uploadSelector, useAppSelector } from "@/stores";
 import { FC, memo } from "react";
 import { View } from "react-native";
 
-type props = object
+type props = {
+  TasksList: TaskList
+}
 
-const Task: FC<props> = () => {
-  const { TasksList } = useAppSelector(uploadSelector);
+const Task: FC<props> = ({ TasksList }) => {
   return (
     <>
       <View>

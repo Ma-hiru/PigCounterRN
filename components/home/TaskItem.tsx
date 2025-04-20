@@ -26,8 +26,9 @@ const TaskItem: FC<props> = ({ task, taskIndex }) => {
             {
               validation ?
                 <Text
-                  style={{ ...styles.HeadText, textAlign: "left",  }}>
-                  <CountDown endTime={endTime.getTime()} format={countdownFormat} />
+                  style={{ ...styles.HeadText, textAlign: "left" }}>
+                  <CountDown endTime={endTime.getTime()} format={countdownFormat}
+                             endText={"已过期"} />
                 </Text> :
                 <Text style={{
                   ...styles.HeadText,

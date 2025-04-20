@@ -18,30 +18,30 @@ const Carousel: FC<props> = () => {
   const handler = goToPages(router, {
     pathname: "/Banner",
     params: {
-      url: "https://www.baidu.com",
-      title: "广告位招租"
+      url: "https://shiina-mahiru.cn/waitAD",
+      title: "网页-广告示范"
     }
   }, "FN");
   const ADList: AD[] = [
     {
       cover: wait,
-      url: "https://www.baidu.com",
-      title: "广告位招租",
+      url: "https://shiina-mahiru.cn/waitAD",
+      title: "网页-广告示范",
       handler
     }, {
       cover: wait,
-      url: "https://www.baidu.com",
-      title: "广告位招租",
+      url: "https://shiina-mahiru.cn/waitAD",
+      title: "网页-广告示范",
       handler
     }, {
       cover: wait,
-      url: "https://www.baidu.com",
-      title: "广告位招租",
+      url: "https://shiina-mahiru.cn/waitAD",
+      title: "网页-广告示范",
       handler
     }, {
       cover: wait,
-      url: "https://www.baidu.com",
-      title: "广告位招租",
+      url: "https://shiina-mahiru.cn/waitAD",
+      title: "网页-广告示范",
       handler
     }];
   return (
