@@ -7,7 +7,7 @@ zlz:
     username: root
     password: 123456
   image:
-    save-path: ${working.dir}/profilePicture
+    save-path: ${working.dir}
   password:
     salt: PigCounter
   redis:

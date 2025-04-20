@@ -203,11 +203,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageResult page(int pageNum, int pageSize, String organization) {
         PageHelper.startPage(pageNum,pageSize);
-        Page<Employee> page  = employeeMapper.page(organization);
-        if(page==null){
-            throw new NotFoundUserException();
+        try (Page<Employee> page = employeeMapper.page(organization)) {
+            if (page == null) {
+                throw new NotFoundUserException();
+            }
+            return new PageResult(page.getTotal(), page.getResult());
         }
-        return new PageResult(page.getTotal(),page.getResult());
     }
 
     @Override

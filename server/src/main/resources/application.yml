@@ -1,5 +1,10 @@
 server:
   port: 8080
+  ssl:
+    enabled: true
+    key-store: classpath:ssl/renmen321.cn.jks
+    key-store-password: 8f8yrvoo
+    key-store-type: JKS
   servlet:
     context-path: /api
 spring:

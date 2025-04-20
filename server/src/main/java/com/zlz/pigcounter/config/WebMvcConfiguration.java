@@ -1,5 +1,6 @@
 package com.zlz.pigcounter.config;
 
+import com.common.constant.ImageConstant;
 import com.zlz.pigcounter.interceptor.JwtTokenAdminInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,12 +20,14 @@ import java.util.List;
 
 @Configuration
 @Slf4j
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class
+WebMvcConfiguration implements WebMvcConfigurer {
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
 
     @Value("${zlz.image.save-path}")
     private String imageSavePath;
+
     /**
      * 注册拦截器
      * @param registry
@@ -39,8 +43,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      * @param registry
      */
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/profilePicture/**")
+                .addResourceLocations("file:" + imageSavePath+ ImageConstant.PROFILE_PICTURE_PATH);
+
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:" + imageSavePath);
+                .addResourceLocations("file:" + imageSavePath+ ImageConstant.IMAGE_PATH);
+        System.out.println(imageSavePath+ ImageConstant.IMAGE_PATH);
     }
 
 }

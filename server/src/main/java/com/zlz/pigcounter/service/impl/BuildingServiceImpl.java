@@ -50,19 +50,20 @@ public class BuildingServiceImpl implements BuildingService {
     @Override
     public PageResult page(int pageNum, int pageSize,int orgId) {
         PageHelper.startPage(pageNum,pageSize);
-        Page<Building> page = buildingMapper.page(orgId);
-        List<BuildingVO> buildingVOs=new ArrayList<>();
-        page.getResult().forEach(building -> {
-            buildingVOs.add(BuildingVO.builder()
-                    .id(building.getId())
-                    .buildingName(building.getBuildingName())
-                    //TODO 获取组织名称和编码
-                    .orgName(null)
-                    .orgCode(null)
-                    .build()
-            );
-        });
-        return new PageResult(page.getTotal(),buildingVOs);
+        try (Page<Building> page = buildingMapper.page(orgId)) {
+            List<BuildingVO> buildingVOs = new ArrayList<>();
+            page.getResult().forEach(building -> {
+                buildingVOs.add(BuildingVO.builder()
+                        .id(building.getId())
+                        .buildingName(building.getBuildingName())
+                        //TODO 获取组织名称和编码
+                        .orgName(null)
+                        .orgCode(null)
+                        .build()
+                );
+            });
+            return new PageResult(page.getTotal(), buildingVOs);
+        }
     }
 
     @Override

@@ -73,11 +73,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public PageResult getTasksPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
-        Page<Task> page =taskMapper.getTasksPage();
-        if (page==null){
-            throw  new  NotFoundTaskException();
+        try(  Page<Task> page =taskMapper.getTasksPage()) {
+            if (page==null){
+                throw  new  NotFoundTaskException();
+            }
+            return new PageResult(page.getTotal(),page.getResult());
         }
-        return new PageResult(page.getTotal(),page.getResult());
+        
     }
 
     @Override

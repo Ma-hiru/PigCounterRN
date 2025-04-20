@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface EmployeeMapper {
-    @Select("select id, name, password,phone, sex, create_time, profile_picture, username, organization from employee where username = #{username}")
+    @Select("select id, name, password,phone, sex, create_time, profile_picture, username, organization,admin from employee where username = #{username}")
     Employee getByUsername(String username);
 
     @Insert("insert into employee (username,password,name,sex,phone,create_time,profile_picture,organization,admin) values (#{username},#{password},#{name},#{sex},#{phone},#{createTime},#{profilePicture},#{organization},#{admin})")
