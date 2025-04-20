@@ -6,7 +6,7 @@ import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { useImmer } from "use-immer";
-import { APP_NAME, GlobalStyles } from "@/settings";
+import { APP_NAME } from "@/settings";
 
 type props = object
 
@@ -45,7 +45,7 @@ export const Feedback: FC<props> = () => {
     <MyBlueBtn className="w-[80%] mb-4">提交</MyBlueBtn>
   </View>, [feedbackInfo, setFeedbackInfo]);
   const Render = useCallback(() => {
-    if (!hasToken) return DataRender;
+    if (hasToken) return DataRender;
     return NoDataRender;
   }, [DataRender, NoDataRender, hasToken]);
   return (

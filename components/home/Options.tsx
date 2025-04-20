@@ -15,6 +15,7 @@ import { useImmer } from "use-immer";
 import logger from "@/utils/logger";
 import { newsSelector } from "@/stores/slice/newSlice";
 import News from "@/components/home/News";
+import { UploadFilesRouteParams } from "@/types/route";
 
 type props = object;
 const Options: FC<props> = () => {
@@ -72,12 +73,13 @@ const Options: FC<props> = () => {
                 taskIndex: [0, 0, 0],
                 penId: 114514,
                 once: "true"
-              } satisfies UploadFilesSendRouteParams
+              } satisfies  UploadFilesRouteParams
             }, "FN")}
           />
           <IconOptionItem
-            title="死猪统计"
+            title="查看数据"
             icon={PigIcon}
+            onPress={goToPages(router,"/(main)/More","FN")}
             iconStyle={{ width: 40, height: 40 }} />
         </View>
         <View className="flex-row justify-evenly">
@@ -104,7 +106,7 @@ const Options: FC<props> = () => {
         <View>
           <MyPagesCard cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
                        title={"今日任务"}>
-            <Task TasksList={TasksList}/>
+            <Task TasksList={TasksList} />
           </MyPagesCard>
 
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"热门新闻"}>
