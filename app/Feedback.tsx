@@ -2,15 +2,13 @@ import BigHeader from "@/components/BigHeader";
 import ImgUploader from "@/components/feedback/ImgUploader";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { useLogin } from "@/hooks/useLogin";
-import { FeedbackInfo } from "@/types/feedback";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { useImmer } from "use-immer";
+import { APP_NAME, GlobalStyles } from "@/settings";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 export const Feedback: FC<props> = () => {
   const { hasToken } = useLogin();
@@ -41,7 +39,8 @@ export const Feedback: FC<props> = () => {
         />
       </Textarea>
       <Text className="mb-4 mt-4">上传图片（选填）</Text>
-      <ImgUploader feedbackInfo={feedbackInfo} setFeedbackInfo={setFeedbackInfo} key={feedbackInfo.feedbackImg.length}/>
+      <ImgUploader feedbackInfo={feedbackInfo} setFeedbackInfo={setFeedbackInfo}
+                   key={feedbackInfo.feedbackImg.length} />
     </View>
     <MyBlueBtn className="w-[80%] mb-4">提交</MyBlueBtn>
   </View>, [feedbackInfo, setFeedbackInfo]);
@@ -52,16 +51,9 @@ export const Feedback: FC<props> = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 bg-white">
+      <View className="flex-1 bg-white" style={{ paddingBottom: 25 }}>
         <BigHeader title="问题反馈" info={
-          <>
-            <Text className="text-left text-[#999999]">反馈</Text>
-            <Text className="text-left text-[#999999]">使用</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
-            <Text className="text-left text-[#999999]">系统</Text>
-            <Text className="text-left text-[#999999]">的问题信息</Text>
-          </>
+          <BigHeader.InfoText content={`反馈使用{${APP_NAME}}系统的问题信息`} />
         }>
         </BigHeader>
         {Render()}

@@ -1,7 +1,6 @@
 import PlusIcon from "@/assets/images/plus.svg";
 import DelIcon from "@/assets/images/delete.svg";
 import { Card } from "@/components/ui/card";
-import { FeedbackInfo } from "@/types/feedback";
 import { pickImgFile } from "@/utils/pickImgFile";
 import { setImageScale } from "@/utils/setImageScale";
 import { Image, ImageSource } from "expo-image";

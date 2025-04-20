@@ -1,4 +1,3 @@
-import { UserProfile } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateType } from "@/stores";
 

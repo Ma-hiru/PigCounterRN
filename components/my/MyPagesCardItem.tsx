@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
   Text: {
     marginLeft: 5
   }
-});
+} as const);

@@ -1,5 +1,4 @@
 import ImgItem from "@/components/feedback/ImgItem";
-import { FeedbackInfo } from "@/types/feedback";
 import { FC } from "react";
 import { View } from "react-native";
 import { Updater } from "use-immer";

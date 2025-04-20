@@ -3,7 +3,7 @@ import Manage from "@/components/more/Manage";
 import Report from "@/components/more/Report";
 import { userSelector } from "@/stores";
 import { memo } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, View } from "react-native";
 import { useSelector } from "react-redux";
 
 
@@ -12,11 +12,13 @@ const More = () => {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <Header title={profile?.admin ? "管理" : "上报"} />
-      {
-        profile?.admin ? <Manage /> : <Report />
-      }
+      <View className="flex-1 bg-gray-50">
+        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+        <Header title={profile?.admin ? "管理" : "数据"} />
+        {
+          profile?.admin ? <Manage /> : <Report />
+        }
+      </View>
     </>
   );
 };

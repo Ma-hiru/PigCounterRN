@@ -3,13 +3,16 @@ import Item from "@/components/userInfo/Item";
 import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
+import { APP_NAME } from "@/settings";
+import { useAppSelector, userSelector } from "@/stores";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 export const CompanyInfo: FC<props> = () => {
   const { hasToken } = useLogin();
+  const { profile } = useAppSelector(userSelector);
+
+
   const NoDataRender = useMemo(() => <View
     className="flex-1 flex-row justify-center items-center">
     <Text style={{ textAlign: "center" }}>暂无数据</Text>
@@ -20,7 +23,7 @@ export const CompanyInfo: FC<props> = () => {
         <Text>xxxxxx</Text>
       </Item>
       <Item title="组织名">
-        <Text>xxxxxx</Text>
+        <Text>{profile.organization}</Text>
       </Item>
       <Item title="管理员">
         <Text>聂国梁</Text>
@@ -32,9 +35,9 @@ export const CompanyInfo: FC<props> = () => {
         <Text>雨湖区 雨湖路 100 号</Text>
       </Item>
     </View>
-  </View>, []);
+  </View>, [profile.organization]);
   const Render = useCallback(() => {
-    if (!hasToken) return DataRender;
+    if (hasToken) return DataRender;
     return NoDataRender;
   }, [DataRender, NoDataRender, hasToken]);
   return (
@@ -42,14 +45,7 @@ export const CompanyInfo: FC<props> = () => {
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 bg-white">
         <BigHeader title="组织信息" info={
-          <>
-            <Text className="text-left text-[#999999]">查看</Text>
-            <Text className="text-left text-[#999999]">登录在</Text>
-            <Text className="text-left color-[#c38b95]">猪只</Text>
-            <Text className="text-left color-[#409eff]">计数</Text>
-            <Text className="text-left text-[#999999]">系统</Text>
-            <Text className="text-left text-[#999999]">的组织信息</Text>
-          </>
+          <BigHeader.InfoText content={`查看登录在{${APP_NAME}}系统的组织信息`} />
         }>
         </BigHeader>
         {Render()}

@@ -1,8 +1,6 @@
 import { FC } from "react";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const Manage: FC<props> = () => {
   return (

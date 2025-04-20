@@ -1,13 +1,11 @@
-import { ResponseData } from "@/types/api";
 import { useToast } from "@/components/ui/toast";
-import { RemoveFirstArg } from "@/types/utils";
 import { curryFirst } from "@/utils/curryFirst";
 import Logger from "@/utils/logger";
 import { showNewToast } from "@/utils/toast";
 
 
-export const fetchData = async <T extends ResponseData<any>, P>(
-  reqFn: (data: P) => Promise<T>,
+export const fetchData = async <T extends ResponseData<any>, P extends any[]>(
+  reqFn: (...args: P) => Promise<T>,
   reqData: P,
   successFn: (res: T, createToast: RemoveFirstArg<typeof showNewToast>) => void,
   failFn: (res: T, createToast: RemoveFirstArg<typeof showNewToast>) => void,
@@ -15,7 +13,7 @@ export const fetchData = async <T extends ResponseData<any>, P>(
 ): Promise<void> => {
   const newShowNewToast = curryFirst(showNewToast, toast);
   try {
-    const res = await reqFn(reqData);
+    const res = await reqFn(...reqData);
     if (res?.ok) {
       successFn(res, newShowNewToast);
     } else {

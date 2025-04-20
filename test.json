@@ -1,0 +1,95 @@
+{"__internalInstanceHandle": {"_debugHookTypes": null, "_debugInfo": null, "_debugNeedsRemount": false, "_debugOwner
+  ": {"_debugHookTypes": [Array], "_debugInfo": null, "_debugNeedsRemount": false, "_debugOwner": [FiberNode], "actualDuration": 0.6519
+  269943237305, "actualStartTime": 555243754.803242, "alternate": [FiberNode], "child": [FiberNode], "childLanes": 0, "deletions": null
+, "dependencies": null, "elementType": [Function InternalTextInput], "flags": 12582913, "index": 0, "key": null, "lanes": 0, "memoize
+  dProps": [Object], "memoizedState": [Object], "mode": 3, "pendingProps": [Object], "ref": null, "refCleanup": null, "return": [FiberN
+  ode], "selfBaseDuration": 0.5695310831069946, "sibling": null, "stateNode": null, "subtreeFlags": 2097664, "tag": 0, "treeBaseDuratio
+  n": 0.5853639841079712, "type": [Function InternalTextInput], "updateQueue": [Object]}, "actualDuration": 0.06770801544189453, "actua
+  lStartTime": 555243755.385013, "alternate": {"_debugHookTypes": null, "_debugInfo": null, "_debugNeedsRemount": false, "_debugOwner":
+[FiberNode], "actualDuration": 0.6864060163497925, "actualStartTime": 555244874.697669, "alternate": [Circular], "child": null, "chi
+ldLanes": 0, "deletions": null, "dependencies": null, "elementType": "AndroidTextInput", "flags": 2097668, "index": 0, "key": null, "
+lanes": 0, "memoizedProps": [Object], "memoizedState": null, "mode": 3, "pendingProps": [Object], "ref": [Function anonymous], "refCl
+eanup": undefined, "return": [FiberNode], "selfBaseDuration": 0.020208001136779785, "sibling": null, "stateNode": [Object], "subtreeF
+lags": 0, "tag": 5, "treeBaseDuration": 0.020208001136779785, "type": "AndroidTextInput", "updateQueue": null}, "child": null, "child
+Lanes": 0, "deletions": null, "dependencies": null, "elementType": "AndroidTextInput", "flags": 2097664, "index": 0, "key": null, "la
+nes": 0, "memoizedProps": {"accessibilityElementsHidden": undefined, "accessibilityLabelledBy": undefined, "accessibilityState": [Obj
+ect], "accessible": true, "allowFontScaling": true, "aria-invalid": undefined, "aria-label": "Input Field", "aria-required": undefine
+d, "autoCapitalize": "sentences", "autoComplete": undefined, "caretHidden": undefined, "children": undefined, "cursorColor": undefine
+d, "dataSet": [Object], "disableFullscreenUI": undefined, "disabled": undefined, "editable": true, "focusable": true, "forwardedRef":
+[Function anonymous], "keyboardType": undefined, "mostRecentEventCount": 0, "nativeID": undefined, "numberOfLines": undefined, "onBl
+ur": [Function _onBlur], "onChange": [Function _onChange], "onChangeText": [Function onChangeText], "onClick": [Function onClick], "o
+nFocus": [Function _onFocus], "onKeyPress": [Function onKeyPress], "onResponderGrant": [Function onResponderGrant], "onResponderMove"
+: [Function onResponderMove], "onResponderRelease": [Function onResponderRelease], "onResponderTerminate": [Function onResponderTermi
+nate], "onResponderTerminationRequest": [Function onResponderTerminationRequest], "onScroll": [Function _onScroll], "onSelectionChang
+e": [Function _onSelectionChange], "onStartShouldSetResponder": [Function onStartShouldSetResponder], "placeholder": "请输入用户名",
+"placeholderTextColor": "rgba(140, 140, 140, 1)", "rejectResponderTermination": true, "returnKeyType": "next", "secureTextEntry": fal
+se, "selectionColor": undefined, "selectionHandleColor": undefined, "showSoftInputOnFocus": undefined, "states": [Object], "style": [
+Object], "submitBehavior": "blurAndSubmit", "text": "", "textBreakStrategy": undefined, "textContentType": undefined, "type": "text",
+"underlineColorAndroid": "transparent", "value": ""}, "memoizedState": null, "mode": 3, "pendingProps": {"accessibilityElementsHidde
+n": undefined, "accessibilityLabelledBy": undefined, "accessibilityState": [Object], "accessible": true, "allowFontScaling": true, "a
+ria-invalid": undefined, "aria-label": "Input Field", "aria-required": undefined, "autoCapitalize": "sentences", "autoComplete": unde
+fined, "caretHidden": undefined, "children": undefined, "cursorColor": undefined, "dataSet": [Object], "disableFullscreenUI": undefin
+ed, "disabled": undefined, "editable": true, "focusable": true, "forwardedRef": [Function anonymous], "keyboardType": undefined, "mos
+tRecentEventCount": 0, "nativeID": undefined, "numberOfLines": undefined, "onBlur": [Function _onBlur], "onChange": [Function _onChan
+ge], "onChangeText": [Function onChangeText], "onClick": [Function onClick], "onFocus": [Function _onFocus], "onKeyPress": [Function
+onKeyPress], "onResponderGrant": [Function onResponderGrant], "onResponderMove": [Function onResponderMove], "onResponderRelease": [F
+unction onResponderRelease], "onResponderTerminate": [Function onResponderTerminate], "onResponderTerminationRequest": [Function onRe
+sponderTerminationRequest], "onScroll": [Function _onScroll], "onSelectionChange": [Function _onSelectionChange], "onStartShouldSetRe
+sponder": [Function onStartShouldSetResponder], "placeholder": "请输入用户名", "placeholderTextColor": "rgba(140, 140, 140, 1)", "rej
+ectResponderTermination": true, "returnKeyType": "next", "secureTextEntry": false, "selectionColor": undefined, "selectionHandleColor
+": undefined, "showSoftInputOnFocus": undefined, "states": [Object], "style": [Object], "submitBehavior": "blurAndSubmit", "text": ""
+, "textBreakStrategy": undefined, "textContentType": undefined, "type": "text", "underlineColorAndroid": "transparent", "value": ""},
+"ref": [Function anonymous], "refCleanup": undefined, "return": {"_debugHookTypes": null, "_debugInfo": null, "_debugNeedsRemount":
+false, "_debugOwner": [FiberNode], "actualDuration": 0.08093690872192383, "actualStartTime": 555243755.375169, "alternate": [FiberNod
+e], "child": [Circular], "childLanes": 0, "deletions": null, "dependencies": null, "elementType": [Object], "flags": 0, "index": 0, "
+key": null, "lanes": 0, "memoizedProps": [Object], "memoizedState": null, "mode": 3, "pendingProps": [Object], "ref": null, "refClean
+up": null, "return": [FiberNode], "selfBaseDuration": 0.008853912353515625, "sibling": null, "stateNode": null, "subtreeFlags": 20976
+64, "tag": 10, "treeBaseDuration": 0.015832901000976562, "type": [Object], "updateQueue": null}, "selfBaseDuration": 0.00697898864746
+09375, "sibling": null, "stateNode": {"canonical": [Object], "node": [Object]}, "subtreeFlags": 0, "tag": 5, "treeBaseDuration": 0.00
+69789886474609375, "type": "AndroidTextInput", "updateQueue": null}, "__nativeTag": 12894, "_viewConfig": {"(index)": "_viewConfig",
+"Commands": {}, "bubblingEventTypes": {"topBlur": [Object], "topChange": [Object], "topClick": [Object], "topEndEditing": [Object], "
+topFocus": [Object], "topKeyPress": [Object], "topPointerCancel": [Object], "topPointerDown": [Object], "topPointerEnter": [Object],
+"topPointerLeave": [Object], "topPointerMove": [Object], "topPointerOut": [Object], "topPointerOver": [Object], "topPointerUp": [Obje
+ct], "topSelect": [Object], "topSubmitEditing": [Object], "topTouchCancel": [Object], "topTouchEnd": [Object], "topTouchMove": [Objec
+t], "topTouchStart": [Object]}, "directEventTypes": {"onGestureHandlerEvent": [Object], "onGestureHandlerStateChange": [Object], "top
+AccessibilityAction": [Object], "topContentSizeChange": [Object], "topLayout": [Object], "topLoadingError": [Object], "topLoadingFini
+sh": [Object], "topLoadingStart": [Object], "topMessage": [Object], "topMomentumScrollBegin": [Object], "topMomentumScrollEnd": [Obje
+ct], "topScroll": [Object], "topScrollBeginDrag": [Object], "topScrollEndDrag": [Object], "topSelectionChange": [Object]}, "uiViewCla
+ssName": "AndroidTextInput", "validAttributes": {"accessibilityActions": true, "accessibilityCollection": true, "accessibilityCollect
+ionItem": true, "accessibilityHint": true, "accessibilityLabel": true, "accessibilityLabelledBy": true, "accessibilityLiveRegion": tr
+ue, "accessibilityRole": true, "accessibilityState": true, "accessibilityValue": true, "adjustsFontSizeToFit": true, "alignContent":
+true, "alignItems": true, "alignSelf": true, "allowFontScaling": true, "aspectRatio": true, "autoCapitalize": true, "autoComplete": t
+rue, "autoCorrect": true, "autoFocus": true, "backgroundColor": [Object], "borderBottomColor": [Object], "borderBottomLeftRadius": tr
+ue, "borderBottomRightRadius": true, "borderBottomWidth": true, "borderColor": [Object], "borderEndWidth": true, "borderLeftColor": [
+Object], "borderLeftWidth": true, "borderRadius": true, "borderRightColor": [Object], "borderRightWidth": true, "borderStartWidth": t
+rue, "borderStyle": true, "borderTopColor": [Object], "borderTopLeftRadius": true, "borderTopRightRadius": true, "borderTopWidth": tr
+ue, "borderWidth": true, "bottom": true, "boxShadow": [Object], "caretHidden": true, "collapsable": true, "collapsableChildren": true
+, "color": [Object], "columnGap": true, "contextMenuHidden": true, "cursorColor": [Object], "disableFullscreenUI": true, "display": t
+rue, "editable": true, "elevation": true, "end": true, "experimental_backgroundImage": [Object], "experimental_layoutConformance": tr
+ue, "experimental_mixBlendMode": true, "filter": [Object], "flex": true, "flexBasis": true, "flexDirection": true, "flexGrow": true,
+"flexShrink": true, "flexWrap": true, "fontFamily": true, "fontSize": true, "fontStyle": true, "fontVariant": true, "fontWeight": tru
+e, "gap": true, "height": true, "importantForAccessibility": true, "importantForAutofill": true, "includeFontPadding": true, "inlineI
+mageLeft": true, "inlineImagePadding": true, "inset": true, "insetBlock": true, "insetBlockEnd": true, "insetBlockStart": true, "inse
+tInline": true, "insetInlineEnd": true, "insetInlineStart": true, "isolation": true, "justifyContent": true, "keyboardType": true, "l
+eft": true, "letterSpacing": true, "lineHeight": true, "margin": true, "marginBlock": true, "marginBlockEnd": true, "marginBlockStart
+": true, "marginBottom": true, "marginEnd": true, "marginHorizontal": true, "marginInline": true, "marginInlineEnd": true, "marginInl
+ineStart": true, "marginLeft": true, "marginRight": true, "marginStart": true, "marginTop": true, "marginVertical": true, "maxFontSiz
+eMultiplier": true, "maxHeight": true, "maxLength": true, "maxWidth": true, "minHeight": true, "minWidth": true, "minimumFontScale":
+true, "mostRecentEventCount": true, "multiline": true, "nativeID": true, "numberOfLines": true, "onClick": true, "onClickCapture": tr
+ue, "onContentSizeChange": true, "onKeyPress": true, "onLayout": true, "onMoveShouldSetResponder": true, "onMoveShouldSetResponderCap
+ture": true, "onPointerEnter": true, "onPointerEnterCapture": true, "onPointerLeave": true, "onPointerLeaveCapture": true, "onPointer
+Move": true, "onPointerMoveCapture": true, "onPointerOut": true, "onPointerOutCapture": true, "onPointerOver": true, "onPointerOverCa
+pture": true, "onResponderEnd": true, "onResponderGrant": true, "onResponderMove": true, "onResponderReject": true, "onResponderRelea
+se": true, "onResponderStart": true, "onResponderTerminate": true, "onResponderTerminationRequest": true, "onScroll": true, "onSelect
+ionChange": true, "onShouldBlockNativeResponder": true, "onStartShouldSetResponder": true, "onStartShouldSetResponderCapture": true,
+"onTouchCancel": true, "onTouchEnd": true, "onTouchMove": true, "onTouchStart": true, "opacity": true, "overflow": true, "padding": t
+rue, "paddingBlock": true, "paddingBlockEnd": true, "paddingBlockStart": true, "paddingBottom": true, "paddingEnd": true, "paddingHor
+izontal": true, "paddingInline": true, "paddingInlineEnd": true, "paddingInlineStart": true, "paddingLeft": true, "paddingRight": tru
+e, "paddingStart": true, "paddingTop": true, "paddingVertical": true, "placeholder": true, "placeholderTextColor": [Object], "positio
+n": true, "renderToHardwareTextureAndroid": true, "returnKeyLabel": true, "returnKeyType": true, "right": true, "role": true, "rotati
+on": true, "rowGap": true, "scaleX": true, "scaleY": true, "secureTextEntry": true, "selectTextOnFocus": true, "selectionColor": [Obj
+ect], "selectionHandleColor": [Object], "shadowColor": [Object], "showSoftInputOnFocus": true, "start": true, "style": [Object], "sub
+mitBehavior": true, "testID": true, "text": true, "textAlign": true, "textAlignVertical": true, "textBreakStrategy": true, "textDecor
+ationLine": true, "textShadowColor": [Object], "textShadowOffset": true, "textShadowRadius": true, "textTransform": true, "top": true
+, "transform": true, "transformOrigin": true, "translateX": true, "translateY": true, "underlineColorAndroid": [Object], "width": tru
+e, "zIndex": true}}, "clear": [Function clear], "getNativeRef": [Function getNativeRef], "isFocused": [Function isFocused], "setSelection": [Function setSelection]}

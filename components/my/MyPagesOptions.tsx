@@ -10,12 +10,10 @@ import { useLogin } from "@/hooks/useLogin";
 import { goToPages } from "@/utils/goToPages";
 import { type Router, useRouter } from "expo-router";
 import { FC, memo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MyPagesCard from "./MyPagesCard";
 
-interface props {
-  /* empty */
-}
+type props = object
 
 const CardIconList = [
   {
@@ -59,21 +57,11 @@ const MyPagesOptions: FC<props> = () => {
               )
             }
           </MyPagesCard>
-          <MyPagesCard cardStyle={{ marginBottom: 10 }} title={"今日任务"}>
-            <View className="mb-4">
-              <Text style={{ textAlign: "center" }}>暂无任务</Text>
-            </View>
-          </MyPagesCard>
-          <MyPagesCard cardStyle={{ marginBottom: 10 }} title={"未处理上传"}>
-            <View className="mb-4">
-              <Text style={{ textAlign: "center" }}>暂无数据</Text>
-            </View>
-          </MyPagesCard>
           <MyPagesCard title={"更多"}>
             <View className="mb-4">
-              <MyPagesCardItem text={"设置"} img={settings} iconSize={25}
+              <MyPagesCardItem text={"设置"} img={settings} iconSize={30}
                                onPress={goToPages(router, "/Settings", "FN")} />
-              <MyPagesCardItem text={"退出登录"} img={logout} iconSize={22}
+              <MyPagesCardItem text={"退出登录"} img={logout} iconSize={30}
                                onPress={handleLogout} />
             </View>
           </MyPagesCard>
@@ -89,8 +77,6 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12,
     position: "relative",
-    display: "flex",
-    flexDirection: "column",
     justifyContent: "space-between"
   },
   InfoCard: {

@@ -1,5 +1,6 @@
 import CountDown from "@/components/upload/CountDown";
-import { FC, Fragment, useSyncExternalStore } from "react";
+import { countdownFormat, useValidateTask } from "@/utils/validateTask";
+import { FC, Fragment } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -9,15 +10,13 @@ import {
   AccordionTrigger
 } from "@/components/ui/accordion";
 import { ChevronDownIcon, ChevronUpIcon } from "@/components/ui/icon";
-import { Task } from "@/types/task";
 import { Button, ButtonText } from "@/components/ui/button";
 import { goToPages } from "@/utils/goToPages";
 import { Divider } from "@/components/ui/divider";
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "@/settings";
-import * as dayjs from "dayjs";
-import * as duration from "dayjs/plugin/duration";
+import { UploadFilesRouteParams } from "@/types/route";
 
 interface props {
   task: Task;
@@ -25,21 +24,9 @@ interface props {
   router: ReturnType<typeof useRouter>;
 }
 
-dayjs.default.extend(duration.default);
 type btnAction = GetReactProps<typeof Button>["action"];
-const format = (time: number) => {
-  return dayjs.default.duration(time, "milliseconds").format("HH时mm分ss秒");
-};
 const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
-  const endTime = dayjs.default(task.endTime).toDate();
-  const startTime = dayjs.default(task.startTime).toDate();
-  const validation = useSyncExternalStore(
-    (listener) => {
-      const timer = setInterval(listener, 1000);
-      return () => clearInterval(timer);
-    },
-    () => !(startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
-  );
+  const { endTime, validation } = useValidateTask(task);
   return (
     <>
       <View
@@ -60,26 +47,26 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
             </View>
             {
               validation ?
-              <Text style={{ ...styles.HeadText, textAlign: "left" }}>
-                <CountDown endTime={endTime.getTime()} format={format} />
-              </Text> :
-              <Text style={{
-                ...styles.HeadText,
-                color: validation ? GlobalStyles.PositiveColor : GlobalStyles.NegativeColor,
-                textAlign: "left"
-              }}>
-                未开放
-              </Text>
+                <Text style={{ ...styles.HeadText, textAlign: "left" }}>
+                  <CountDown endTime={endTime.getTime()} format={countdownFormat} endText="未开放"/>
+                </Text> :
+                <Text style={{
+                  ...styles.HeadText,
+                  color: validation ? GlobalStyles.PositiveColor : GlobalStyles.NegativeColor,
+                  textAlign: "left"
+                }}>
+                  未开放
+                </Text>
             }
           </View>
           <View>
             <Text style={{
               ...styles.HeadText,
-              color: GlobalStyles.ThemeColor3
+              color: GlobalStyles.ThemeColor
             }}>任务起始：{task.startTime}</Text>
             <Text style={{
               ...styles.HeadText,
-              color: GlobalStyles.ThemeColor3
+              color: GlobalStyles.ThemeColor
             }}>任务结束：{task.endTime}</Text>
           </View>
         </View>
@@ -100,11 +87,11 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                       {
                         ({ isExpanded }) =>
                           <>
-                            <AccordionTitleText>{building.buildingId}</AccordionTitleText>
+                            <AccordionTitleText>{"楼栋" + building.buildingId}</AccordionTitleText>
                             {
                               isExpanded ?
-                              <AccordionIcon as={ChevronUpIcon} className="ml-3" /> :
-                              <AccordionIcon as={ChevronDownIcon} className="ml-3" />
+                                <AccordionIcon as={ChevronUpIcon} className="ml-3" /> :
+                                <AccordionIcon as={ChevronDownIcon} className="ml-3" />
                             }
                           </>
                       }
@@ -126,8 +113,9 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                   params: {
                                     title: `楼栋${building.buildingId} · 栏舍${pen.penId}`,
                                     taskIndex: [taskIndex, buildingIndex, penIndex],
-                                    penId: pen.penId
-                                  }
+                                    penId: pen.penId,
+                                    once: "false"
+                                  } satisfies UploadFilesRouteParams
                                 },
                                 "FN"
                               )}
@@ -136,7 +124,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                 penIndex !== 0 || penIndex !== building.pens.length - 1 ? { marginBottom: 10 } : {}
                               }
                             >
-                              <ButtonText>{pen.penId}</ButtonText>
+                              <ButtonText>{"栏舍" + pen.penId}</ButtonText>
                             </Button>
                           );
                         }
@@ -172,8 +160,8 @@ const styles = StyleSheet.create({
     textAlign: "left"
   },
   Tags: {
-    backgroundColor: GlobalStyles.ThemeColor,
-    color: GlobalStyles.TagsText,
+    backgroundColor: GlobalStyles.SecondColor,
+    color: "#000",
     padding: 2,
     fontWeight: 500,
     marginRight: 5

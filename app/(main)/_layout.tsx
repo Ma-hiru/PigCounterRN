@@ -1,11 +1,35 @@
 import { Tabs } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Feather from "@expo/vector-icons/Feather";
 import { GlobalStyles } from "@/settings";
 import { memo } from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { ImageStyle as RNImageStyle, Platform, Pressable, StyleProp, View } from "react-native";
+import { Image, ImageSource } from "expo-image";
+import Home from "@/assets/images/NavBar/home.svg";
+import Home_Active from "@/assets/images/NavBar/home_active.svg";
+import See from "@/assets/images/NavBar/see.svg";
+import See_Active from "@/assets/images/NavBar/see_active.svg";
+import Data from "@/assets/images/NavBar/data.svg";
+import Data_Active from "@/assets/images/NavBar/data_active.svg";
+import User from "@/assets/images/NavBar/user.svg";
+import User_Active from "@/assets/images/NavBar/user_active.svg";
 
 const MainLayout = () => {
+  const RenderIcon = (focused: boolean, defaultIcon: ImageSource | number, activeIcon: ImageSource | number, style?: StyleProp<RNImageStyle>) => {
+    return (
+      focused ? <Image source={activeIcon} style={{
+          width: 35,
+          height: 35,
+          position: "relative",
+          right: 1.4,
+          ...style as object
+        }} /> :
+        <Image source={defaultIcon} style={{
+          width: 35, height: 35,
+          position: "relative",
+          right: 1.4,
+          ...style as object
+        }} />
+    );
+  };
   return (
     <>
       <Tabs
@@ -37,7 +61,7 @@ const MainLayout = () => {
           ),
           tabBarLabelPosition: "below-icon",
           headerShown: false,
-          tabBarActiveTintColor: GlobalStyles.ThemeColor,
+          tabBarActiveTintColor: "#000",
           headerShadowVisible: false,
           tabBarStyle: {
             backgroundColor: GlobalStyles.TabBarBg
@@ -50,37 +74,34 @@ const MainLayout = () => {
         <Tabs.Screen
           name="Home"
           options={{
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="home" size={24} color={color} />
-            ),
-            title: "首页",
+            tabBarIcon: ({ focused }) => RenderIcon(focused, Home, Home_Active),
+            title: "首页"
           }}
         />
         <Tabs.Screen
           name="Upload"
           options={{
-            tabBarIcon: ({ color }) => (
-              <Feather name="upload-cloud" size={24} color={color} />
-            ),
-            title: "上传"
+            tabBarIcon: ({ focused }) => RenderIcon(focused, See, See_Active, {
+              bottom: 1.5,
+              right: 0
+            }),
+            title: "计数"
           }}
         />
         <Tabs.Screen
           name="More"
           options={{
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="bells" size={24} color={color} />
-            ),
-            title: "上报"
+            tabBarIcon: ({ focused }) => RenderIcon(focused, Data, Data_Active, { right: 0 }),
+            title: "数据"
           }}
         />
         <Tabs.Screen
           name="My"
           options={{
-            tabBarIcon: ({ color }) => (
-              <AntDesign name="team" size={24} color={color} />
-            ),
-            title: "组织"
+            tabBarIcon: ({ focused }) => RenderIcon(focused, User, User_Active, {
+              right: 0.5
+            }),
+            title: "我的"
           }}
         />
       </Tabs>
@@ -89,8 +110,3 @@ const MainLayout = () => {
 };
 // noinspection JSUnusedGlobalSymbols
 export default memo(MainLayout);
-const styles = StyleSheet.create({
-  tabsBarBorder: {
-    borderWidth: 0
-  }
-});

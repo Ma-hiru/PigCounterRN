@@ -1,10 +1,16 @@
-import { debounce } from "lodash-es";
 import { FC, memo, useCallback, useMemo } from "react";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "expo-router";
-import { View, Text, StyleSheet, TextInput } from "react-native";
-import { Updater } from "use-immer";
+import Feather from "@expo/vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import { GlobalStyles } from "@/settings";
+import ModalWindow from "@/components/ModalWindow";
+import { useMyState } from "@/hooks/useMyState";
+import logger from "@/utils/logger";
+import { View, Text } from "react-native";
+import { Input, InputField } from "@/components/ui/input";
 
 interface props {
   previewImg?: RNFile;
@@ -16,15 +22,10 @@ interface props {
   clearUpload: () => void;
   isUpload: boolean;
   confirmData: () => void;
-  addArtifact: () => void;
-  useCount: [count: count, setCount: setCount];
+  addArtifact: (res: number) => void;
+  count: number;
 }
 
-type count = {
-  aiCount: number
-  peopleCount: number
-}
-type setCount = Updater<count>;
 const UploadPagesOptionsCard: FC<props> = (
   {
     previewImg,
@@ -37,23 +38,31 @@ const UploadPagesOptionsCard: FC<props> = (
     isUpload,
     confirmData,
     addArtifact,
-    useCount
+    count
   }) => {
-  const [count, setCount] = useCount;
   const router = useRouter();
+  const showModal = useMyState(false);
   const NoDataRender = useMemo(() => (
     <>
-      <Button onPress={takeAssets("images", "take")} className="mt-4">
-        <ButtonText>拍照上传</ButtonText>
+      <Button onPress={takeAssets("images", "take")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Feather name="camera" color="white" />
+        <ButtonText style={{ color: "white" }}>拍照上传</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "take")} className="mt-4">
-        <ButtonText>录像上传</ButtonText>
+      <Button onPress={takeAssets("videos", "take")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Feather name="video" color="white" />
+        <ButtonText style={{ color: "white" }}>录像上传</ButtonText>
       </Button>
-      <Button onPress={takeAssets("images", "pick")} className="mt-4">
-        <ButtonText>本地图片</ButtonText>
+      <Button onPress={takeAssets("images", "pick")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <AntDesign name="picture" color="white" />
+        <ButtonText style={{ color: "white" }}>本地图片</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "pick")} className="mt-4">
-        <ButtonText>本地视频</ButtonText>
+      <Button onPress={takeAssets("videos", "pick")} className="mt-4" variant="link"
+              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
+        <Entypo name="folder-video" color="white" />
+        <ButtonText style={{ color: "white" }}>本地视频</ButtonText>
       </Button>
     </>
   ), [takeAssets]);
@@ -75,14 +84,19 @@ const UploadPagesOptionsCard: FC<props> = (
       <Button onPress={clearUpload} className="mt-4" action="negative">
         <ButtonText>重新上传</ButtonText>
       </Button>
-      <Button onPress={addArtifact} className="mt-4" action="primary">
+      <Button onPress={() => {
+        showModal.set(true);
+      }} className="mt-4" action="primary">
         <ButtonText>修改数据</ButtonText>
       </Button>
-      <Button onPress={confirmData} className="mt-4" action="positive">
+      <Button onPress={()=>{
+        confirmData();
+        router.back();
+      }} className="mt-4" action="positive">
         <ButtonText>确认</ButtonText>
       </Button>
     </>
-  ), [addArtifact, clearUpload, confirmData]);
+  ), [clearUpload, confirmData, showModal]);
   const Render = useCallback(() => {
     if (previewVideo || previewImg || cachePath.path) {
       if (isUpload) return UploadDataRender;
@@ -90,48 +104,33 @@ const UploadPagesOptionsCard: FC<props> = (
     }
     return NoDataRender;
   }, [NoDataRender, PreViewDataRender, UploadDataRender, cachePath.path, isUpload, previewImg, previewVideo]);
+
+  const inputNum = useMyState(0);
   const inputCount = (text: string) => {
     const num = Number.parseInt(text);
-    if (Number.isNaN(num))
-      setCount((draft) => {
-        draft.peopleCount = 0;
-      });
-    else setCount((draft) => {
-      draft.peopleCount = num;
-    });
+    if (Number.isNaN(num)) inputNum.set(0);
+    else inputNum.set(num);
   };
+  logger("console", "uploadoptionstart", "show", showModal.get());
   return (
     <>
-      <Card>
-        {isUpload &&
-         (
-           <View className="w-full flex-col justify-center items-center mb-4">
-             <Text className="font-bold text-2xl">
-               识别数量:
-               <Text style={styles.CountText} className="text-2xl">{" " + count.aiCount}</Text>
-             </Text>
-             <View className="flex-row justify-center items-center">
-               <Text className="font-bold text-2xl h-auto">
-                 人工计数:
-               </Text>
-               <TextInput
-                 value={String(count.peopleCount)}
-                 style={{ height: "auto", width: "auto" }}
-                 className="text-2xl text-[red]"
-                 onChangeText={inputCount}
-               />
-             </View>
-           </View>
-         )
-        }
+      <ModalWindow
+        title="修改数据"
+        confirm={() => {
+          addArtifact(inputNum.get());
+        }} show={showModal}
+      >
+        <View>
+          <Input>
+            <InputField placeholder={String(count)} onChangeText={inputCount} />
+          </Input>
+        </View>
+      </ModalWindow>
+      <Card style={{ backgroundColor: "rgba(255,255,255,0.6)", marginTop: 15 }}>
         {Render()}
       </Card>
     </>
   );
 };
 export default memo(UploadPagesOptionsCard);
-const styles = StyleSheet.create({
-  CountText: {
-    color: "red"
-  }
-});
+
