@@ -43,8 +43,8 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
   }, [task.buildings, validation]);
   useEffect(() => {
     total.set((draft) => {
-      draft.pensNum += pensNum;
-      draft.countNum += countNum;
+      draft.pensNum = pensNum;
+      draft.countNum = countNum;
     });
     // eslint-disable-next-line
   }, [countNum, pensNum]);

@@ -62,10 +62,12 @@ const UploadFiles: FC = () => {
     DEFAULT_UPLOAD_TYPE
   } = useAppSelector(uploadSelector);
   let {
-    TasksList
+    TasksList,
+    OnceTask
   } = useAppSelector(uploadSelector);
+  logger("console", "isOnceUpload.current", isOnceUpload.current);
   if (isOnceUpload.current) {
-    TasksList = OnceTaskTemp;
+    TasksList = OnceTask;
   }
   logger("console", "TasksList", TasksList, "Index", TaskIndexTuple);
   /** 获取缓存 */
@@ -86,12 +88,12 @@ const UploadFiles: FC = () => {
           tempUri,
           `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`,
           (file) => {
-            updateTaskList(TaskIndexTuple, file.uri, type);
+            updateTaskList(TaskIndexTuple, file.uri, type, _, _, isOnceUpload.current);
           });
         break;
       case "delete":
         await removeFile(tempUri, (_) => {
-          updateTaskList(TaskIndexTuple, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES);
+          updateTaskList(TaskIndexTuple, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_RES, isOnceUpload.current);
         });
     }
   }, [DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE, TaskIndexTuple]);
@@ -182,7 +184,7 @@ const UploadFiles: FC = () => {
             case "videos":
               setPreviewVideo(file);
           }
-          updateTaskList(TaskIndexTuple, file.uri, cachePath.type, res.data.count[0], res.data.count[0]);
+          updateTaskList(TaskIndexTuple, file.uri, cachePath.type, res.data.count[0], res.data.count[0], isOnceUpload.current);
           setIsUpload(true);
         },
         (res, createToast) => {
@@ -198,7 +200,7 @@ const UploadFiles: FC = () => {
 
   }, []);
   const addArtifact = useCallback((res: number) => {
-    updateTaskList(TaskIndexTuple, _, _, _, res);
+    updateTaskList(TaskIndexTuple, _, _, _, res, isOnceUpload.current);
   }, [TaskIndexTuple]);
   return (
     <>

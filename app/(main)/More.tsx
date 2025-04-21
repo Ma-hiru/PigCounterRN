@@ -1,15 +1,16 @@
 import Header from "@/components/Header";
 import Manage from "@/components/more/Manage";
 import Report from "@/components/more/Report";
-import { userSelector } from "@/stores";
+import { stateId, uploadSelector, useAppSelector, userSelector } from "@/stores";
 import { memo } from "react";
 import { StatusBar, View } from "react-native";
 import { useSelector } from "react-redux";
+import logger from "@/utils/logger";
 
 
 const More = () => {
   const { profile } = useSelector(userSelector);
-
+  logger("console", "stateId", stateId);
   return (
     <>
       <View className="flex-1 bg-gray-50">
@@ -23,4 +24,4 @@ const More = () => {
   );
 };
 // noinspection JSUnusedGlobalSymbols
-export default memo(More);
+export default More;
