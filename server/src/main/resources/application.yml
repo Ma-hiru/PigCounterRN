@@ -31,6 +31,7 @@ mybatis:
     map-underscore-to-camel-case: true
 jwt:
   admin-secret-key: ${zlz.jwt.admin-secret-key}
-  admin-token-name: ${zlz.jwt.admin-token-name}
-    #过期时间
+  admin-token-name:
+    ${zlz.jwt.admin-token-name}
+  #过期时间
   admin-ttl: ${zlz.jwt.admin-ttl}
