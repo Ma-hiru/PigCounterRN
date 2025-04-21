@@ -1,5 +1,6 @@
 package com.zlz.pigcounter.service.impl;
 
+import com.common.constant.ImageConstant;
 import com.common.constant.JwtClaimsConstant;
 import com.common.context.BaseContext;
 import com.common.exception.*;
@@ -111,7 +112,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             String fileExtension=profilePicture.getOriginalFilename().substring(profilePicture.getOriginalFilename().lastIndexOf("."));
             String fileName= UUID.randomUUID() +fileExtension;
-             filePath= imageSavePath+"/"+fileName;
+             filePath= imageSavePath+ ImageConstant.PROFILE_PICTURE_PATH +"/"+fileName;
         }
         employee.setProfilePicture(filePath);
         employee.setCreateTime(LocalDateTime.now());
