@@ -35,6 +35,7 @@ const userSlice = createSlice({
       state.token = action.payload.token;
     },
     setLogout: (state) => {
+      //TODO
       state.token = "";
       state.profile = {
         id: -1,

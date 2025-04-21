@@ -12,7 +12,7 @@ export const pickImgFile = async () => {
     const result = await launchImageLibraryAsync({
       mediaTypes: "images",
       allowsMultipleSelection: false,
-      quality: 1,
+      quality: 0.5,
       selectionLimit: 1,
       allowsEditing: true
     });

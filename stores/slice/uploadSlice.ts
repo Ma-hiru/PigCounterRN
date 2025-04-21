@@ -11,7 +11,7 @@ interface initialType {
   DEFAULT_UPLOAD_TYPE: typeof DEFAULT_UPLOAD_TYPE;
 }
 
-export const OnceTaskTemp: TaskList = [{
+export let OnceTaskTemp: TaskList = [{
   id: 114514,
   employeeId: 114514,
   startTime: "",
@@ -30,6 +30,9 @@ export const OnceTaskTemp: TaskList = [{
     }
   ]
 }];
+export const updateOnceTaskTemp = (data: typeof OnceTaskTemp) => {
+  OnceTaskTemp = data;
+};
 export const TasksListTemp: TaskList = [
   {
     id: 0,

@@ -3,8 +3,7 @@ import { memo, useEffect } from "react";
 import { useFonts, getLoadedFonts } from "expo-font";
 import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
 import baigetianxingtiRegular from "@/assets/fonts/zihun50hao-baigetianxingti-Regular.ttf";
-import { PersistedRootState, uploadActions, uploadSelector, useAppSelector } from "@/stores";
-import { useDispatch } from "react-redux";
+import { PersistedRootState, uploadSelector, useAppSelector } from "@/stores";
 import logger from "@/utils/logger";
 
 const App = () => {
