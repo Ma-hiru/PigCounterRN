@@ -12,7 +12,6 @@ export const CompanyInfo: FC<props> = () => {
   const { hasToken } = useLogin();
   const { profile } = useAppSelector(userSelector);
 
-
   const NoDataRender = useMemo(() => <View
     className="flex-1 flex-row justify-center items-center">
     <Text style={{ textAlign: "center" }}>暂无数据</Text>

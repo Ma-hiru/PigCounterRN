@@ -1,18 +1,23 @@
 import { UriToRNFile } from "@/utils/convertToRNFile";
-import Logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { cacheDirectory, downloadAsync } from "expo-file-system";
 
-export const DownloadFile = async (url: string): Promise<RNFile> => {
+export const DownloadFile = async (url: string): Promise<RNFile | null> => {
+  const fileName = url.split("/").pop()!;
+  const downloadPath = `${cacheDirectory}${fileName}`;
+  const file = await UriToRNFile(downloadPath);
+  if (file.uri !== "") return file;
   try {
-    const fileName = url.split("/").pop()!;
-    const downloadPath = `${cacheDirectory}${fileName}`;
     const { uri } = await downloadAsync(
       url,
       downloadPath
     );
-    return UriToRNFile(uri);
+    if (uri === "") return Promise.reject(null);
+    const data = await UriToRNFile(uri);
+    if (data.uri === "") return Promise.reject(null);
+    return Promise.resolve(data);
   } catch (error) {
-    Logger("console", error);
-    return UriToRNFile("");
+    Log.Echo({ error });
+    return Promise.reject(null);
   }
 };

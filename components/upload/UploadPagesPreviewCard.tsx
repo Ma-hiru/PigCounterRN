@@ -1,4 +1,4 @@
-import Logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { FC, memo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
@@ -27,13 +27,14 @@ const UploadPagesPreviewCard: FC<props> = (
     setScale
   }) => {
   console.log("------------------------");
-  Logger("console", "cachePath--PreviewCard", cachePath);
-  Logger("console", "previewImg--PreviewCard", previewImg);
-  Logger("console", "previewVideo--PreviewCard", previewVideo);
+  Log.Console("cachePath--PreviewCard", cachePath);
+  Log.Console("previewImg--PreviewCard", previewImg);
+  Log.Console("previewVideo--PreviewCard", previewVideo);
   console.log("------------------------");
   return (
     <>
-      <Card className="mb-4" style={{ backgroundColor: "rgba(255,255,255,0.6)",backdropFilter:"blur(10)"  }}>
+      <Card className="mb-4"
+            style={{ backgroundColor: "rgba(255,255,255,0.6)", backdropFilter: "blur(10)" }}>
         {
           (previewImg || cachePath.path)
             ?
@@ -66,7 +67,7 @@ const UploadPagesPreviewCard: FC<props> = (
 export default memo(UploadPagesPreviewCard);
 const styles = StyleSheet.create({
   previewCard: {
-    height: 200,
+    height: 200
   },
   icon: {
     width: 20,

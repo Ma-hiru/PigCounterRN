@@ -5,22 +5,22 @@ import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
-import { useImmer } from "use-immer";
 import { APP_NAME } from "@/settings";
+import { useMyState } from "@/hooks/useMyState";
 
 type props = object
 
 export const Feedback: FC<props> = () => {
   const { hasToken } = useLogin();
-  const NoDataRender = useMemo(() => <View
-    className="flex-1 flex-row justify-center items-center">
-    <Text style={{ textAlign: "center" }}>请登录</Text>
-  </View>, []);
-  const [feedbackInfo, setFeedbackInfo] = useImmer<FeedbackInfo>({
+  const feedbackInfo = useMyState<FeedbackInfo>({
     taskId: 0,
     feedback: "",
     feedbackImg: []
   });
+  const NoDataRender = useMemo(() => <View
+    className="flex-1 flex-row justify-center items-center">
+    <Text style={{ textAlign: "center" }}>请登录</Text>
+  </View>, []);
   const DataRender = useMemo(() => <View className="flex-1 justify-between items-center mt-16">
     <View className="w-[80%]">
       <Text className="mb-4">文字信息（必须）</Text>
@@ -32,20 +32,20 @@ export const Feedback: FC<props> = () => {
       >
         <TextareaInput
           placeholder="描述你的问题"
-          value={feedbackInfo.feedback}
-          onChangeText={text => setFeedbackInfo(draft => {
+          value={feedbackInfo.get().feedback}
+          onChangeText={text => feedbackInfo.set(draft => {
             draft.feedback = text;
           })}
         />
       </Textarea>
       <Text className="mb-4 mt-4">上传图片（选填）</Text>
-      <ImgUploader feedbackInfo={feedbackInfo} setFeedbackInfo={setFeedbackInfo}
-                   key={feedbackInfo.feedbackImg.length} />
+      <ImgUploader feedbackInfo={feedbackInfo.get()} setFeedbackInfo={feedbackInfo.set}
+                   key={feedbackInfo.get().feedbackImg.length} />
     </View>
     <MyBlueBtn className="w-[80%] mb-4">提交</MyBlueBtn>
-  </View>, [feedbackInfo, setFeedbackInfo]);
+  </View>, [feedbackInfo]);
   const Render = useCallback(() => {
-    if (hasToken) return DataRender;
+    if (!hasToken) return DataRender;
     return NoDataRender;
   }, [DataRender, NoDataRender, hasToken]);
   return (

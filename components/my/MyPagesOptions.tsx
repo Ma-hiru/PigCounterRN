@@ -58,12 +58,20 @@ const MyPagesOptions: FC<props> = () => {
             }
           </MyPagesCard>
           <MyPagesCard title={"更多"}>
-            <View className="mb-4">
-              <MyPagesCardItem text={"设置"} img={settings} iconSize={30}
-                               onPress={goToPages(router, "/Settings", "FN")} />
-              <MyPagesCardItem text={"退出登录"} img={logout} iconSize={30}
-                               onPress={handleLogout} />
-            </View>
+            <MyPagesCard.CanPress>
+              <MyPagesCardItem
+                text={"设置"}
+                img={settings}
+                iconSize={30}
+                onPress={goToPages(router, "/Settings", "FN")}
+              />
+              <MyPagesCardItem
+                text={"退出登录"}
+                img={logout}
+                iconSize={30}
+                onPress={handleLogout}
+              />
+            </MyPagesCard.CanPress>
           </MyPagesCard>
         </View>
       </View>
@@ -83,18 +91,10 @@ const styles = StyleSheet.create({
     position: "relative",
     top: -20
   },
-  LogoutText: {
-    color: "red"
-  },
-  LogoutTextActive: {
-    color: "#fc7070"
-  },
   InfoCardStyle: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center"
-  },
-  TaskCardStyle: {},
-  UnhandledUploadCardStyle: {}
+  }
 });

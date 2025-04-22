@@ -2,18 +2,18 @@ import { FC, memo } from "react";
 import ImageCarousel from "@/components/Carousel";
 import { Dimensions, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
-import logger from "@/utils/logger";
 import { AD } from "@/types/ad";
 import wait from "@/assets/ad/wait.jpg";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
+import { Log } from "@/utils/logger";
 
 
 type props = object;
 
 
 const Carousel: FC<props> = () => {
-  logger("console", "HomeCarouselStart.");
+  Log.Console("HomeCarouselStart.");
   const router = useRouter();
   const handler = goToPages(router, {
     pathname: "/Banner",

@@ -19,4 +19,5 @@ const OnceUpload: FC<props> = () => {
     </>
   );
 };
+// noinspection JSUnusedGlobalSymbols
 export default OnceUpload;

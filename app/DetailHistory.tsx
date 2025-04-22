@@ -1,6 +1,5 @@
 import { FC, useMemo } from "react";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
-import { DetailHistoryRouteParams } from "@/types/route";
 import { uploadSelector, useAppSelector } from "@/stores";
 import { ScrollView, StatusBar, Text, View } from "react-native";
 import { GlobalStyles } from "@/settings";

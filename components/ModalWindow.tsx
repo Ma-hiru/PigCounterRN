@@ -13,7 +13,7 @@ import { Text } from "@/components/ui/text";
 import { Icon, CloseIcon } from "@/components/ui/icon";
 import { FC, ReactNode } from "react";
 import { MyState } from "@/hooks/useMyState";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { GlobalStyles } from "@/settings";
 
 type props = {
@@ -24,7 +24,7 @@ type props = {
   cancel?: () => void;
 }
 const ModalWindow: FC<props> = ({ show, children, title, confirm, cancel }) => {
-  logger("console", "modalstart", "show:", show.get());
+  Log.Console("modalShow:", show.get());
   return (
     <Modal
       isOpen={show.get()}

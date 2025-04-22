@@ -1,6 +1,5 @@
 import RootState, { uploadActions } from "@/stores";
 import { cloneDeep } from "lodash-es";
-import logger from "@/utils/logger";
 
 export type TaskIndexTuple = {
   TaskIndex: number;

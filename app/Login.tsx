@@ -2,46 +2,46 @@ import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
 import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
 import { StatusBar, StyleSheet, InteractionManager, View } from "react-native";
-import { useCallback, useEffect, useState } from "react";
-import { reqLogin } from "@/api";
+import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
-import { fetchData } from "@/utils/fetchData";
-import { useToast } from "@/components/ui/toast";
+import { useFetchData } from "@/utils/fetchData";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import background from "@/assets/images/login/login_bg.png";
 import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
+import { useMyState } from "@/hooks/useMyState";
 
 const { setLogin } = userActions;
 const Login = () => {
   const router = useRouter();
   const { token } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
-  const toast = useToast();
-  const [loading, setLoading] = useState(false);
+  const { fetchData, API } = useFetchData();
+  const loading = useMyState(false);
   const handleSubmit = useCallback(async (loginInfo: loginInfo) => {
-    setLoading(true);
+    loading.set(true);
     InteractionManager.runAfterInteractions(async () => {
       await fetchData(
-        reqLogin,
+        API.reqLogin,
         [loginInfo],
-        (res) => {
-          logger("console", "loginResponse=>", res.data);
+        (res, createToast) => {
+          Log.Console("loginResponse=>", res.data);
           dispatch(setLogin(res.data));
+          createToast("登录成功", "欢迎回来！"+res.data.username);
         },
         (res, createToast) => {
           createToast("请求出错！", res?.message);
-        }, toast);
-      setLoading(false);
+        });
+      loading.set(false);
     });
-  }, [dispatch, toast]);
+  }, [API.reqLogin, dispatch, fetchData, loading]);
   useEffect(() => {
     if (token !== "") {
       router.push("/Home");
     }
   }, [router, token]);
-  logger("console", "loginstart");
+  Log.Console("LoginShow");
   return (
     <>
       <View className="flex-1 relative">
@@ -70,7 +70,7 @@ const Login = () => {
           contentStyle={styles.HeaderContent}
           hasBackIcon={false}
         >
-          <LoginPagesForm handleLogin={handleSubmit} loading={loading} />
+          <LoginPagesForm handleLogin={handleSubmit} loading={loading.get()} />
           <LoginPagesMoreBtn />
         </BigHeader>
       </View>

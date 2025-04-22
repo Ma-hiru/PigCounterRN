@@ -7,7 +7,6 @@ import Task from "@/components/home/Task";
 import { uploadSelector, useAppSelector } from "@/stores";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
-import { DetailHistoryRouteParams } from "@/types/route";
 
 
 type props = object

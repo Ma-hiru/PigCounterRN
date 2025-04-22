@@ -11,19 +11,19 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import { uploadSelector } from "@/stores";
-import { useImmer } from "use-immer";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { newsSelector } from "@/stores/slice/newsSlice";
 import News from "@/components/home/News";
-import { UploadFilesRouteParams } from "@/types/route";
+import { useMyState } from "@/hooks/useMyState";
+
 
 type props = object;
 const Options: FC<props> = () => {
   const router = useRouter();
   const { TasksList } = useSelector(uploadSelector);
   const { NewsList } = useSelector(newsSelector);
-  logger("console", "OptionsStart");
-  const [LastCount, setLastCount] = useImmer({
+  Log.Console("HomeOptionsStart");
+  const LastCount = useMyState({
     taskIndex: 0,
     buildingIndex: 0,
     penIndex: 0,
@@ -38,7 +38,7 @@ const Options: FC<props> = () => {
           for (const [penIndex, pen] of building.pens.entries()) {
             if (pen.penNum === -1) {
               //TODO Name
-              return setLastCount({
+              return LastCount.set({
                 taskIndex,
                 buildingIndex,
                 penIndex,
@@ -51,7 +51,8 @@ const Options: FC<props> = () => {
         }
       }
     });
-  }, [TasksList, setLastCount]);
+    // eslint-disable-next-line
+  }, [TasksList]);
   return (
     <>
       <View className=" flex-1 bg-gray-50" style={{
@@ -79,7 +80,7 @@ const Options: FC<props> = () => {
           <IconOptionItem
             title="查看数据"
             icon={PigIcon}
-            onPress={goToPages(router,"/(main)/More","FN")}
+            onPress={goToPages(router, "/(main)/More", "FN")}
             iconStyle={{ width: 40, height: 40 }} />
         </View>
         <View className="flex-row justify-evenly">
@@ -96,9 +97,9 @@ const Options: FC<props> = () => {
             onPress={goToPages(router, {
               pathname: "/UploadFiles",
               params: {
-                title: `楼栋${LastCount.buildingName} · 栏舍${LastCount.penName}`,
-                taskIndex: [LastCount.taskIndex, LastCount.buildingIndex, LastCount.penIndex],
-                penId: LastCount.penId
+                title: `楼栋${LastCount.get().buildingName} · 栏舍${LastCount.get().penName}`,
+                taskIndex: [LastCount.get().taskIndex, LastCount.get().buildingIndex, LastCount.get().penIndex],
+                penId: LastCount.get().penId
               }
             }, "FN")}
           />

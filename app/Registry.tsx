@@ -1,11 +1,9 @@
-import { reqRegistry } from "@/api";
 import BigHeader from "@/components/BigHeader";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import { validate, validateType } from "@/components/registry/validate";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
-import { useToast } from "@/components/ui/toast";
-import { fetchData } from "@/utils/fetchData";
+import { useFetchData } from "@/utils/fetchData";
 import { pickImgFile } from "@/utils/pickImgFile";
 import { FC, memo, useState } from "react";
 import {
@@ -19,7 +17,7 @@ import {
 } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
-import { APP_NAME, GlobalStyles } from "@/settings";
+import { APP_NAME } from "@/settings";
 import background from "@/assets/images/login/login_bg.png";
 import { Image } from "expo-image";
 import { goToPages } from "@/utils/goToPages";
@@ -53,13 +51,13 @@ const Registry: FC<props> = () => {
     admin: false
   });
   const [avatar, setAvatar] = useState<ImageURISource | number>(defaultAvatar);
-  const toast = useToast();
   const router = useRouter();
+  const { fetchData, API } = useFetchData();
   const handleSubmit = async () => {
     if (!validate(registryInfo, setInvalid)) return;
     if (avatar === defaultAvatar) return ToastAndroid.showWithGravity("请选择头像", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
     await fetchData(
-      reqRegistry,
+      API.reqRegistry,
       [registryInfo],
       (_, createToast) => {
         createToast("注册成功", "注册成功，请登录");
@@ -67,8 +65,7 @@ const Registry: FC<props> = () => {
       },
       (res, createToast) => {
         createToast("请求出错！", res?.message);
-      },
-      toast
+      }
     );
   };
   const pickAvatar = async () => {

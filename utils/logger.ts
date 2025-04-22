@@ -1,30 +1,44 @@
 import { Alert, ToastAndroid } from "react-native";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
+import { showNewToast } from "@/utils/toast";
 
-const Logger = (Mode: "console" | "alert", ...data: any[]) => {
-  switch (Mode) {
-    case "console":
-      console.log(`\x1B[31m${dayjs.default(new Date()).format("YY-MM-DD hh:mm:ss").toString()}\x1B[0m`);
-      return console.log(...data);
-    case "alert":
-      return Alert.alert("TS-Log", data.toString());
-  }
-};
+let IsPause = false;
+
 const Console = (...data: any[]) => {
-  return console.log(`\x1B[31m${dayjs.default(new Date()).format("YY-MM-DD hh:mm:ss").toString()}\x1B[0m`, ...data);
+  if (IsPause) return;
+  return console.log(`\x1B[31m${dayjs(new Date()).format("YY-MM-DD hh:mm:ss").toString()}\x1B[0m`, ...data);
 };
 const Echo = (data: object) => {
+  if (IsPause) return;
   for (const key in data) {
     Console(key, data[key as keyof typeof data]);
   }
 };
-const Message = () => {
-};
 const AlertMessage = (title: string = "TS-Log", ...data: any[]) => {
+  if (IsPause) return;
   return Alert.alert(title, data.toString());
 };
-const Toast = (msg: string, duration: string, gravity: string, x: number, y: number) => {
-  ToastAndroid.showWithGravityAndOffset(msg
-    , ToastAndroid.SHORT, ToastAndroid.BOTTOM, 0, 100);
+const Toast = (msg: string, duration: "SHORT" | "LONG", gravity: "BOTTOM" | "CENTER" | "TOP") => {
+  if (IsPause) return;
+  if (!ToastAndroid) Echo({ Tips: "ToastAndroid不支持" });
+  return ToastAndroid.showWithGravity(msg
+    , ToastAndroid[duration], ToastAndroid[gravity]);
 };
-export default Logger;
+
+export const OnPauseLog = <T extends keyof typeof Log>(log: T, params: Parameters<(typeof Log)[T]>) => {
+  IsPause = false;
+  const fn = Log[log];
+  // @ts-ignore
+  fn(...params);
+  IsPause = true;
+};
+export const LoggerPause = () => {
+  IsPause = true;
+};
+export const Log = {
+  Console,
+  Echo,
+  Message: showNewToast,
+  AlertMessage,
+  Toast
+};

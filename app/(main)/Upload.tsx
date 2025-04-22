@@ -5,16 +5,16 @@ import { View, ScrollView, StatusBar, RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import UploadPagesList from "@/components/upload/UploadPagesList";
 import { uploadSelector, useAppSelector } from "@/stores";
-import MyPortal from "@/components/MyPortal";
+import { useMyState } from "@/hooks/useMyState";
 
 const Upload = () => {
   const router = useRouter();
   const { TasksList } = useAppSelector(uploadSelector);
-  const [refreshing, setRefreshing] = useState(false);
-
+  const refreshing = useMyState(false);
   const onRefresh = async () => {
-    setRefreshing(true);
-    setRefreshing(false);
+    refreshing.set(true);
+    // TODO: 刷新数据
+    refreshing.set(false);
   };
   return (
     <>
@@ -25,7 +25,7 @@ const Upload = () => {
           className="flex-1 bg-gray-50"
           refreshControl={
             <RefreshControl
-              refreshing={refreshing}
+              refreshing={refreshing.get()}
               onRefresh={onRefresh}
               tintColor={GlobalStyles.ThemeColor}
               colors={[GlobalStyles.ThemeColor1]}

@@ -10,7 +10,7 @@ localStore.getItem("baseUrl").then((data) => {
   if (data !== "") {
     baseUrl = data;
   } else {
-    localStore.setItem("baseUrl", DEFAULT_BASE_URL);
+    localStore.setItem("baseUrl", DEFAULT_BASE_URL).then();
   }
 });
 localStore.getItem("UPLOAD_QUALITY").then((data) => {
@@ -19,7 +19,7 @@ localStore.getItem("UPLOAD_QUALITY").then((data) => {
     if (Number.isNaN(num)) UPLOAD_QUALITY = DEFAULT_UPLOAD_QUALITY;
     else UPLOAD_QUALITY = num;
   } else {
-    localStore.setItem("UPLOAD_QUALITY", String(DEFAULT_UPLOAD_QUALITY));
+    localStore.setItem("UPLOAD_QUALITY", String(DEFAULT_UPLOAD_QUALITY)).then();
   }
 });
 export const ChangeAppBaseUrl = async (url: string) => {
@@ -116,3 +116,4 @@ export const APP_NAME = "牧豕云鉴";
 export const APP_VERSION = "1.1.1";
 export const APP_WELCOME = `一拍即“数”，“牧”养无忧`;
 export const RES_TIMEOUT = 20000;
+export const UPLOAD_AVATAR_QUALITY = 0.5;

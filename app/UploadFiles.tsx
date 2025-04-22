@@ -1,9 +1,8 @@
-import { reqUpload } from "@/api/moudule/uploadAPI";
 import BigHeader from "@/components/BigHeader";
 import { GlobalStyles, UPLOAD_QUALITY } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { DownloadFile } from "@/utils/downloadFile";
-import { fetchData } from "@/utils/fetchData";
+import { useFetchData } from "@/utils/fetchData";
 import { removeFile, saveFile } from "@/utils/saveFile";
 import { TaskIndexTuple, updateTaskList } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
@@ -24,11 +23,10 @@ import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import background from "@/assets/images/bg_1.jpg";
 import { Image } from "expo-image";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { handleUploadURL } from "@/utils/handleServerURL";
 import MyPortal from "@/components/MyPortal";
 import { useMyState } from "@/hooks/useMyState";
-import { UploadFilesRouteParams } from "@/types/route";
 
 const _ = undefined;
 
@@ -64,11 +62,10 @@ const UploadFiles: FC = () => {
     TasksList,
     OnceTask
   } = useAppSelector(uploadSelector);
-  logger("console", "isOnceUpload.current", isOnceUpload.current);
+  Log.Console("isOnceUpload.current", isOnceUpload.current);
   if (isOnceUpload.current) {
     TasksList = OnceTask;
   }
-  logger("console", "TasksList", TasksList, "Index", TaskIndexTuple);
   /** 获取缓存 */
   const cachePath = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
@@ -148,6 +145,7 @@ const UploadFiles: FC = () => {
   const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES);
 
   /** 提交 */
+  const { fetchData, API } = useFetchData();
   const loading = useMyState(false);
   const submitFile = useCallback(async () => {
     const file = await UriToRNFile(cachePath.path);
@@ -155,27 +153,23 @@ const UploadFiles: FC = () => {
     loading.set(true);
     try {
       await fetchData(
-        reqUpload,
+        API.reqUpload,
         [{
           taskId: TaskIndex,
           penId: PenId,
           files: [file]
         }],
         async (res) => {
-
-          logger("console", "uploadResponse", res);
+          Log.Console("uploadResponse", res);
           const resURL = handleUploadURL(res.data.outputPicturePath[0]);
-          logger("console", "resURL", resURL);
+          Log.Echo({ resURL });
           const file = await DownloadFile(resURL);
-          logger("console", "downloadFile", file);
-          // Log.set(draft => {
-          //   draft.ResponseDataURL = res.data.outputPicturePath[0];
-          //   draft.HandledURL = resURL;
-          //   draft.DownloadFileURI = file.uri;
-          //   draft.FinalURL = file.uri || resURL;
-          // });
-          file.uri = file.uri || resURL;
-          logger("console", "SavedUploadURL=>", file.uri);
+          if (!file) {
+            Log.Console("DownloadFile", "结果图片下载失败");
+            Log.Message(toast, "处理出错！", "结果图片下载失败");
+            //TODO 加载失败使用默认图片
+            return;
+          }
           switch (cachePath.type) {
             case "images":
               setPreviewImg(file);
@@ -188,13 +182,12 @@ const UploadFiles: FC = () => {
         },
         (res, createToast) => {
           createToast("处理出错！", res?.message);
-        },
-        toast
+        }
       );
     } finally {
       loading.set(false);
     }
-  }, [PenId, TaskIndex, TaskIndexTuple, cachePath.path, cachePath.type, loading, toast]);
+  }, [API.reqUpload, PenId, TaskIndex, TaskIndexTuple, cachePath.path, cachePath.type, fetchData, loading, toast]);
   const confirmData = useCallback(() => {
 
   }, []);

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootStateType } from "@/stores";
 import { News, NewsList } from "@/types/news";
-import logger from "@/utils/logger";
 
 
 type initialType = {
@@ -35,7 +34,6 @@ const newsSlice = createSlice({
       state.NewsList = action.payload;
     },
     addNews: (state, action: PayloadAction<News>) => {
-      logger("console", "addNews", action.payload)
       state.NewsList.push(action.payload);
     },
     deleteNews: (state, action: PayloadAction<News>) => {

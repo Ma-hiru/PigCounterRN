@@ -1,28 +1,14 @@
 import { Stack } from "expo-router";
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { useFonts, getLoadedFonts } from "expo-font";
 import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
 import baigetianxingtiRegular from "@/assets/fonts/zihun50hao-baigetianxingti-Regular.ttf";
-import { PersistedRootState, uploadSelector, useAppSelector } from "@/stores";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
+import { useRefreshPersisted } from "@/hooks/useChangePersisted";
 
 const App = () => {
-  // useEffect(() => {
-  //   PersistedRootState.purge().then(() => {
-  //     console.log("初始清除持久化成功");
-  //   });
-  // });
-  let {
-    TasksList,
-    OnceTask
-  } = useAppSelector(uploadSelector);
-  useEffect(() => {
-    logger("console", "App.tsx", TasksList);
-    logger("console", "App.tsx", OnceTask);
-    PersistedRootState.flush().then(() => {
-      logger("console", "持久化重置刷新");
-    });
-  });
+  useRefreshPersisted(false);
+  Log.Console("App");
   useFonts({ FlyFlowerSongRegular, baigetianxingtiRegular });
   console.log(getLoadedFonts());
   return (

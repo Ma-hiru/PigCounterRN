@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { ImageURISource, Pressable, ScrollView, StatusBar, Text, View } from "react-native";
 import BigHeader from "@/components/BigHeader";
 import { APP_NAME } from "@/settings";
@@ -7,11 +7,8 @@ import { useMyState } from "@/hooks/useMyState";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
 import MyBlueBtn from "@/components/MyBlueBtn";
-import { useToast } from "@/components/ui/toast";
-import { useImmer } from "use-immer";
 import { validate, validateType } from "@/components/registry/validate";
-import { fetchData } from "@/utils/fetchData";
-import { reqRegistry } from "@/api";
+import { useFetchData } from "@/utils/fetchData";
 import { pickImgFile } from "@/utils/pickImgFile";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppSelector, userSelector } from "@/stores";
@@ -21,9 +18,10 @@ type props = object;
 const ChangeProfile: FC<props> = () => {
   const success = useMyState(false);
   const code = useMyState("");
+  const { fetchData, API } = useFetchData();
   const { profile } = useAppSelector(userSelector);
   //TODO 还需要查询用户信息
-  const [registryInfo, setRegistryInfo] = useImmer<registryInfo>({
+  const registryInfo = useMyState<registryInfo>({
     username: profile.username,
     password: "",
     name: profile.name,
@@ -33,7 +31,7 @@ const ChangeProfile: FC<props> = () => {
     picture: new Blob(),
     admin: profile.admin
   });
-  const [invalid, setInvalid] = useImmer<validateType>({
+  const invalid = useMyState<validateType>({
     username: false,
     password: false,
     name: false,
@@ -43,29 +41,27 @@ const ChangeProfile: FC<props> = () => {
     picture: false,
     admin: false
   });
-  const toast = useToast();
-  const [avatar, setAvatar] = useState<ImageURISource | number>(profile.profilePicture ? { uri: profile.profilePicture } : defaultAvatar);
+  const avatar = useMyState<ImageURISource | number>(profile.profilePicture ? { uri: profile.profilePicture } : defaultAvatar);
   const handleSubmit = async () => {
-    if (!validate(registryInfo, setInvalid)) return;
+    if (!validate(registryInfo.get(), invalid.set)) return;
     await fetchData(
-      reqRegistry,
+      API.reqRegistry,
       [registryInfo],
       (_, createToast) => {
         createToast("修改资料", "修改成功");
       },
       (res, createToast) => {
         createToast("请求出错！", res?.message);
-      },
-      toast
+      }
     );
   };
   const pickAvatar = async () => {
     const res = await pickImgFile();
     if (!res) return;
-    setRegistryInfo((draft) => {
+    registryInfo.set((draft) => {
       draft.picture = res;
     });
-    setAvatar(res);
+    avatar.set(res);
   };
   return (
     <>
@@ -82,14 +78,15 @@ const ChangeProfile: FC<props> = () => {
             <View className="flex justify-center items-center w-[80%]">
               <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
                 <Avatar size="xl">
-                  <AvatarImage source={avatar} />
+                  <AvatarImage source={avatar.get()} />
                 </Avatar>
-                {avatar === defaultAvatar && <Text className="text-sm mt-2">点击选择头像</Text>}
+                {avatar.get() === defaultAvatar &&
+                  <Text className="text-sm mt-2">点击选择头像</Text>}
               </Pressable>
               <RegistryPagesForm
-                setRegistryInfo={setRegistryInfo}
-                invalid={invalid}
-                registryInfo={registryInfo}
+                setRegistryInfo={registryInfo.set}
+                invalid={invalid.get()}
+                registryInfo={registryInfo.get()}
               />
               <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
                 {"提交"}

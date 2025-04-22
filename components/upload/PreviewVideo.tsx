@@ -1,4 +1,4 @@
-import Logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { FC, memo, useMemo } from "react";
 import { useVideoPlayer, VideoSource, VideoView } from "expo-video";
 import { StyleProp, View, ViewStyle } from "react-native";
@@ -18,23 +18,23 @@ const PreviewVideo: FC<props> = (
     ContainerStyle,
     videoStyle,
     cachePath,
-    previewVideo,
+    previewVideo
   }) => {
   // const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
   console.log("------------------------");
-  Logger("console", "cachePath--Video", cachePath);
-  Logger("console", "previewVideo--Video", previewVideo);
+  Log.Console("cachePath--Video", cachePath);
+  Log.Console("previewVideo--Video", previewVideo);
   const videoSource = useMemo(() => {
     return previewVideo || (cachePath.type === "videos" ? { uri: cachePath.path } : null);
   }, [cachePath, previewVideo]);
-  Logger("console", "videoSource--Video", videoSource);
+  Log.Console("videoSource--Video", videoSource);
   const player = useVideoPlayer(videoSource, player => {
     player.loop = true;
     player.muted = true;
     player.play();
     console.log("player.status", player.status);
   });
-  Logger("console", "player--Video", player);
+  Log.Console("player--Video", player);
   console.log("------------------------");
   return (
     <>
