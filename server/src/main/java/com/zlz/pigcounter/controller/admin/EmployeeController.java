@@ -51,9 +51,9 @@ public class EmployeeController {
      */
     @PostMapping("/register")
     @CacheEvict(cacheNames = "employee_page", allEntries = true)
-    public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class, EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture", required = false) MultipartFile porfilePicture) {
+    public Result add(@ModelAttribute @Validated({EmployeeValidation.add.class, EmployeeValidation.update.class}) Employee employee, @RequestParam(value = "picture", required = false) MultipartFile profilePicture) {
         log.info("新增员工：{}", employee);
-        employeeService.add(employee, porfilePicture);
+        employeeService.add(employee, profilePicture);
         return Result.success();
     }
 
