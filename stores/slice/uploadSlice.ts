@@ -30,9 +30,6 @@ export let OnceTaskTemp: TaskList = [{
     }
   ]
 }];
-export const updateOnceTaskTemp = (data: typeof OnceTaskTemp) => {
-  OnceTaskTemp = data;
-};
 export const TasksListTemp: TaskList = [
   {
     id: 0,

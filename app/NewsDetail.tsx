@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo } from "react";
 import { useAppSelector } from "@/stores";
-import { newsSelector } from "@/stores/slice/newSlice";
+import { newsSelector } from "@/stores/slice/newsSlice";
 import logger from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import { StatusBar, Text, View, InteractionManager, ScrollView } from "react-native";

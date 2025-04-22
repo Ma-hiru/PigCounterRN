@@ -14,7 +14,6 @@ import {
   requestMediaLibraryPermissionsAsync
 } from "expo-image-picker";
 import {
-  OnceTaskTemp,
   uploadSelector,
   useAppSelector
 } from "@/stores";

@@ -1,16 +1,13 @@
 import Header from "@/components/Header";
 import Manage from "@/components/more/Manage";
 import Report from "@/components/more/Report";
-import { stateId, uploadSelector, useAppSelector, userSelector } from "@/stores";
-import { memo } from "react";
+import { userSelector } from "@/stores";
 import { StatusBar, View } from "react-native";
 import { useSelector } from "react-redux";
-import logger from "@/utils/logger";
 
 
 const More = () => {
   const { profile } = useSelector(userSelector);
-  logger("console", "stateId", stateId);
   return (
     <>
       <View className="flex-1 bg-gray-50">

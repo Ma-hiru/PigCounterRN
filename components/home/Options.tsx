@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { uploadSelector } from "@/stores";
 import { useImmer } from "use-immer";
 import logger from "@/utils/logger";
-import { newsSelector } from "@/stores/slice/newSlice";
+import { newsSelector } from "@/stores/slice/newsSlice";
 import News from "@/components/home/News";
 import { UploadFilesRouteParams } from "@/types/route";
 

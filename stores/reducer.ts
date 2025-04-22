@@ -1,6 +1,6 @@
 import { userReducer } from "@/stores/slice/userSlice";
 import { uploadReducer } from "@/stores/slice/uploadSlice";
-import { newsReducer } from "@/stores/slice/newSlice";
+import { newsReducer } from "@/stores/slice/newsSlice";
 
 export default {
   userStore: userReducer,
