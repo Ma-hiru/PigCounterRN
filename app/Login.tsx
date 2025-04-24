@@ -11,15 +11,27 @@ import background from "@/assets/images/login/login_bg.png";
 import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
+import localStore from "@/utils/localStore";
 
 const { setLogin } = userActions;
+const setRemember = (loginInfo: loginInfo, remember: boolean) => {
+  if (remember) {
+    localStore.setItem("remember", String(remember)).then();
+    localStore.setItem("username", loginInfo.username).then();
+    localStore.setItem("password", loginInfo.password).then();
+  } else {
+    localStore.setItem("remember", String(remember)).then();
+    localStore.setItem("username", "").then();
+    localStore.setItem("password", "").then();
+  }
+};
 const Login = () => {
   const router = useRouter();
   const { token } = useAppSelector(userSelector);
   const dispatch = useAppDispatch();
   const { fetchData, API } = useFetchData();
   const loading = useMyState(false);
-  const handleSubmit = useCallback(async (loginInfo: loginInfo) => {
+  const handleSubmit = useCallback(async (loginInfo: loginInfo, remember: boolean) => {
     loading.set(true);
     InteractionManager.runAfterInteractions(async () => {
       await fetchData(
@@ -28,7 +40,8 @@ const Login = () => {
         (res, createToast) => {
           Log.Console("loginResponse=>", res.data);
           dispatch(setLogin(res.data));
-          createToast("登录成功", "欢迎回来！"+res.data.username);
+          setRemember(loginInfo, remember);
+          createToast("登录成功", "欢迎回来！" + res.data.username);
         },
         (res, createToast) => {
           createToast("请求出错！", res?.message);

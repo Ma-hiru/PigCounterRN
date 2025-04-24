@@ -13,7 +13,7 @@ import {
   Text,
   StatusBar,
   ScrollView,
-  ToastAndroid
+  ToastAndroid, InteractionManager
 } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
@@ -22,6 +22,9 @@ import background from "@/assets/images/login/login_bg.png";
 import { Image } from "expo-image";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
+import { Log } from "@/utils/logger";
+import { useToast } from "@/components/ui/toast";
+import { useMyState } from "@/hooks/useMyState";
 
 type props = object
 
@@ -51,22 +54,28 @@ const Registry: FC<props> = () => {
     admin: false
   });
   const [avatar, setAvatar] = useState<ImageURISource | number>(defaultAvatar);
+  const loading = useMyState(false);
   const router = useRouter();
   const { fetchData, API } = useFetchData();
+  const toast = useToast();
   const handleSubmit = async () => {
     if (!validate(registryInfo, setInvalid)) return;
-    if (avatar === defaultAvatar) return ToastAndroid.showWithGravity("请选择头像", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
-    await fetchData(
-      API.reqRegistry,
-      [registryInfo],
-      (_, createToast) => {
-        createToast("注册成功", "注册成功，请登录");
-        goToPages(router, "/Login", "MOVE");
-      },
-      (res, createToast) => {
-        createToast("请求出错！", res?.message);
-      }
-    );
+    if (avatar === defaultAvatar) return Log.Message(toast, "缺少信息", "请选择头像");
+    loading.set(true);
+    InteractionManager.runAfterInteractions(async () => {
+      await fetchData(
+        API.reqRegistry,
+        [registryInfo],
+        (_, createToast) => {
+          createToast("注册成功", "注册成功，请登录");
+          goToPages(router, "/Login", "MOVE");
+        },
+        (res, createToast) => {
+          createToast("请求出错！", res?.message);
+        }
+      );
+      loading.set(false);
+    });
   };
   const pickAvatar = async () => {
     const res = await pickImgFile();
@@ -107,8 +116,8 @@ const Registry: FC<props> = () => {
                 invalid={invalid}
                 registryInfo={registryInfo}
               />
-              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
-                {"注册"}
+              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6" loading={loading.get()}>
+                注册
               </MyBlueBtn>
             </View>
           </View>
