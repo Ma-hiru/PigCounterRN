@@ -117,3 +117,4 @@ export const APP_VERSION = "1.1.1";
 export const APP_WELCOME = `一拍即“数”，“牧”养无忧`;
 export const RES_TIMEOUT = 20000;
 export const UPLOAD_AVATAR_QUALITY = 0.5;
+export const UPLOAD_FEEDBACK_QUALITY = 0.5;

@@ -1565,7 +1565,7 @@
     patch-package "8.0.0"
     tailwind-variants "0.1.20"
 
-"@gluestack-ui/overlay@^0.1.16", "@gluestack-ui/overlay@^0.1.20", "@gluestack-ui/overlay@^0.1.21", "@gluestack-ui/overlay@^0.1.22":
+"@gluestack-ui/overlay@0.1.22", "@gluestack-ui/overlay@^0.1.16", "@gluestack-ui/overlay@^0.1.20", "@gluestack-ui/overlay@^0.1.21", "@gluestack-ui/overlay@^0.1.22":
   version "0.1.22"
   resolved "https://registry.npmmirror.com/@gluestack-ui/overlay/-/overlay-0.1.22.tgz#b0c03eb88f37e1564b6522f3d021052dcce86f4a"
   integrity sha512-ttlSjO/ysN9NuTq5JPoVwOAU8aKMaj738xTCxOVgBRr1+kbBUVpmBnygVlC6PvHvJF1A00a0ZTzw48CIVL5aNw==
@@ -1573,6 +1573,19 @@
     "@react-native-aria/focus" "^0.2.9"
     "@react-native-aria/interactions" "0.2.16"
     "@react-native-aria/overlays" "^0.3.15"
+
+"@gluestack-ui/popover@^0.1.49":
+  version "0.1.49"
+  resolved "https://registry.npmmirror.com/@gluestack-ui/popover/-/popover-0.1.49.tgz#38fa4971938d5a84c74fab9e305c0293dc7c36c5"
+  integrity sha512-AI73AXEPoIPGpwhQICn9BiQIJzCDGSb4RT6OQI2V3TKlBYM+RodZvK0RKMipEsROBQwNWbcJoPJRkH9jwDVrBA==
+  dependencies:
+    "@gluestack-ui/hooks" "0.1.13"
+    "@gluestack-ui/overlay" "0.1.22"
+    "@gluestack-ui/utils" "^0.1.15"
+    "@react-native-aria/dialog" "^0.0.5"
+    "@react-native-aria/focus" "^0.2.9"
+    "@react-native-aria/interactions" "0.2.16"
+    "@react-native-aria/overlays" "0.3.15"
 
 "@gluestack-ui/provider@^0.1.13", "@gluestack-ui/provider@^0.1.19":
   version "0.1.19"
@@ -2371,7 +2384,7 @@
     "@react-stately/tree" "^3.1.2"
     "@react-types/menu" "^3.1.1"
 
-"@react-native-aria/overlays@^0.3.15":
+"@react-native-aria/overlays@0.3.15", "@react-native-aria/overlays@^0.3.15":
   version "0.3.15"
   resolved "https://registry.npmmirror.com/@react-native-aria/overlays/-/overlays-0.3.15.tgz#42aab9b0475dea34c488857da257e2dc3e941893"
   integrity sha512-ialIMsXmiQe6A2cWv4O62nJs8raAEkC27BYUu0Z6BEWbhYn+3MhrujxFzsozJ6bwDZgsfNOqtfwk1ScXJxXjkQ==

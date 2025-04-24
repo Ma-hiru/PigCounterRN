@@ -20,7 +20,7 @@ const persistConfig = {
   // blacklist: [],
   version: 1,
   migrate: (state: any) => Promise.resolve(state)
-};
+} as const;
 const persistedReducer = persistReducer(persistConfig, combineReducers(rootReducer));
 
 export const RootState = configureStore({

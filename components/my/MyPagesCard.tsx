@@ -10,9 +10,10 @@ type props = {
   titleStyle?: StyleProp<TextStyle>
 }
 type CanPressType = {
-  children: ReactNode,
-  onPress?: () => void,
-  containerStyle?: StyleProp<ViewStyle>,
+  children: ReactNode;
+  onPress?: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
+  onLongPress?: () => void;
 }
 const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
   {
@@ -48,9 +49,9 @@ const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
     </>
   );
 };
-const CanPress: FC<CanPressType> = ({ children, onPress, containerStyle }) => {
+const CanPress: FC<CanPressType> = ({ children, onPress, containerStyle, onLongPress }) => {
   return <>
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} onLongPress={onLongPress}>
       {
         ({ pressed }) =>
           <View style={[pressed && styles.Shadow, containerStyle]}>

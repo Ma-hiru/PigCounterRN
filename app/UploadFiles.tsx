@@ -1,17 +1,16 @@
-import BigHeader from "@/components/BigHeader";
-import { GlobalStyles, UPLOAD_QUALITY } from "@/settings";
+import {
+  DEFAULT_UPLOAD_PATH,
+  DEFAULT_UPLOAD_RES,
+  DEFAULT_UPLOAD_TYPE,
+  UPLOAD_QUALITY
+} from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
-import { DownloadFile } from "@/utils/downloadFile";
 import { useFetchData } from "@/utils/fetchData";
 import { removeFile, saveFile } from "@/utils/saveFile";
 import { TaskIndexTuple, updateTaskList } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
-import { Alert, ScrollView, StatusBar, Text, View } from "react-native";
-import {
-  ImagePickerResult, launchCameraAsync,
-  launchImageLibraryAsync, requestCameraPermissionsAsync,
-  requestMediaLibraryPermissionsAsync
-} from "expo-image-picker";
+import { ScrollView, StatusBar, View } from "react-native";
+import { ImagePickerResult } from "expo-image-picker";
 import {
   uploadSelector,
   useAppSelector
@@ -27,6 +26,8 @@ import { Log } from "@/utils/logger";
 import { handleUploadURL } from "@/utils/handleServerURL";
 import MyPortal from "@/components/MyPortal";
 import { useMyState } from "@/hooks/useMyState";
+import { fileSystem } from "@/utils/fileSystem";
+import UploadFilesHeader from "@/components/upload/UploadFilesHeader";
 
 const _ = undefined;
 
@@ -53,19 +54,9 @@ const UploadFiles: FC = () => {
     PenIndex
   } satisfies  TaskIndexTuple), [BuildingIndex, PenIndex, TaskIndex]);
   /** store */
-  const {
-    DEFAULT_UPLOAD_PATH,
-    DEFAULT_UPLOAD_RES,
-    DEFAULT_UPLOAD_TYPE
-  } = useAppSelector(uploadSelector);
-  let {
-    TasksList,
-    OnceTask
-  } = useAppSelector(uploadSelector);
+  let { TasksList, OnceTask } = useAppSelector(uploadSelector);
   Log.Console("isOnceUpload.current", isOnceUpload.current);
-  if (isOnceUpload.current) {
-    TasksList = OnceTask;
-  }
+  if (isOnceUpload.current) TasksList = OnceTask;
   /** 获取缓存 */
   const cachePath = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
@@ -92,44 +83,43 @@ const UploadFiles: FC = () => {
           updateTaskList(TaskIndexTuple, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_RES, isOnceUpload.current);
         });
     }
-  }, [DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE, TaskIndexTuple]);
+  }, [TaskIndexTuple]);
   const takeAssets = useCallback((mode: "images" | "videos", method: "take" | "pick") => async () => {
     let result: ImagePickerResult;
     if (method === "take") {
-      const { status } = await requestCameraPermissionsAsync();
-      if (status !== "granted") return Alert.alert("权限被拒绝", `需要相机权限才能${mode === "images" ? "拍照" : "录像"}`);
-      result = await launchCameraAsync({
+      const res = await fileSystem.TakeAssets({
         mediaTypes: mode,
         allowsEditing: false,
         quality: UPLOAD_QUALITY,
         base64: false,
         selectionLimit: 1
-      });
+      }, toast);
+      if (res === null) return;
+      result = res;
     } else {
-      const { status } = await requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") return Alert.alert("权限被拒绝", `需要文件访问权限才能选择文件`);
-      result = await launchImageLibraryAsync({
+      const res = await fileSystem.PickAssets({
         mediaTypes: mode,
         allowsEditing: false,
         quality: UPLOAD_QUALITY,
         base64: false,
         selectionLimit: 1
-      });
+      }, toast);
+      if (res === null) return;
+      result = res;
     }
-    if (!result.canceled) {
-      const file = result.assets[0];
-      const fileInfo = AssetsToRNFile(file);
-      switch (mode) {
-        case "images":
-          setPreviewImg(fileInfo);
-          setScale(file.width / file.height);
-          break;
-        case "videos":
-          setPreviewVideo(fileInfo);
-      }
-      return await resolveTemp(fileInfo.uri, "save", mode);
+    const file = result.assets[0];
+    const fileInfo = AssetsToRNFile(file);
+    switch (mode) {
+      case "images":
+        setPreviewImg(fileInfo);
+        setScale(file.width / file.height);
+        break;
+      case "videos":
+        setPreviewVideo(fileInfo);
     }
-  }, [resolveTemp]);
+    return await resolveTemp(fileInfo.uri, "save", mode);
+  }, [resolveTemp, toast]);
+
   /** 清理缓存 */
   const clearImg = useCallback(async () => {
     setPreviewImg(undefined);
@@ -137,10 +127,10 @@ const UploadFiles: FC = () => {
     await resolveTemp(previewImg?.uri || cachePath.path, "delete");
   }, [cachePath.path, previewImg?.uri, resolveTemp]);
   const clearUpload = useCallback(async () => {
-    // TODO fetchData();
     await clearImg();
     setIsUpload(false);
   }, [clearImg]);
+
   /** 上传预览 */
   const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES);
 
@@ -163,7 +153,7 @@ const UploadFiles: FC = () => {
           Log.Console("uploadResponse", res);
           const resURL = handleUploadURL(res.data.outputPicturePath[0]);
           Log.Echo({ resURL });
-          const file = await DownloadFile(resURL);
+          const file = await fileSystem.DownloadFile(resURL);
           if (!file) {
             Log.Console("DownloadFile", "结果图片下载失败");
             Log.Message(toast, "处理出错！", "结果图片下载失败");
@@ -189,7 +179,7 @@ const UploadFiles: FC = () => {
     }
   }, [API.reqUpload, PenId, TaskIndex, TaskIndexTuple, cachePath.path, cachePath.type, fetchData, loading, toast]);
   const confirmData = useCallback(() => {
-
+    //TODO 确认数据
   }, []);
   const addArtifact = useCallback((res: number) => {
     updateTaskList(TaskIndexTuple, _, _, _, res, isOnceUpload.current);
@@ -198,45 +188,18 @@ const UploadFiles: FC = () => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <View className="flex-1 relative">
-        <Image
-          source={background}
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            inset: 0
-          }}
-          contentFit={"cover"}
+        <Image source={background} style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          inset: 0
+        }} contentFit={"cover"}
         />
-        <BigHeader
-          title={(defaultStyle) => {
-            return (
-              <>
-                <Text className="text-left" style={defaultStyle}>计数</Text>
-                <Text className="text-right"
-                      style={{
-                        ...defaultStyle as object,
-                        color: GlobalStyles.PositiveColor,
-                        fontFamily: ""
-                      }}>
-                  {isUpload && peopleCacheCount}
-                </Text>
-              </>
-            );
-          }
-          }
-          titleContainerStyle={{
-            justifyContent: "space-between",
-            flexDirection: "row",
-            alignItems: "center"
-          }}
-          info={
-            <BigHeader.InfoText
-              content={isOnceUpload.current ? `{${routeTitle.current}}` : `对应区域：{${routeTitle.current}}`}
-              emphasizeColor="#409eff"
-              normalColor="#333"
-            />
-          } containerStyle={{ backgroundColor: "none" }} />
+        <UploadFilesHeader
+          isUpload={isUpload}
+          peopleCacheCount={peopleCacheCount}
+          isOnceUpload={isOnceUpload.current} routeTitle={routeTitle.current}
+        />
         <ScrollView className="pl-8 pr-8 flex-1 "
                     key={TaskIndex << 20 + BuildingIndex << 10 + PenIndex}
                     style={{ marginTop: 30 }}

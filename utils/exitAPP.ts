@@ -1,5 +1,6 @@
 import { useNavigation } from "expo-router";
-import { BackHandler, Platform, ToastAndroid } from "react-native";
+import { BackHandler, Platform } from "react-native";
+import { Log } from "@/utils/logger";
 
 export const ExitApp = (navigation: ReturnType<typeof useNavigation>) => () => {
   let lastBackPressed = 0;
@@ -10,7 +11,7 @@ export const ExitApp = (navigation: ReturnType<typeof useNavigation>) => () => {
       return true;
     }
     lastBackPressed = now;
-    ToastAndroid.show("再次返回以退出应用", ToastAndroid.SHORT);
+    Log.Toast("再次返回以退出应用", "SHORT", "BOTTOM");
     if (Platform.OS === "ios") {
       (navigation as any).setOptions({
         gestureEnabled: false

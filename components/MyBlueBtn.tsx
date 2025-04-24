@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { GlobalStyles } from "@/settings";
-import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import colors from "tailwindcss/colors";

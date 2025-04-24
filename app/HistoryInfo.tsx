@@ -7,11 +7,15 @@ import Task from "@/components/home/Task";
 import { uploadSelector, useAppSelector } from "@/stores";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
+import { useMyState } from "@/hooks/useMyState";
+import { useLogin } from "@/hooks/useLogin";
+import Blank from "@/components/Blank";
 
 
 type props = object
 
 export const HistoryInfo: FC<props> = () => {
+  const { hasToken } = useLogin();
   const router = useRouter();
   //今日列表
   const { TasksList } = useAppSelector(uploadSelector);
@@ -19,6 +23,7 @@ export const HistoryInfo: FC<props> = () => {
       TasksList.map(item => item.id)
     , [TasksList]);
   //TODO 获取历史列表
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
@@ -27,21 +32,30 @@ export const HistoryInfo: FC<props> = () => {
                    info={<BigHeader.InfoText content={`查看{${APP_NAME}}系统历史记录信息`} />
                    }
         >
-          <MyPagesCard
-            cardStyle={{ marginBottom: 15, paddingBottom: 15, marginTop: 15 }}
-            title={"今日任务"}
-          >
-            <MyPagesCard.CanPress onPress={goToPages(router, {
-              pathname: "/DetailHistory",
-              params: {
-                taskId: TasksListIds,
-                time: "今日"
-              } satisfies DetailHistoryRouteParams
-            }, "FN")}>
-              <Task TasksList={TasksList} />
-            </MyPagesCard.CanPress>
-          </MyPagesCard>
+          {hasToken &&
+            <MyPagesCard
+              cardStyle={{ marginBottom: 15, paddingBottom: 15, marginTop: 15 }}
+              title={"今日任务"}
+            >
+              <MyPagesCard.CanPress onPress={goToPages(router, {
+                pathname: "/DetailHistory",
+                params: {
+                  taskId: TasksListIds,
+                  time: "今日"
+                } satisfies DetailHistoryRouteParams
+              }, "FN")}>
+                <Task TasksList={TasksList} />
+              </MyPagesCard.CanPress>
+            </MyPagesCard>
+          }
         </BigHeader>
+        {!hasToken
+          && <Blank tips={"先登录吧！"} style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%"
+          }} className={"-translate-x-1/2 -translate-y-1/2"} />
+        }
       </View>
     </>
   );

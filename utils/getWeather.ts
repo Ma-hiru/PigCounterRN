@@ -3,8 +3,8 @@ import axios from "axios";
 
 
 const enum API {
-  LOCAL_WEATHER = "https://devapi.qweather.com/v7/weather/now",
-  LOCAL_CITY = "https://geoapi.qweather.com/v2/city/lookup",
+  LOCAL_WEATHER = "https://1devapi.qweather.com/v7/weather/now",
+  LOCAL_CITY = "https://1geoapi.qweather.com/v2/city/lookup",
   KEY = "5e185d3411dc4d5bb0e0a276a704ea63"
 }
 

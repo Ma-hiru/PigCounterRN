@@ -9,9 +9,10 @@ import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import { validate, validateType } from "@/components/registry/validate";
 import { useFetchData } from "@/utils/fetchData";
-import { pickImgFile } from "@/utils/pickImgFile";
+import { useToast } from "@/components/ui/toast";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppSelector, userSelector } from "@/stores";
+import { fileSystem } from "@/utils/fileSystem";
 
 type props = object;
 
@@ -46,7 +47,7 @@ const ChangeProfile: FC<props> = () => {
     if (!validate(registryInfo.get(), invalid.set)) return;
     await fetchData(
       API.reqRegistry,
-      [registryInfo],
+      [registryInfo.get()],
       (_, createToast) => {
         createToast("修改资料", "修改成功");
       },
@@ -55,14 +56,16 @@ const ChangeProfile: FC<props> = () => {
       }
     );
   };
+  const toast = useToast();
   const pickAvatar = async () => {
-    const res = await pickImgFile();
-    if (!res) return;
-    registryInfo.set((draft) => {
-      draft.picture = res;
-    });
-    avatar.set(res);
+    await fileSystem.PickAvatar((res) => {
+      registryInfo.set((draft) => {
+        draft.picture = res;
+      });
+      avatar.set(res);
+    }, toast);
   };
+
   return (
     <>
       <ScrollView className="flex-1 w-screen h-screen">

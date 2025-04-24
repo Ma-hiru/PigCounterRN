@@ -15,7 +15,8 @@ import { Log } from "@/utils/logger";
 import { newsSelector } from "@/stores/slice/newsSlice";
 import News from "@/components/home/News";
 import { useMyState } from "@/hooks/useMyState";
-
+import { getCurrentTask } from "@/utils/validateTask";
+import { useToast } from "@/components/ui/toast";
 
 type props = object;
 const Options: FC<props> = () => {
@@ -31,9 +32,11 @@ const Options: FC<props> = () => {
     buildingName: "",
     penName: ""
   });
+  const CurrentTask = getCurrentTask(TasksList);
+  const toast = useToast();
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      for (const [taskIndex, task] of TasksList.entries()) {
+      for (const [taskIndex, task] of CurrentTask.entries()) {
         for (const [buildingIndex, building] of task.buildings.entries()) {
           for (const [penIndex, pen] of building.pens.entries()) {
             if (pen.penNum === -1) {
@@ -94,14 +97,19 @@ const Options: FC<props> = () => {
             title="开始计数"
             icon={CountIcon}
             iconStyle={{ width: 40, height: 40 }}
-            onPress={goToPages(router, {
-              pathname: "/UploadFiles",
-              params: {
-                title: `楼栋${LastCount.get().buildingName} · 栏舍${LastCount.get().penName}`,
-                taskIndex: [LastCount.get().taskIndex, LastCount.get().buildingIndex, LastCount.get().penIndex],
-                penId: LastCount.get().penId
+            onPress={() => {
+              if (CurrentTask.length === 0) {
+                return Log.Message(toast, "", "暂无活跃任务，休息一下吧！");
               }
-            }, "FN")}
+              goToPages(router, {
+                pathname: "/UploadFiles",
+                params: {
+                  title: `楼栋${LastCount.get().buildingName} · 栏舍${LastCount.get().penName}`,
+                  taskIndex: [LastCount.get().taskIndex, LastCount.get().buildingIndex, LastCount.get().penIndex],
+                  penId: LastCount.get().penId
+                }
+              }, "MOVE");
+            }}
           />
         </View>
         <View>
@@ -110,7 +118,7 @@ const Options: FC<props> = () => {
             <Task TasksList={TasksList} />
           </MyPagesCard>
 
-          <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"热门新闻"}>
+          <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"每日一闻"}>
             {
               NewsList.map((news) =>
                 <News news={news} key={news.id} />)

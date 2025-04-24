@@ -7,20 +7,29 @@ import { View, Text, StatusBar } from "react-native";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { APP_NAME } from "@/settings";
 import { useMyState } from "@/hooks/useMyState";
+import Blank from "@/components/Blank";
 
 type props = object
 
 export const Feedback: FC<props> = () => {
   const { hasToken } = useLogin();
+  const loading = useMyState(false);
   const feedbackInfo = useMyState<FeedbackInfo>({
     taskId: 0,
     feedback: "",
     feedbackImg: []
   });
-  const NoDataRender = useMemo(() => <View
-    className="flex-1 flex-row justify-center items-center">
-    <Text style={{ textAlign: "center" }}>请登录</Text>
-  </View>, []);
+  const submit = useCallback(() => {
+    loading.set(true);
+    setTimeout(() => {
+      loading.set(false);
+    }, 2000);
+  }, [loading]);
+  const NoDataRender = useMemo(() => <Blank tips={"先登录吧！"} style={{
+    position: "absolute",
+    top: "50%",
+    left: "50%"
+  }} className={"-translate-x-1/2 -translate-y-1/2"} />, []);
   const DataRender = useMemo(() => <View className="flex-1 justify-between items-center mt-16">
     <View className="w-[80%]">
       <Text className="mb-4">文字信息（必须）</Text>
@@ -42,10 +51,13 @@ export const Feedback: FC<props> = () => {
       <ImgUploader feedbackInfo={feedbackInfo.get()} setFeedbackInfo={feedbackInfo.set}
                    key={feedbackInfo.get().feedbackImg.length} />
     </View>
-    <MyBlueBtn className="w-[80%] mb-4">提交</MyBlueBtn>
-  </View>, [feedbackInfo]);
+    <View className="w-[80%] justify-center items-center">
+      <MyBlueBtn className="mb-4" loading={loading.get()} onPress={submit}>提交</MyBlueBtn>
+    </View>
+  </View>, [feedbackInfo, loading, submit]);
+
   const Render = useCallback(() => {
-    if (!hasToken) return DataRender;
+    if (hasToken) return DataRender;
     return NoDataRender;
   }, [DataRender, NoDataRender, hasToken]);
   return (

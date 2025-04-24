@@ -16,7 +16,8 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { Input, InputField } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useLogin";
-
+import { Log } from "@/utils/logger";
+import {useToast } from "@/components/ui/toast";
 type props = object
 
 export const Settings: FC<props> = () => {
@@ -26,6 +27,7 @@ export const Settings: FC<props> = () => {
   const configQuality = useMyState(UPLOAD_QUALITY);
   const { hasToken } = useLogin();
   const router = useRouter();
+  const toast = useToast();
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
@@ -44,7 +46,7 @@ export const Settings: FC<props> = () => {
                       HasBg: "false"
                     }
                   }, "MOVE");
-                else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                else Log.Toast("请先登录", "SHORT", "BOTTOM");
               }}
             >
               <Text>找回密码</Text>
@@ -55,7 +57,7 @@ export const Settings: FC<props> = () => {
                                   onPress={() => {
                                     if (hasToken)
                                       goToPages(router, "/ChangeProfile", "MOVE");
-                                    else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                                    else Log.Toast("请先登录","SHORT","BOTTOM");
                                   }}>
               <Text>修改资料</Text>
             </MyPagesCard.CanPress>

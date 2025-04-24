@@ -4,7 +4,6 @@ import defaultAvatar from "@/assets/images/logo_1.jpg";
 import { validate, validateType } from "@/components/registry/validate";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
 import { useFetchData } from "@/utils/fetchData";
-import { pickImgFile } from "@/utils/pickImgFile";
 import { FC, memo, useState } from "react";
 import {
   ImageURISource,
@@ -13,7 +12,7 @@ import {
   Text,
   StatusBar,
   ScrollView,
-  ToastAndroid, InteractionManager
+  InteractionManager
 } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
@@ -25,6 +24,7 @@ import { useRouter } from "expo-router";
 import { Log } from "@/utils/logger";
 import { useToast } from "@/components/ui/toast";
 import { useMyState } from "@/hooks/useMyState";
+import { fileSystem } from "@/utils/fileSystem";
 
 type props = object
 
@@ -78,12 +78,12 @@ const Registry: FC<props> = () => {
     });
   };
   const pickAvatar = async () => {
-    const res = await pickImgFile();
-    if (!res) return;
-    setRegistryInfo((draft) => {
-      draft.picture = res;
-    });
-    setAvatar(res);
+    await fileSystem.PickAvatar((res) => {
+      setRegistryInfo((draft) => {
+        draft.picture = res;
+      });
+      setAvatar(res);
+    },toast);
   };
   return (
     <>
@@ -116,7 +116,8 @@ const Registry: FC<props> = () => {
                 invalid={invalid}
                 registryInfo={registryInfo}
               />
-              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6" loading={loading.get()}>
+              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6"
+                         loading={loading.get()}>
                 注册
               </MyBlueBtn>
             </View>
