@@ -82,7 +82,7 @@ const Options: FC<props> = () => {
           />
           <IconOptionItem
             title="查看数据"
-            icon={PigIcon}
+            icon={CountIcon}
             onPress={goToPages(router, "/(main)/More", "FN")}
             iconStyle={{ width: 40, height: 40 }} />
         </View>
@@ -95,7 +95,7 @@ const Options: FC<props> = () => {
           />
           <IconOptionItem
             title="开始计数"
-            icon={CountIcon}
+            icon={PigIcon}
             iconStyle={{ width: 40, height: 40 }}
             onPress={() => {
               if (CurrentTask.length === 0) {
@@ -115,7 +115,12 @@ const Options: FC<props> = () => {
         <View>
           <MyPagesCard cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
                        title={"今日任务"}>
-            <Task TasksList={TasksList} />
+            <MyPagesCard.CanPress
+              containerStyle={{ paddingLeft: 5, paddingRight: 5 }}
+              onPress={goToPages(router, "/Upload", "FN")}
+            >
+              <Task TasksList={TasksList} />
+            </MyPagesCard.CanPress>
           </MyPagesCard>
 
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"每日一闻"}>

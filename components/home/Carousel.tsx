@@ -47,14 +47,14 @@ const Carousel: FC<props> = () => {
   return (
     <>
       <View className=""
-            style={{ position: "relative", top: -50, margin: "auto", marginBottom: 15 }}>
+            style={{ position: "relative", top: -40, margin: "auto", marginBottom: 15 }}>
         <Shadow offset={[0, 0]} sides={{ bottom: true }} distance={20}
                 corners={{ bottomEnd: true }} paintInside={false} stretch={false}
                 safeRender={false}>
           <ImageCarousel
             data={ADList}
             width={Dimensions.get("window").width * 0.84}
-            height={Dimensions.get("window").width / 2}
+            height={Dimensions.get("window").width * 0.84 / 16 * 9}
           />
         </Shadow>
       </View>

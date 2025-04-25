@@ -18,7 +18,8 @@ export const useValidateTask = (task: Task) => {
     },
     () => (startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
   );
-  return { validation, startTime, endTime };
+  const isOutdate = Date.now() >= endTime.getTime();
+  return { validation, startTime, endTime, isOutdate };
 };
 export const getCurrentTask = (taskList: Task[]) => {
   let currentTask: Task[] = [];

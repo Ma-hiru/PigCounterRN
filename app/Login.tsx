@@ -1,18 +1,22 @@
 import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
 import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
-import { StatusBar, StyleSheet, InteractionManager, View } from "react-native";
+import {
+  StatusBar,
+  StyleSheet,
+  InteractionManager,
+  ImageBackground,
+  KeyboardAvoidingView
+} from "react-native";
 import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { useFetchData } from "@/utils/fetchData";
 import { useRouter } from "expo-router";
-import { Image } from "expo-image";
 import background from "@/assets/images/login/login_bg.png";
 import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
 import localStore from "@/utils/localStore";
-
 const { setLogin } = userActions;
 const setRemember = (loginInfo: loginInfo, remember: boolean) => {
   if (remember) {
@@ -57,36 +61,31 @@ const Login = () => {
   Log.Console("LoginShow");
   return (
     <>
-      <View className="flex-1 relative">
-        <Image
-          source={background}
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            inset: 0
-          }}
-          contentFit={"cover"}
-        />
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-        <BigHeader
-          title={APP_NAME}
-          info={
-            <BigHeader.InfoText content={APP_WELCOME} />
-          }
-          font="baigetianxingtiRegular"
-          containerStyle={styles.HeaderContainer}
-          titleContainerStyle={styles.HeaderTitleContainer}
-          infoContainerStyle={styles.HeaderInfoContainer}
-          titleStyle={styles.HeaderTitle}
-          backContainerStyle={styles.HeaderBackContainer}
-          contentStyle={styles.HeaderContent}
-          hasBackIcon={false}
-        >
-          <LoginPagesForm handleLogin={handleSubmit} loading={loading.get()} />
-          <LoginPagesMoreBtn />
-        </BigHeader>
-      </View>
+      <ImageBackground source={background} style={{ flex: 1 }}>
+        <KeyboardAvoidingView className="flex-1 relative" style={{ zIndex: 1 }}>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+          <BigHeader
+            title={APP_NAME}
+            info={
+              <BigHeader.InfoText
+                content={APP_WELCOME}
+                textStyle={{ fontFamily: "FlyFlowerSongRegular" as Fonts }}
+              />
+            }
+            font="baigetianxingtiRegular"
+            containerStyle={styles.HeaderContainer}
+            titleContainerStyle={styles.HeaderTitleContainer}
+            infoContainerStyle={styles.HeaderInfoContainer}
+            titleStyle={styles.HeaderTitle}
+            backContainerStyle={styles.HeaderBackContainer}
+            contentStyle={styles.HeaderContent}
+            hasBackIcon={false}
+          >
+            <LoginPagesForm handleLogin={handleSubmit} loading={loading.get()} />
+            <LoginPagesMoreBtn />
+          </BigHeader>
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </>
   );
 };

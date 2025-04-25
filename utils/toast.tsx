@@ -38,7 +38,7 @@ export const showNewToast = (
             </Text>
           }
           <Text style={{
-            color: GlobalStyles.SecondColor,
+            color: "#fff",
             fontFamily: "baigetianxingtiRegular" as Fonts
           }}>
             {desc}

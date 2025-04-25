@@ -12,13 +12,13 @@ import {
   Text,
   StatusBar,
   ScrollView,
-  InteractionManager
+  InteractionManager,
+  ImageBackground
 } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
 import { APP_NAME } from "@/settings";
 import background from "@/assets/images/login/login_bg.png";
-import { Image } from "expo-image";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { Log } from "@/utils/logger";
@@ -83,21 +83,11 @@ const Registry: FC<props> = () => {
         draft.picture = res;
       });
       setAvatar(res);
-    },toast);
+    }, toast);
   };
   return (
     <>
-      <View className="flex-1 relative">
-        <Image
-          source={background}
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            inset: 0
-          }}
-          contentFit={"cover"}
-        />
+      <ImageBackground source={background} className="flex-1">
         <ScrollView className="flex-1 w-screen h-screen">
           <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
           <BigHeader title="注册"
@@ -123,7 +113,7 @@ const Registry: FC<props> = () => {
             </View>
           </View>
         </ScrollView>
-      </View>
+      </ImageBackground>
     </>
   );
 };
