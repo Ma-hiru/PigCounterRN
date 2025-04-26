@@ -1,13 +1,12 @@
 import BigHeader from "@/components/BigHeader";
 import { FC, useMemo } from "react";
 import { View, StatusBar } from "react-native";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import Task from "@/components/home/Task";
 import { uploadSelector, useAppSelector } from "@/stores";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
-import { useMyState } from "@/hooks/useMyState";
 import { useLogin } from "@/hooks/useLogin";
 import Blank from "@/components/Blank";
 
@@ -50,7 +49,7 @@ export const HistoryInfo: FC<props> = () => {
           }
         </BigHeader>
         {!hasToken
-          && <Blank tips={"先登录吧！"} style={{
+          && <Blank tips={NO_LOGIN_TIPS} style={{
             position: "absolute",
             top: "50%",
             left: "50%"

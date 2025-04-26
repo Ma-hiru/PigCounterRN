@@ -17,6 +17,7 @@ import News from "@/components/home/News";
 import { useMyState } from "@/hooks/useMyState";
 import { getCurrentTask } from "@/utils/validateTask";
 import { useToast } from "@/components/ui/toast";
+import { NO_LOGIN_TIPS } from "@/settings";
 
 type props = object;
 const Options: FC<props> = () => {
@@ -70,15 +71,20 @@ const Options: FC<props> = () => {
             title="单次计数"
             icon={SingleIcon}
             iconStyle={{ width: 38, height: 38 }}
-            onPress={goToPages(router, {
-              pathname: "/UploadFiles",
-              params: {
-                title: `单次计数`,
-                taskIndex: [0, 0, 0],
-                penId: 114514,
-                once: "true"
-              } satisfies  UploadFilesRouteParams
-            }, "FN")}
+            onPress={() => {
+              if (CurrentTask.length === 0) {
+                return Log.Message(toast, "", NO_LOGIN_TIPS);
+              }
+              goToPages(router, {
+                pathname: "/UploadFiles",
+                params: {
+                  title: `单次计数`,
+                  taskIndex: [0, 0, 0],
+                  penId: 114514,
+                  once: "true"
+                } satisfies  UploadFilesRouteParams
+              }, "MOVE");
+            }}
           />
           <IconOptionItem
             title="查看数据"

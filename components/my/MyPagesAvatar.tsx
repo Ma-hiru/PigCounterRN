@@ -11,7 +11,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Log } from "@/utils/logger";
 import { handleAvatarURL } from "@/utils/handleServerURL";
-import { goToPages } from "@/utils/goToPages";
 import { usePages } from "@/hooks/usePages";
 
 

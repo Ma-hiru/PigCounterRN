@@ -71,7 +71,7 @@ const NewsDetail: FC<props> = () => {
         >
           <View style={{ marginTop: 30, marginBottom: 30 }}>
             <Image {...CoverProps} />
-            <Text style={{ fontSize: 18, marginTop: 15 }}>
+            <Text style={{ fontSize: 18, marginTop: 15 }} selectable={true}>
               {CurrentNews.get().content}
             </Text>
           </View>

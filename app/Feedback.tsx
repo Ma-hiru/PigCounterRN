@@ -5,7 +5,7 @@ import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import { useMyState } from "@/hooks/useMyState";
 import Blank from "@/components/Blank";
 
@@ -25,7 +25,7 @@ export const Feedback: FC<props> = () => {
       loading.set(false);
     }, 2000);
   }, [loading]);
-  const NoDataRender = useMemo(() => <Blank tips={"先登录吧！"} style={{
+  const NoDataRender = useMemo(() => <Blank tips={NO_LOGIN_TIPS} style={{
     position: "absolute",
     top: "50%",
     left: "50%"

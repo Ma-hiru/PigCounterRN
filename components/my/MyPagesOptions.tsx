@@ -12,6 +12,7 @@ import { type Router, useRouter } from "expo-router";
 import { FC, memo } from "react";
 import { StyleSheet, View } from "react-native";
 import MyPagesCard from "./MyPagesCard";
+import { Log } from "@/utils/logger";
 
 type props = object
 
@@ -41,6 +42,7 @@ const CardIconList = [
 const MyPagesOptions: FC<props> = () => {
   const router = useRouter();
   const { handleLogout } = useLogin();
+  Log.Console("MyPagesOptions")
   return (
     <>
       <View style={styles.InfoCardBox}>

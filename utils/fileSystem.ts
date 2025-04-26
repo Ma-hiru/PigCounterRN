@@ -7,10 +7,31 @@ import {
 } from "expo-image-picker";
 import { Log } from "@/utils/logger";
 import { useToast } from "@/components/ui/toast";
-import { UPLOAD_AVATAR_QUALITY } from "@/settings";
+import { CACHE_DIR, UPLOAD_AVATAR_QUALITY } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
-import { cacheDirectory, downloadAsync } from "expo-file-system";
+import {
+  copyAsync,
+  deleteAsync,
+  getInfoAsync,
+  downloadAsync,
+  cacheDirectory,
+  readDirectoryAsync,
+  makeDirectoryAsync
+} from "expo-file-system";
 
+const getCachePath = async (fileName: string): Promise<string> => {
+  if (cacheDirectory === null) return "";
+  const { exists } = await getInfoAsync(cacheDirectory + CACHE_DIR);
+  try {
+    if (!exists) {
+      await makeDirectoryAsync(cacheDirectory + CACHE_DIR, { intermediates: false });
+    }
+    return cacheDirectory + CACHE_DIR + "/" + fileName;
+  } catch (err) {
+    Log.Echo({ err });
+    return "";
+  }
+};
 const TakeAssets = async (options: ImagePickerOptions, toast?: ReturnType<typeof useToast>) => {
   try {
     const { status } = await requestCameraPermissionsAsync();
@@ -65,8 +86,9 @@ const PickAvatar = async (success: (file: RNFile) => void, toast?: ReturnType<ty
   success(result);
 };
 export const DownloadFile = async (url: string): Promise<RNFile | null> => {
+  if (cacheDirectory === null) return null;
   const fileName = url.split("/").pop()!;
-  const downloadPath = `${cacheDirectory}${fileName}`;
+  const downloadPath = await getCachePath(fileName);
   const file = await UriToRNFile(downloadPath);
   if (file.uri !== "") return file;
   try {
@@ -83,13 +105,54 @@ export const DownloadFile = async (url: string): Promise<RNFile | null> => {
     return Promise.reject(null);
   }
 };
+export const SaveFile = async (uri: string, fileName: string, success?: (file: RNFile) => any) => {
+  if (cacheDirectory === null) return;
+  const cachePath = await getCachePath(fileName);
+  try {
+    await copyAsync({
+      from: uri,
+      to: cachePath
+    });
+    if (success) {
+      const file = await UriToRNFile(cachePath);
+      success(file);
+    }
+  } catch (err) {
+    Log.Echo({ err });
+    Log.Toast("资源存储失败,请检查权限！", "SHORT", "BOTTOM");
+  }
+};
+export const RemoveFile = async (uri: string, handler?: (ok: boolean) => void) => {
+  let ok = true;
+  try {
+    const { exists } = await getInfoAsync(uri);
+    exists && await deleteAsync(uri, { idempotent: false });
+  } catch (err) {
+    Log.Echo({ err });
+    Log.Toast("资源删除失败，请检查权限！", "SHORT", "BOTTOM");
+    ok = false;
+  } finally {
+    if (handler) {
+      handler(ok);
+    }
+  }
+};
 
+export * from "expo-file-system";
 export const fileSystem = {
     TakeAssets,
     PickAssets,
     PickAvatar,
     TakeAssetsRNFile,
     PickAssetsRNFile,
-    DownloadFile
+    DownloadFile,
+    SaveFile,
+    RemoveFile,
+    copyAsync,
+    deleteAsync,
+    getInfoAsync,
+    downloadAsync,
+    cacheDirectory,
+    readDirectoryAsync
   }
 ;

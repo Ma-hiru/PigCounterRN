@@ -1,12 +1,12 @@
 import { Alert, ToastAndroid } from "react-native";
 import dayjs from "dayjs";
 import { showNewToast } from "@/utils/toast";
+import { decorationFunc } from "@/utils/decorationFunc";
 
 let IsPause = false;
-
 const Console = (...data: any[]) => {
   if (IsPause) return;
-  return console.log(`\x1B[31m${dayjs(new Date()).format("YY-MM-DD hh:mm:ss").toString()}\x1B[0m`, ...data);
+  return console.log(`\x1B[31m${dayjs(new Date()).format("YY-MM-DD HH:mm:ss A").toString()}\x1B[0m`, ...data);
 };
 const Echo = (data: object) => {
   if (IsPause) return;
@@ -24,16 +24,11 @@ const Toast = (msg: string, duration: "SHORT" | "LONG", gravity: "BOTTOM" | "CEN
   return ToastAndroid.showWithGravity(msg
     , ToastAndroid[duration], ToastAndroid[gravity]);
 };
-
-export const OnPauseLog = <T extends keyof typeof Log>(log: T, params: Parameters<(typeof Log)[T]>) => {
-  IsPause = false;
-  const fn = Log[log];
-  // @ts-ignore
-  fn(...params);
-  IsPause = true;
-};
 export const LoggerPause = () => {
   IsPause = true;
+};
+export const LoggerResume = () => {
+  IsPause = false;
 };
 export const Log = {
   Console,
@@ -41,4 +36,11 @@ export const Log = {
   Message: showNewToast,
   AlertMessage,
   Toast
+};
+export const PauseLog = {
+  Console: decorationFunc(Console, LoggerResume, LoggerPause),
+  Echo: decorationFunc(Echo, LoggerResume, LoggerPause),
+  Message: decorationFunc(showNewToast, LoggerResume, LoggerPause),
+  AlertMessage: decorationFunc(AlertMessage, LoggerResume, LoggerPause),
+  Toast: decorationFunc(Toast, LoggerResume, LoggerPause)
 };

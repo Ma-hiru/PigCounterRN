@@ -6,7 +6,6 @@ import {
 } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { useFetchData } from "@/utils/fetchData";
-import { removeFile, saveFile } from "@/utils/saveFile";
 import { TaskIndexTuple, updateTaskList } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { ScrollView, StatusBar, View } from "react-native";
@@ -71,7 +70,7 @@ const UploadFiles: FC = () => {
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos" | "") => {
     switch (mode) {
       case "save":
-        await saveFile(
+        await fileSystem.SaveFile(
           tempUri,
           `${Date.now()}.${type === "images" ? "jpeg" : "mp4"}`,
           (file) => {
@@ -79,7 +78,7 @@ const UploadFiles: FC = () => {
           });
         break;
       case "delete":
-        await removeFile(tempUri, (_) => {
+        await fileSystem.RemoveFile(tempUri, (_) => {
           updateTaskList(TaskIndexTuple, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_RES, isOnceUpload.current);
         });
     }

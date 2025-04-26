@@ -10,7 +10,7 @@ const App = () => {
   useRefreshPersisted(false);
   Log.Console("App");
   useFonts({ FlyFlowerSongRegular, baigetianxingtiRegular });
-  console.log(getLoadedFonts());
+  Log.Console("LoadedFonts", getLoadedFonts());
   return (
     <Stack>
       <Stack.Screen name="(main)" options={{ headerShown: false }} />

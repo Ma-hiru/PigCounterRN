@@ -1,11 +1,10 @@
-import RootState, { useAppSelector, userActions, userSelector } from "@/stores";
+import { useAppSelector, userSelector } from "@/stores";
 import { useCallback, useMemo } from "react";
 import { usePages } from "@/hooks/usePages";
 import { useFetchData } from "@/utils/fetchData";
 import { Log } from "@/utils/logger";
+import { logout } from "@/utils/user";
 
-const { setLogout } = userActions;
-const { dispatch } = RootState;
 
 interface returnType {
   hasToken: boolean,
@@ -15,19 +14,20 @@ interface returnType {
 }
 
 export const useLogin = (): returnType => {
+  Log.Console("useLogin");
   const { token } = useAppSelector(userSelector);
   const { fetchData, API } = useFetchData();
   const Pages = usePages();
-  const logout = useCallback(() => {
+  const sendLogout = useCallback(() => {
     fetchData(API.reqLogout, []).catch((err) => {
       Log.Toast(err.Message || err.toString() || "请求失败", "SHORT", "BOTTOM");
     });
   }, [API.reqLogout, fetchData]);
 
   const safeLogout = useCallback(() => {
-    dispatch(setLogout());
     logout();
-  }, [logout]);
+    sendLogout();
+  }, [sendLogout]);
 
   const handleLogout = useCallback(() => {
     safeLogout();

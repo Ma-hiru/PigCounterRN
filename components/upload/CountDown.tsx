@@ -1,6 +1,5 @@
 import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
 import { Text, AppState } from "react-native";
-import { Log } from "@/utils/logger";
 
 interface props {
   endTime: number;
@@ -36,7 +35,6 @@ const CountDown: FC<props> = ({ endTime, format, endText = "已过期" }) => {
     };
   }, [endTime, update]);
   const Render = () => {
-    Log.Echo({ remaining });
     if (remaining <= 0) return <Text>{endText}</Text>;
     return <Text>{(format && format(remaining)) || remaining}</Text>;
   };

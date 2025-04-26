@@ -1,9 +1,11 @@
 import { FC } from "react";
 import { StatusBar, View, Pressable } from "react-native";
 import BigHeader from "@/components/BigHeader";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import NoticeItem from "@/components/notice/NoticeItem";
 import { useMyState } from "@/hooks/useMyState";
+import { useLogin } from "@/hooks/useLogin";
+import Blank from "@/components/Blank";
 
 
 type props = object;
@@ -36,6 +38,7 @@ const Notice: FC<props> = () => {
       del: false
     }
   ]);
+  const { hasToken } = useLogin();
   return (
     <>
       <Pressable style={{ flex: 1 }} onPress={() => {
@@ -49,7 +52,7 @@ const Notice: FC<props> = () => {
           >
             <View style={{ marginTop: 30 }} />
             {
-              items.get().map((item, index) => {
+              hasToken && items.get().map((item, index) => {
                 return !item.del && <NoticeItem
                   clickArea={clickArea}
                   time={item.time}
@@ -70,8 +73,10 @@ const Notice: FC<props> = () => {
                 />;
               })
             }
-
           </BigHeader>
+          {
+            !hasToken && <Blank tips={NO_LOGIN_TIPS} />
+          }
         </View>
       </Pressable>
     </>

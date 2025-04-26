@@ -6,7 +6,7 @@ import { userSelector } from "@/stores";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { useSelector } from "react-redux";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import DefaultAvatar from "@/assets/images/logo_1.jpg";
 import { handleAvatarURL } from "@/utils/handleServerURL";
 import { useMyState } from "@/hooks/useMyState";
@@ -49,7 +49,7 @@ export const UserInfo: FC<props> = () => {
   }, [API.reqUserInfo, detailProfile, fetchData, hasToken, profile.id]);
 
 
-  const NoDataRender = useMemo(() => <Blank tips={"先登录吧！"} style={{
+  const NoDataRender = useMemo(() => <Blank tips={NO_LOGIN_TIPS} style={{
     position: "absolute",
     top: "50%",
     left: "50%"
