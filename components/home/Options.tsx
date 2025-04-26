@@ -1,5 +1,5 @@
 import { FC, memo, useEffect } from "react";
-import { View, InteractionManager } from "react-native";
+import { View, InteractionManager, Text } from "react-native";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import SingleIcon from "@/assets/images/home/single.svg";
 import PigIcon from "@/assets/images/home/pig.svg";
@@ -17,11 +17,16 @@ import News from "@/components/home/News";
 import { useMyState } from "@/hooks/useMyState";
 import { getCurrentTask } from "@/utils/validateTask";
 import { useToast } from "@/components/ui/toast";
-import { NO_LOGIN_TIPS } from "@/settings";
+import { NO_ACTIVE_TASK, NO_LOGIN_TIPS } from "@/settings";
+import { Image } from "expo-image";
+import ForbidIcon from "@/assets/images/forbid.svg";
+import RestIcon from "@/assets/images/home/rest.svg";
+import { useLogin } from "@/hooks/useLogin";
 
 type props = object;
 const Options: FC<props> = () => {
   const router = useRouter();
+  const { hasToken } = useLogin();
   const { TasksList } = useSelector(uploadSelector);
   const { NewsList } = useSelector(newsSelector);
   Log.Console("HomeOptionsStart");
@@ -72,7 +77,7 @@ const Options: FC<props> = () => {
             icon={SingleIcon}
             iconStyle={{ width: 38, height: 38 }}
             onPress={() => {
-              if (CurrentTask.length === 0) {
+              if (!hasToken) {
                 return Log.Message(toast, "", NO_LOGIN_TIPS);
               }
               goToPages(router, {
@@ -105,7 +110,7 @@ const Options: FC<props> = () => {
             iconStyle={{ width: 40, height: 40 }}
             onPress={() => {
               if (CurrentTask.length === 0) {
-                return Log.Message(toast, "", "暂无活跃任务，休息一下吧！");
+                return Log.Message(toast, "", NO_ACTIVE_TASK);
               }
               goToPages(router, {
                 pathname: "/UploadFiles",
@@ -125,8 +130,44 @@ const Options: FC<props> = () => {
               containerStyle={{ paddingLeft: 5, paddingRight: 5 }}
               onPress={goToPages(router, "/Upload", "FN")}
             >
-              <Task TasksList={TasksList} />
+              <Task TasksList={CurrentTask} />
             </MyPagesCard.CanPress>
+            {(!hasToken) &&
+              <View style={{
+                padding: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row"
+              }}>
+                <Image source={ForbidIcon} style={{ width: 20, height: 20, marginRight: 5 }} />
+                <Text
+                  style={{
+                    fontFamily: "baigetianxingtiRegular" as Fonts,
+                    fontSize: 16,
+                    lineHeight: 16
+                  }}>
+                  {NO_LOGIN_TIPS}
+                </Text>
+              </View>
+            }
+            {(hasToken && CurrentTask.length === 0) &&
+              <View style={{
+                padding: 10,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row"
+              }}>
+                <Image source={RestIcon} style={{ width: 25, height: 25, marginRight: 5 }} />
+                <Text
+                  style={{
+                    fontFamily: "baigetianxingtiRegular" as Fonts,
+                    fontSize: 18,
+                    lineHeight: 18
+                  }}>
+                  {NO_ACTIVE_TASK}
+                </Text>
+              </View>
+            }
           </MyPagesCard>
 
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"每日一闻"}>
