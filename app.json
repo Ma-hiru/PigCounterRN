@@ -16,11 +16,12 @@
     },
     "android": {
       "permissions": [
-        "INTERNET",
+        "android.permission.INTERNET",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "package": "com.mahiru.pigcounter"
     },
@@ -76,6 +77,7 @@
       "eas": {
         "projectId": "eaa55e22-9f5e-4bf7-a8e5-77e375a56d74"
       }
-    }
+    },
+    "owner": "mahiru"
   }
 }
