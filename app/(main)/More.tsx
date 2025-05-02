@@ -1,23 +1,25 @@
 import Header from "@/components/Header";
 import Manage from "@/components/more/Manage";
 import Report from "@/components/more/Report";
-import { stateId, uploadSelector, useAppSelector, userSelector } from "@/stores";
-import { memo } from "react";
+import { userSelector } from "@/stores";
 import { StatusBar, View } from "react-native";
 import { useSelector } from "react-redux";
-import logger from "@/utils/logger";
+import { useLogin } from "@/hooks/useLogin";
+import Blank from "@/components/Blank";
+import { NO_LOGIN_TIPS } from "@/settings";
 
 
 const More = () => {
   const { profile } = useSelector(userSelector);
-  logger("console", "stateId", stateId);
+  const { hasToken } = useLogin();
   return (
     <>
       <View className="flex-1 bg-gray-50">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <Header title={profile?.admin ? "管理" : "数据"} />
         {
-          profile?.admin ? <Manage /> : <Report />
+          (hasToken && (profile?.admin ? <Manage /> : <Report />)) ||
+          <Blank tips={NO_LOGIN_TIPS} />
         }
       </View>
     </>

@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo } from "react";
 import { useAppSelector } from "@/stores";
-import { newsSelector } from "@/stores/slice/newSlice";
-import logger from "@/utils/logger";
+import { newsSelector } from "@/stores/slice/newsSlice";
+import { Log } from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import { StatusBar, Text, View, InteractionManager, ScrollView } from "react-native";
 import BigHeader from "@/components/BigHeader";
@@ -16,7 +16,6 @@ type routeParam = {
   id: string;
 }
 const NewsDetail: FC<props> = () => {
-  logger("console", "NewsDetailShow.");
   const { NewsList } = useAppSelector(newsSelector);
   const NewsId = useGetRouteParam<routeParam, number>((params) => {
     return Number(params.id);
@@ -29,22 +28,24 @@ const NewsDetail: FC<props> = () => {
     title: ""
   });
   useEffect(() => {
-    logger("console", "NewsDetailEffect");
     InteractionManager.runAfterInteractions(() => {
       for (const news of NewsList.entries()) {
         if (news[1].id === NewsId) {
           CurrentNews.set(news[1]);
+          Log.Console("CurrentNewsId", NewsId);
           return;
         }
       }
     });
-  }, [CurrentNews, NewsId, NewsList]);
+    //eslint-disable-next-line
+  }, [NewsId, NewsList]);
   const NewsTime = useMemo(() => {
     if (CurrentNews.get().time) {
       const num = Number(CurrentNews.get().time);
       if (Number.isNaN(num)) {
         return CurrentNews.get().time;
       } else {
+        //TODO 优化时间格式
         return new Date(num).toLocaleString();
       }
     }
@@ -70,7 +71,7 @@ const NewsDetail: FC<props> = () => {
         >
           <View style={{ marginTop: 30, marginBottom: 30 }}>
             <Image {...CoverProps} />
-            <Text style={{ fontSize: 18, marginTop: 15 }}>
+            <Text style={{ fontSize: 18, marginTop: 15 }} selectable={true}>
               {CurrentNews.get().content}
             </Text>
           </View>

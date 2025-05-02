@@ -1,12 +1,10 @@
-import RootState, { userActions, userSelector } from "@/stores";
-import { goToPages } from "@/utils/goToPages";
-import { useRouter } from "expo-router";
-import { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { reqLogout } from "@/api";
+import { useAppSelector, userSelector } from "@/stores";
+import { useCallback, useMemo } from "react";
+import { usePages } from "@/hooks/usePages";
+import { useFetchData } from "@/utils/fetchData";
+import { Log } from "@/utils/logger";
+import { logout } from "@/utils/user";
 
-const { setLogout } = userActions;
-const { dispatch } = RootState;
 
 interface returnType {
   hasToken: boolean,
@@ -16,19 +14,35 @@ interface returnType {
 }
 
 export const useLogin = (): returnType => {
-  const { token } = useSelector(userSelector);
-  const router = useRouter();
-  const handleLogout = useCallback(async () => {
-    dispatch(setLogout());
-    goToPages(router, "/Login", "MOVE");
-    await reqLogout();
-  }, [router]);
-  const safeLogout = useCallback(async () => {
-    dispatch(setLogout());
-    await reqLogout();
-  }, []);
+  Log.Console("useLogin");
+  const { token } = useAppSelector(userSelector);
+  const { fetchData, API } = useFetchData();
+  const Pages = usePages();
+  const sendLogout = useCallback(() => {
+    fetchData(API.reqLogout, []).catch((err) => {
+      Log.Toast(err.Message || err.toString() || "请求失败", "SHORT", "BOTTOM");
+    });
+  }, [API.reqLogout, fetchData]);
+
+  const safeLogout = useCallback(() => {
+    logout();
+    sendLogout();
+  }, [sendLogout]);
+
+  const handleLogout = useCallback(() => {
+    safeLogout();
+    Pages.set("/Login", "MOVE");
+  }, [Pages, safeLogout]);
+
+
   const handleLogin = useCallback(() => {
-    goToPages(router, "/Login", "MOVE");
-  }, [router]);
-  return { hasToken: !!token, handleLogout, handleLogin, safeLogout };
+    Pages.set("/Login", "MOVE");
+  }, [Pages]);
+
+  return useMemo(() => ({
+    hasToken: !!token,
+    handleLogout,
+    handleLogin,
+    safeLogout
+  }), [handleLogin, handleLogout, safeLogout, token]);
 };

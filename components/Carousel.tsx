@@ -5,8 +5,8 @@ import { FC, memo, useCallback, useEffect, useRef } from "react";
 import { Image } from "expo-image";
 import { GlobalStyles } from "@/settings";
 import { useNavigation } from "expo-router";
-import logger from "@/utils/logger";
 import { AD } from "@/types/ad";
+import { Log } from "@/utils/logger";
 
 type props = {
   data: AD[];
@@ -15,6 +15,7 @@ type props = {
   containerStyle?: StyleProp<ViewStyle>
 }
 const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
+  //eslint-disable-next-line
   const navigation = useNavigation();
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -25,7 +26,6 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
     });
   }, [progress]);
   useEffect(() => {
-    logger("console", "carousel timer");
     const timer = setInterval(() => {
       onPressPagination((progress.get() + 1) % data.length);
     }, 18000);
@@ -33,7 +33,7 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
       clearInterval(timer);
     };
   }, [progress, data.length, onPressPagination]);
-  logger("console", "ImageCarouselShow.");
+  Log.Console("ImageCarouselShow.");
   return (
     <>
       <Carousel
@@ -52,7 +52,8 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
               alignItems: "center",
               backgroundColor: GlobalStyles.ThemeColor2,
               borderRadius: 10,
-              overflow: "hidden"
+              overflow: "hidden",
+              ...containerStyle as object
             }}
             onPress={() => {
               item?.handler && item.handler(item);
@@ -68,7 +69,8 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
       <Pagination.Basic
         progress={progress}
         data={data}
-        dotStyle={{ backgroundColor: "rgba(255,255,255,0.5)", borderRadius: 50 }}
+        activeDotStyle={{ backgroundColor: GlobalStyles.SecondColor }}
+        dotStyle={{ backgroundColor: "#fff", borderRadius: 50 }}
         containerStyle={{ gap: 5, marginTop: -15 }}
         onPress={onPressPagination}
       />

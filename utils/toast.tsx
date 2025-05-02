@@ -1,8 +1,15 @@
-import { Toast, ToastDescription, ToastTitle, useToast } from "@/components/ui/toast";
+import { Toast, useToast } from "@/components/ui/toast";
 import { ToastPlacement } from "@gluestack-ui/toast/lib/types";
-import { StatusBar } from "react-native";
+import { StatusBar, Text } from "react-native";
+import { GlobalStyles } from "@/settings";
 
-export const showNewToast = (toast: ReturnType<typeof useToast>, title: string, desc: string, placement: ToastPlacement = "top", duration: number = 3000, action: GetReactProps<typeof Toast>["action"] = "info") => {
+export const showNewToast = (
+  toast: ReturnType<typeof useToast>,
+  title: string,
+  desc: string,
+  placement: ToastPlacement = "top",
+  duration: number = 3000,
+  action: GetReactProps<typeof Toast>["action"] = "muted") => {
   const topInset = StatusBar.currentHeight ?? 0;
   toast.show({
     id: String(Math.random()),
@@ -16,17 +23,26 @@ export const showNewToast = (toast: ReturnType<typeof useToast>, title: string, 
           action={action}
           variant="outline"
           style={{
-            paddingLeft: 50,
-            paddingRight: 50,
-            paddingTop: 5,
-            paddingBottom: 5,
-            marginTop: topInset+5
+            marginTop: topInset + 5,
+            backgroundColor: GlobalStyles.ThemeColor1,
           }}
         >
-          <ToastTitle style={{color:"#409eff"}}>
-            {title}
-          </ToastTitle>
-          <ToastDescription>{desc}</ToastDescription>
+          {
+            title !== "" &&
+            <Text style={{
+              color: GlobalStyles.SecondColor,
+              fontSize: 16,
+              fontFamily: "baigetianxingtiRegular" as Fonts
+            }}>
+              {title}
+            </Text>
+          }
+          <Text style={{
+            color: "#fff",
+            fontFamily: "baigetianxingtiRegular" as Fonts
+          }}>
+            {desc}
+          </Text>
         </Toast>
       );
     }

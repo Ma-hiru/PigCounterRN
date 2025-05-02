@@ -6,14 +6,15 @@ import { Image } from "expo-image";
 import WeatherBg from "@/assets/images/bg_2(1).jpg";
 import { setImageScale } from "@/utils/setImageScale";
 import { useWeather } from "@/hooks/useWeather";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
+
 
 type props = object;
 
 const Head: FC<props> = () => {
   const weatherData = useWeather();
   const [bgScale, setBgScale] = useState(1);
-  logger("console","HomeHeadShow.")
+  Log.Console("HomeHeadShow.");
   return (
     <>
       <Header
@@ -48,7 +49,7 @@ const Head: FC<props> = () => {
               }}
         >
           <Image
-            source={GetWeatherIconUrl(weatherData?.weather?.icon, GlobalStyles.WeatherIcon.style, GlobalStyles.WeatherIcon.color, GlobalStyles.WeatherIcon.defaultIcon)}
+            source={GetWeatherIconUrl(weatherData.get().weather?.icon, GlobalStyles.WeatherIcon.style, GlobalStyles.WeatherIcon.color, GlobalStyles.WeatherIcon.defaultIcon)}
             style={{
               height: 18,
               width: 18,
@@ -63,7 +64,7 @@ const Head: FC<props> = () => {
                   fontSize: 14
                 }}>
             {
-              `${weatherData?.weather?.cityName ?? "雨湖区"} ${weatherData?.weather?.temp ?? "19"}℃`
+              `${weatherData.get().weather?.cityName ?? "雨湖区"} ${weatherData.get().weather?.temp ?? "19"}℃`
             }
           </Text>
         </View>

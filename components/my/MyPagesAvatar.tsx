@@ -2,15 +2,16 @@ import checkIcon from "@/assets/images/my/check.svg";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import headBg from "@/assets/images/my/user_bg01.png";
 import { useLogin } from "@/hooks/useLogin";
-import { baseUrl, DEFAULT_MY_BG_SCALE } from "@/settings";
+import { DEFAULT_MY_BG_SCALE } from "@/settings";
 import { userSelector } from "@/stores";
 import { setImageScale } from "@/utils/setImageScale";
 import { Image } from "expo-image";
 import { FC, memo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { handleAvatarURL } from "@/utils/handleServerURL";
+import { usePages } from "@/hooks/usePages";
 
 
 type props = object
@@ -19,15 +20,13 @@ const MyPagesAvatar: FC<props> = () => {
   const [bgScale, setBgScale] = useState(DEFAULT_MY_BG_SCALE);
   const { hasToken, handleLogin } = useLogin();
   const { profile } = useSelector(userSelector);
+  const Pages = usePages();
   const username = profile.name ? profile.name : "点击登录";
-
   const avatar = profile.profilePicture ? handleAvatarURL(profile.profilePicture) : defaultAvatar;
-  logger("console", "avatar", avatar);
-  const organization = profile.organization;
+  Log.Echo({ avatar });
   const handleAvatarPress = () => {
-    if (!hasToken) {
-      handleLogin();
-    }
+    if (!hasToken) handleLogin();
+    else Pages.set("/UserInfo","MOVE")
   };
   return (
     <>
@@ -50,9 +49,9 @@ const MyPagesAvatar: FC<props> = () => {
             {username}
           </Text>
           <View className="w-full flex justify-center items-center flex-row mt-1">
-            {organization && <Image source={checkIcon} style={styles.CheckIcon} />}
+            {profile.organization && <Image source={checkIcon} style={styles.CheckIcon} />}
             <Text style={styles.UserInfoText}>
-              {organization}
+              {profile.organization}
             </Text>
           </View>
         </Pressable>

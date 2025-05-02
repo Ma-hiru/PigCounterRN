@@ -4,7 +4,11 @@ type UploadFilesRouteParams = {
   penId: number;
   once: string;
 }
-export type DetailHistoryRouteParams = {
+type DetailHistoryRouteParams = {
   taskId: number[];
   time: string;
+}
+type BannerRouteParams = {
+  url: string;
+  title: string;
 }

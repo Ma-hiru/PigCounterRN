@@ -6,21 +6,19 @@ import { userSelector } from "@/stores";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
 import { useSelector } from "react-redux";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import DefaultAvatar from "@/assets/images/logo_1.jpg";
 import { handleAvatarURL } from "@/utils/handleServerURL";
 import { useMyState } from "@/hooks/useMyState";
-import { fetchData } from "@/utils/fetchData";
-import { reqUserInfo } from "@/api";
-import logger from "@/utils/logger";
-import { useToast } from "@/components/ui/toast";
+import { useFetchData } from "@/utils/fetchData";
+import { Log } from "@/utils/logger";
+import Blank from "@/components/Blank";
 
 type props = object
 
 export const UserInfo: FC<props> = () => {
   const { profile } = useSelector(userSelector);
   const { hasToken } = useLogin();
-  const toast = useToast();
   const detailProfile = useMyState<UserInfo>({
     admin: false,
     createTime: "",
@@ -33,29 +31,29 @@ export const UserInfo: FC<props> = () => {
     token: "",
     username: ""
   });
+  const { fetchData, API } = useFetchData();
   useEffect(() => {
-    if(detailProfile.get().id===0 && hasToken){
+    if (detailProfile.get().id === 0 && hasToken) {
       fetchData(
-        reqUserInfo,
+        API.reqUserInfo,
         [profile.id],
         (res) => {
-          logger("console", "detailProfile", res.data);
+          Log.Console("detailProfile", res.data);
           detailProfile.set(res.data);
         },
         (res, createToast) => {
           createToast("请求出错！", res?.message);
-        },
-        toast
-      );
+        }
+      ).then()
     }
-  }, [detailProfile, profile.id, toast]);
+  }, [API.reqUserInfo, detailProfile, fetchData, hasToken, profile.id]);
 
 
-
-  const NoDataRender = useMemo(() => <View
-    className="flex-1 flex-row justify-center items-center">
-    <Text style={{ textAlign: "center" }}>暂无数据</Text>
-  </View>, []);
+  const NoDataRender = useMemo(() => <Blank tips={NO_LOGIN_TIPS} style={{
+    position: "absolute",
+    top: "50%",
+    left: "50%"
+  }} className={"-translate-x-1/2 -translate-y-1/2"} />, []);
   const DataRender = useMemo(() => <View className="flex-1 justify-start items-center mt-16">
     <View className="flex justify-center items-center w-[80%]">
       <Item title="头像">

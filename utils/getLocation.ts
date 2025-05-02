@@ -1,4 +1,4 @@
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import {
   Accuracy,
   getCurrentPositionAsync, getLastKnownPositionAsync,
@@ -24,16 +24,16 @@ export const getLocation = async (): Promise<LocationObject | null> => {
       getLastKnownPositionAsync()
     ]);
     if (location.status === "fulfilled") {
-      logger("console", "精确位置");
+      Log.Console("精确位置");
       return location.value;
     }
     if (lastKnownLocation.status === "fulfilled") {
-      logger("console", "使用上次位置");
+      Log.Console("使用上次位置");
       return lastKnownLocation.value;
     }
     return null;
   } catch (e) {
-    logger("console", e);
+    Log.Console(e);
     throw e;
   }
 };

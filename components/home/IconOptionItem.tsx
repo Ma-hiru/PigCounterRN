@@ -21,11 +21,13 @@ const IconOptionItem: FC<props> = ({ icon, title, iconStyle, titleStyle, onPress
               <>
                 <View className="justify-between flex-row items-center"
                       style={[pressed && styles.Shadow]}>
-                  <Text className="text-center" style={titleStyle}>{title}</Text>
+                  <Text className="text-center"
+                        style={[{ fontWeight: "bold" }, titleStyle]}>{title}</Text>
                   <Image source={icon}
                          style={{
                            width: 40,
-                           height: 40, ...iconStyle as object
+                           height: 40,
+                           ...iconStyle as object
                          }}
                   />
                 </View>

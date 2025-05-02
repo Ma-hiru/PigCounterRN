@@ -13,6 +13,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { MyState, useMyState } from "@/hooks/useMyState";
 import { validatePassword, validatePhone } from "@/utils/validateFields";
 import { Button } from "@rneui/themed";
+import MyBlueBtn from "./MyBlueBtn";
 
 
 type props = {
@@ -124,18 +125,18 @@ const CheckPermission: FC<props> = ({ success, code }) => {
                   />
                 </Input>
               </View>
-              <Button color={GlobalStyles.ThemeColor1} onPress={getCode}>
-                获取验证码
-              </Button>
+              <View style={{ borderRadius: 5, overflow: "hidden" }}>
+                <Button color={GlobalStyles.ThemeColor} onPress={getCode}>
+                  获取验证码
+                </Button>
+              </View>
             </View>
             <FormControlError>
               <FormControlErrorIcon as={AlertCircleIcon} />
               <FormControlErrorText>{"验证码错误"}</FormControlErrorText>
             </FormControlError>
           </FormControl>
-          <Button color={GlobalStyles.ThemeColor1} onPress={submit}>
-            提交
-          </Button>
+          <MyBlueBtn containerStyle={{ marginTop: 15 }}> 提交</MyBlueBtn>
         </View>
       }
     </>

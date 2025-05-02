@@ -1,7 +1,7 @@
 import GenerateTableRow from "@/components/more/GenerateTableRow";
-import { DEFAULT_UPLOAD_RES, GlobalStyles } from "@/settings";
+import { GlobalStyles } from "@/settings";
 import { uploadSelector } from "@/stores";
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { RefreshControl, ScrollView, View, Text } from "react-native";
 import {
   Table,
@@ -60,7 +60,8 @@ const Report: FC<props> = () => {
               <TableBody>
                 {
                   TasksList.map((task: Task, taskIndex: number) => (
-                    <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex} total={Total}/>
+                    <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex}
+                                      total={Total} />
                   ))
                 }
               </TableBody>

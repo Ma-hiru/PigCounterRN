@@ -1,20 +1,13 @@
 import { FC } from "react";
 import { WebView } from "react-native-webview";
-import { WebViewSource } from "react-native-webview/lib/WebViewTypes";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 
-type props = {
-  source: WebViewSource;
-};
-type routeParam = {
-  url: string;
-  title: string;
-}
-const Banner: FC<props> = ({ source }) => {
-  const { url } = useGetRouteParam<routeParam>();
+type props = object;
+const Banner: FC<props> = () => {
+  const { url } = useGetRouteParam<BannerRouteParams>();
   return (
     <>
-      <WebView source={source || { uri: url }} style={{ flex: 1 }} />
+      <WebView source={{ uri: url }} style={{ flex: 1 }} />
     </>
   );
 };

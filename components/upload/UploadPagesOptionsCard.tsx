@@ -8,8 +8,8 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { GlobalStyles } from "@/settings";
 import ModalWindow from "@/components/ModalWindow";
 import { useMyState } from "@/hooks/useMyState";
-import logger from "@/utils/logger";
-import { View, Text } from "react-native";
+import  { Log } from "@/utils/logger";
+import { View } from "react-native";
 import { Input, InputField } from "@/components/ui/input";
 
 interface props {
@@ -89,14 +89,14 @@ const UploadPagesOptionsCard: FC<props> = (
       }} className="mt-4" action="primary">
         <ButtonText>修改数据</ButtonText>
       </Button>
-      <Button onPress={()=>{
+      <Button onPress={() => {
         confirmData();
         router.back();
       }} className="mt-4" action="positive">
         <ButtonText>确认</ButtonText>
       </Button>
     </>
-  ), [clearUpload, confirmData, showModal]);
+  ), [clearUpload, confirmData, router, showModal]);
   const Render = useCallback(() => {
     if (previewVideo || previewImg || cachePath.path) {
       if (isUpload) return UploadDataRender;
@@ -111,7 +111,7 @@ const UploadPagesOptionsCard: FC<props> = (
     if (Number.isNaN(num)) inputNum.set(0);
     else inputNum.set(num);
   };
-  logger("console", "uploadoptionstart", "show", showModal.get());
+  Log.Console("uploadOptionsShow", showModal.get());
   return (
     <>
       <ModalWindow

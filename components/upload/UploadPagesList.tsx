@@ -16,7 +16,6 @@ import { Divider } from "@/components/ui/divider";
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "@/settings";
-import { UploadFilesRouteParams } from "@/types/route";
 
 interface props {
   task: Task;
@@ -26,7 +25,7 @@ interface props {
 
 type btnAction = GetReactProps<typeof Button>["action"];
 const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
-  const { endTime, validation } = useValidateTask(task);
+  const { endTime, validation, isOutdate } = useValidateTask(task);
   return (
     <>
       <View
@@ -48,14 +47,15 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
             {
               validation ?
                 <Text style={{ ...styles.HeadText, textAlign: "left" }}>
-                  <CountDown endTime={endTime.getTime()} format={countdownFormat} endText="未开放"/>
+                  <CountDown endTime={endTime.getTime()} format={countdownFormat}
+                             endText="已过期" />
                 </Text> :
                 <Text style={{
                   ...styles.HeadText,
                   color: validation ? GlobalStyles.PositiveColor : GlobalStyles.NegativeColor,
                   textAlign: "left"
                 }}>
-                  未开放
+                  {isOutdate ? "已过期" : "未开放"}
                 </Text>
             }
           </View>

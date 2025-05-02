@@ -9,7 +9,7 @@ import {
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import localStore from "@/utils/localStore";
-import { FC, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {
   Checkbox,
@@ -18,52 +18,70 @@ import {
   CheckboxIcon
 } from "@/components/ui/checkbox";
 import { CheckIcon } from "@/components/ui/icon";
-import { useImmer } from "use-immer";
 import Feather from "@expo/vector-icons/Feather";
 import { GlobalStyles } from "@/settings";
+import { useMyState } from "@/hooks/useMyState";
 
 interface props {
-  handleLogin: (loginInfo: loginInfo) => Promise<void>;
+  handleLogin: (loginInfo: loginInfo, remember: boolean) => Promise<void>;
   loading: boolean;
 }
 
 const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
-  const [loginInfo, setLoginInfo] = useImmer<loginInfo>({ username: "", password: "" });
-  const [isInvalid, setIsInvalid] = useImmer({
+  const loginInfo = useMyState<loginInfo>({ username: "", password: "" });
+  const hasChanged = useMyState(false);
+  useEffect(() => {
+    localStore.getItem("remember").then(async (data) => {
+      if (data === "true") {
+        remember.set(true);
+        const username = await localStore.getItem("username");
+        const password = await localStore.getItem("password");
+        loginInfo.set(draft => {
+          draft.username = username;
+          draft.password = password;
+        });
+      }
+    });
+  });
+  const isInvalid = useMyState({
     username: false,
     password: false
   });
-  const [focus, setFocus] = useImmer({
+  const focus = useMyState({
     usernameFocus: false,
     passwordFocus: false
   });
-  const [remember, setRemember] = useState(false);
+  const remember = useMyState(false);
   const handleSubmit = async () => {
-    const res = validate(loginInfo, setIsInvalid);
+    const res = validate(loginInfo.get(), isInvalid.set);
     if (!res) return;
-    await handleLogin(loginInfo);
-    await localStore.setItem("remember", String(remember));
+    if (!hasChanged.get()) {
+      //没有输入操作，但是通过验证，表明为Remember数据
+      //TODO 指纹校验
+    }
+    await handleLogin(loginInfo.get(), remember.get());
   };
   return (
     <>
       <Text style={{ ...styles.Label }}>用户名</Text>
-      <FormControl isInvalid={isInvalid.username} size="md" className="w-full mb-4">
+      <FormControl isInvalid={isInvalid.get().username} size="md" className="w-full mb-4">
         <Input size="xl" variant="underlined" className="border-solid"
-               style={{ borderColor: focus.usernameFocus ? GlobalStyles.FocusBorderColor : GlobalStyles.DefaultBorderColor }}>
+               style={{ borderColor: focus.get().usernameFocus ? GlobalStyles.FocusBorderColor : GlobalStyles.DefaultBorderColor }}>
           <InputField
             placeholder="请输入用户名"
             returnKeyType="next"
-            value={loginInfo.username}
-            onChangeText={(text) => setLoginInfo(draft => {
+            value={loginInfo.get().username}
+            onChangeText={(text) => loginInfo.set(draft => {
+              hasChanged.set(true);
               draft.username = text.trim();
             })}
             onFocus={() => {
-              setFocus(draft => {
+              focus.set(draft => {
                 draft.usernameFocus = true;
               });
             }}
             onBlur={() => {
-              setFocus(draft => {
+              focus.set(draft => {
                 draft.usernameFocus = false;
               });
             }}
@@ -76,29 +94,30 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
         </FormControlError>
       </FormControl>
       <Text style={{ ...styles.Label }}>密码</Text>
-      <FormControl isInvalid={isInvalid.password} size="md" className="w-full mb-6">
+      <FormControl isInvalid={isInvalid.get().password} size="md" className="w-full mb-6">
         <Input size="xl" variant="underlined" className="border-solid"
-               style={{ borderColor: focus.passwordFocus ? GlobalStyles.FocusBorderColor : GlobalStyles.DefaultBorderColor }}>
+               style={{ borderColor: focus.get().passwordFocus ? GlobalStyles.FocusBorderColor : GlobalStyles.DefaultBorderColor }}>
           <InputField
             type="password"
             placeholder="请输入密码"
-            value={loginInfo.password}
+            value={loginInfo.get().password}
             returnKeyType="done"
-            onChangeText={(text) => setLoginInfo(draft => {
+            onChangeText={(text) => loginInfo.set(draft => {
+              hasChanged.set(true);
               draft.password = text.trim();
             })}
             onFocus={() => {
-              setFocus(draft => {
+              focus.set(draft => {
                 draft.passwordFocus = true;
               });
             }}
             onBlur={() => {
-              setFocus(draft => {
+              focus.set(draft => {
                 draft.passwordFocus = false;
               });
             }}
           />
-          <Feather name="lock" style={{ marginRight: 5 }} size={16}/>
+          <Feather name="lock" style={{ marginRight: 5 }} size={16} />
         </Input>
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
@@ -106,15 +125,19 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
         </FormControlError>
       </FormControl>
       <View className={"flex flex-row justify-start items-center w-full mb-4"}>
-        <Checkbox value={"true"} onChange={(key) => setRemember(key)}>
+        <Checkbox value={"true"} onChange={(key) => remember.set(key)}>
           <CheckboxIndicator>
             <CheckboxIcon as={CheckIcon} />
           </CheckboxIndicator>
           <CheckboxLabel>记住我</CheckboxLabel>
         </Checkbox>
       </View>
-      <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-4 mt-2">
-        {loading ? "登录中..." : "登录"}
+      <MyBlueBtn
+        onPress={handleSubmit as any}
+        className="mb-4 mt-2"
+        loading={loading}
+      >
+        登录
       </MyBlueBtn>
     </>
   );

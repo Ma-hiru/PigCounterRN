@@ -1,8 +1,7 @@
 import { getWeather } from "@/utils/getWeather";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { useEffect } from "react";
-import { ToastAndroid } from "react-native";
-import { useImmer } from "use-immer";
+import { useMyState } from "@/hooks/useMyState";
 
 type ReturnType = {
   weather: WeatherData | null;
@@ -10,33 +9,34 @@ type ReturnType = {
   err: any;
 };
 export const useWeather = () => {
-  const [status, setStatus] = useImmer<ReturnType>({
+  const status = useMyState<ReturnType>({
     weather: null,
     loading: false,
     err: null
   });
   useEffect(() => {
-    setStatus(draft => {
+    status.set(draft => {
       draft.loading = true;
     });
     getWeather()
       .then((weather) => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.weather = weather;
         });
       })
       .catch((error) => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.err = error;
         });
-        logger("console", error);
-        ToastAndroid?.showWithGravity("获取天气失败，请检查网络或权限", ToastAndroid.SHORT, ToastAndroid.BOTTOM)
+        Log.Echo({ error });
+        Log.Toast("获取天气失败，请检查网络或权限", "SHORT", "BOTTOM");
       })
       .finally(() => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.loading = false;
         });
       });
-  }, [setStatus]);
+    //eslint-disable-next-line
+  }, []);
   return status;
 };

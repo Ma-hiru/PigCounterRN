@@ -17,5 +17,15 @@ export const useValidateTask = (task: Task) => {
     },
     () => (startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
   );
-  return { validation, startTime, endTime };
+  const isOutdate = Date.now() >= endTime.getTime();
+  return { validation, startTime, endTime, isOutdate };
+};
+export const getCurrentTask = (taskList: Task[]) => {
+  let currentTask: Task[] = [];
+  taskList.forEach((task) => {
+    const endTime = dayjs(task.endTime).toDate();
+    const startTime = dayjs(task.startTime).toDate();
+    startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime() && currentTask.push(task);
+  });
+  return currentTask;
 };

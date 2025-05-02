@@ -1,9 +1,8 @@
 import { getLocation } from "@/utils/getLocation";
-import logger from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { LocationObject } from "expo-location";
 import { useEffect } from "react";
-import { ToastAndroid } from "react-native";
-import { useImmer } from "use-immer";
+import { useMyState } from "@/hooks/useMyState";
 
 type ReturnType = {
   location: LocationObject | null;
@@ -11,33 +10,34 @@ type ReturnType = {
   err: any;
 };
 export const useLocation = () => {
-  const [status, setStatus] = useImmer<ReturnType>({
+  const status = useMyState<ReturnType>({
     location: null,
     loading: false,
     err: null
   });
   useEffect(() => {
-    setStatus(draft => {
+    status.set(draft => {
       draft.loading = true;
     });
     getLocation()
       .then((location) => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.location = location;
         });
       })
       .catch((error) => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.err = error;
         });
-        logger("console", error);
-        ToastAndroid?.showWithGravity("获取位置失败，请检查网络或权限", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+        Log.Echo({ error });
+        Log.Toast("获取位置失败，请检查网络或权限", "SHORT", "BOTTOM");
       })
       .finally(() => {
-        setStatus(draft => {
+        status.set(draft => {
           draft.loading = false;
         });
       });
-  }, [setStatus]);
+    //eslint-disable-next-line
+  }, []);
   return status;
 };

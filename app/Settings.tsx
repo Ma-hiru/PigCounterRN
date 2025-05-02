@@ -1,6 +1,6 @@
 import BigHeader from "@/components/BigHeader";
-import { FC } from "react";
-import { StatusBar, StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { FC, useMemo } from "react";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import {
   APP_NAME,
   baseUrl,
@@ -16,6 +16,9 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { Input, InputField } from "@/components/ui/input";
 import { useLogin } from "@/hooks/useLogin";
+import { Log } from "@/utils/logger";
+import { useTemp } from "@/hooks/useTemp";
+import MyPortal from "@/components/MyPortal";
 
 type props = object
 
@@ -26,6 +29,13 @@ export const Settings: FC<props> = () => {
   const configQuality = useMyState(UPLOAD_QUALITY);
   const { hasToken } = useLogin();
   const router = useRouter();
+  const removeLoading = useMyState(false);
+  const { TempSize, ClearTemp } = useTemp();
+  const TempSizeFormat = useMemo(() => {
+    const MB = TempSize / 1024 / 1024;
+    if (MB <= 0) return 0;
+    else return MB.toFixed(2);
+  }, [TempSize]);
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
@@ -44,7 +54,7 @@ export const Settings: FC<props> = () => {
                       HasBg: "false"
                     }
                   }, "MOVE");
-                else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                else Log.Toast("请先登录", "SHORT", "BOTTOM");
               }}
             >
               <Text>找回密码</Text>
@@ -55,9 +65,24 @@ export const Settings: FC<props> = () => {
                                   onPress={() => {
                                     if (hasToken)
                                       goToPages(router, "/ChangeProfile", "MOVE");
-                                    else ToastAndroid.showWithGravity("请先登录", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+                                    else Log.Toast("请先登录", "SHORT", "BOTTOM");
                                   }}>
               <Text>修改资料</Text>
+            </MyPagesCard.CanPress>
+          </MyPagesCard>
+          <MyPagesCard cardStyle={styles.Card}>
+            <MyPagesCard.CanPress
+              containerStyle={styles.Press}
+              onPress={() => {
+                removeLoading.set(true);
+                ClearTemp().finally(() => {
+                  setTimeout(() => {
+                    removeLoading.set(false);
+                  }, 1000);
+                });
+              }}>
+              <Text>清除缓存</Text>
+              <Text>{TempSizeFormat}M</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
           <MyPagesCard cardStyle={styles.Card}>
@@ -109,6 +134,7 @@ export const Settings: FC<props> = () => {
           />
         </Input>
       </ModalWindow>
+      <MyPortal visible={removeLoading.get()} text="删除中..." />
     </>
   );
 };

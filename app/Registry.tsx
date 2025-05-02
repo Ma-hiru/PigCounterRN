@@ -1,12 +1,9 @@
-import { reqRegistry } from "@/api";
 import BigHeader from "@/components/BigHeader";
 import MyBlueBtn from "@/components/MyBlueBtn";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import { validate, validateType } from "@/components/registry/validate";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
-import { useToast } from "@/components/ui/toast";
-import { fetchData } from "@/utils/fetchData";
-import { pickImgFile } from "@/utils/pickImgFile";
+import { useFetchData } from "@/utils/fetchData";
 import { FC, memo, useState } from "react";
 import {
   ImageURISource,
@@ -15,15 +12,19 @@ import {
   Text,
   StatusBar,
   ScrollView,
-  ToastAndroid
+  InteractionManager,
+  ImageBackground
 } from "react-native";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
-import { APP_NAME, GlobalStyles } from "@/settings";
+import { APP_NAME } from "@/settings";
 import background from "@/assets/images/login/login_bg.png";
-import { Image } from "expo-image";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
+import { Log } from "@/utils/logger";
+import { useToast } from "@/components/ui/toast";
+import { useMyState } from "@/hooks/useMyState";
+import { fileSystem } from "@/utils/fileSystem";
 
 type props = object
 
@@ -53,45 +54,40 @@ const Registry: FC<props> = () => {
     admin: false
   });
   const [avatar, setAvatar] = useState<ImageURISource | number>(defaultAvatar);
-  const toast = useToast();
+  const loading = useMyState(false);
   const router = useRouter();
+  const { fetchData, API } = useFetchData();
+  const toast = useToast();
   const handleSubmit = async () => {
     if (!validate(registryInfo, setInvalid)) return;
-    if (avatar === defaultAvatar) return ToastAndroid.showWithGravity("请选择头像", ToastAndroid.SHORT, ToastAndroid.BOTTOM);
-    await fetchData(
-      reqRegistry,
-      [registryInfo],
-      (_, createToast) => {
-        createToast("注册成功", "注册成功，请登录");
-        goToPages(router, "/Login", "MOVE");
-      },
-      (res, createToast) => {
-        createToast("请求出错！", res?.message);
-      },
-      toast
-    );
+    if (avatar === defaultAvatar) return Log.Message(toast, "缺少信息", "请选择头像");
+    loading.set(true);
+    InteractionManager.runAfterInteractions(async () => {
+      await fetchData(
+        API.reqRegistry,
+        [registryInfo],
+        (_, createToast) => {
+          createToast("注册成功", "注册成功，请登录");
+          goToPages(router, "/Login", "MOVE");
+        },
+        (res, createToast) => {
+          createToast("请求出错！", res?.message);
+        }
+      );
+      loading.set(false);
+    });
   };
   const pickAvatar = async () => {
-    const res = await pickImgFile();
-    if (!res) return;
-    setRegistryInfo((draft) => {
-      draft.picture = res;
-    });
-    setAvatar(res);
+    await fileSystem.PickAvatar((res) => {
+      setRegistryInfo((draft) => {
+        draft.picture = res;
+      });
+      setAvatar(res);
+    }, toast);
   };
   return (
     <>
-      <View className="flex-1 relative">
-        <Image
-          source={background}
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            inset: 0
-          }}
-          contentFit={"cover"}
-        />
+      <ImageBackground source={background} className="flex-1">
         <ScrollView className="flex-1 w-screen h-screen">
           <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
           <BigHeader title="注册"
@@ -110,13 +106,14 @@ const Registry: FC<props> = () => {
                 invalid={invalid}
                 registryInfo={registryInfo}
               />
-              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
-                {"注册"}
+              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6"
+                         loading={loading.get()}>
+                注册
               </MyBlueBtn>
             </View>
           </View>
         </ScrollView>
-      </View>
+      </ImageBackground>
     </>
   );
 };

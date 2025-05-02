@@ -3,8 +3,9 @@ import Item from "@/components/userInfo/Item";
 import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
-import { APP_NAME } from "@/settings";
+import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import { useAppSelector, userSelector } from "@/stores";
+import Blank from "@/components/Blank";
 
 type props = object
 
@@ -12,11 +13,11 @@ export const CompanyInfo: FC<props> = () => {
   const { hasToken } = useLogin();
   const { profile } = useAppSelector(userSelector);
 
-
-  const NoDataRender = useMemo(() => <View
-    className="flex-1 flex-row justify-center items-center">
-    <Text style={{ textAlign: "center" }}>暂无数据</Text>
-  </View>, []);
+  const NoDataRender = useMemo(() => <Blank tips={NO_LOGIN_TIPS} style={{
+    position: "absolute",
+    top: "50%",
+    left: "50%"
+  }} className={"-translate-x-1/2 -translate-y-1/2"} />, []);
   const DataRender = useMemo(() => <View className="flex-1 justify-start items-center mt-16">
     <View className="flex justify-center items-center w-[80%]">
       <Item title="Logo">

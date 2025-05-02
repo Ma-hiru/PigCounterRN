@@ -1,12 +1,13 @@
 import PlusIcon from "@/assets/images/plus.svg";
 import DelIcon from "@/assets/images/delete.svg";
 import { Card } from "@/components/ui/card";
-import { pickImgFile } from "@/utils/pickImgFile";
 import { setImageScale } from "@/utils/setImageScale";
 import { Image, ImageSource } from "expo-image";
 import { FC, memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, Dimensions } from "react-native";
 import { Updater } from "use-immer";
+import { fileSystem } from "@/utils/fileSystem";
+import { UPLOAD_FEEDBACK_QUALITY } from "@/settings";
 
 interface props {
   source?: ImageSource;
@@ -16,7 +17,12 @@ interface props {
 const ImgItem: FC<props> = ({ source, setFeedbackInfo }) => {
   const [scale, setScale] = useState(1);
   const addImg = useCallback(async () => {
-    const res = await pickImgFile();
+    const res = await fileSystem.PickAssetsRNFile({
+      mediaTypes: "images",
+      quality: UPLOAD_FEEDBACK_QUALITY,
+      selectionLimit: 1,
+      allowsEditing: false
+    });
     if (!res) return;
     setFeedbackInfo(draft => {
       draft.feedbackImg.push(res);
