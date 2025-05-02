@@ -40,4 +40,6 @@ public class Employee implements Serializable {
 
     @NotNull(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)
     private Boolean admin;
+
+    private Long orgId;
 }

@@ -1,4 +1,4 @@
-package com.zlz.pigcounter.controller.admin;
+package com.zlz.pigcounter.controller;
 
 import com.common.pojo.dto.TaskDTO;
 import com.common.pojo.dto.PenPictureUploadDTO;
