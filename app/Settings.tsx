@@ -43,7 +43,7 @@ export const Settings: FC<props> = () => {
         <BigHeader title="设置" info={
           <BigHeader.InfoText content={`配置{${APP_NAME}}系统`} />
         }>
-          <MyPagesCard cardStyle={[{ marginTop: 30 }, styles.Card]}>
+          <MyPagesCard cardStyle={[{ marginTop: 30 }, styles.Card]} className="shadow-2xl">
             <MyPagesCard.CanPress
               containerStyle={styles.Press}
               onPress={() => {
@@ -60,7 +60,7 @@ export const Settings: FC<props> = () => {
               <Text>找回密码</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
-          <MyPagesCard cardStyle={styles.Card}>
+          <MyPagesCard cardStyle={styles.Card} className="shadow-2xl">
             <MyPagesCard.CanPress containerStyle={styles.Press}
                                   onPress={() => {
                                     if (hasToken)
@@ -70,7 +70,7 @@ export const Settings: FC<props> = () => {
               <Text>修改资料</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
-          <MyPagesCard cardStyle={styles.Card}>
+          <MyPagesCard cardStyle={styles.Card} className="shadow-2xl">
             <MyPagesCard.CanPress
               containerStyle={styles.Press}
               onPress={() => {
@@ -85,7 +85,7 @@ export const Settings: FC<props> = () => {
               <Text>{TempSizeFormat}M</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
-          <MyPagesCard cardStyle={styles.Card}>
+          <MyPagesCard cardStyle={styles.Card} className="shadow-2xl">
             <MyPagesCard.CanPress
               containerStyle={styles.Press}
               onPress={() => showQualityModal.set(true)}
@@ -94,7 +94,7 @@ export const Settings: FC<props> = () => {
               <Text>{UPLOAD_QUALITY}</Text>
             </MyPagesCard.CanPress>
           </MyPagesCard>
-          <MyPagesCard cardStyle={styles.Card}>
+          <MyPagesCard cardStyle={styles.Card} className="shadow-2xl">
             <MyPagesCard.CanPress
               containerStyle={styles.Press}
               onPress={() => showBaseUrlModal.set(true)}

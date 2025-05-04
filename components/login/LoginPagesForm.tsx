@@ -21,6 +21,7 @@ import { CheckIcon } from "@/components/ui/icon";
 import Feather from "@expo/vector-icons/Feather";
 import { GlobalStyles } from "@/settings";
 import { useMyState } from "@/hooks/useMyState";
+import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
 
 interface props {
   handleLogin: (loginInfo: loginInfo, remember: boolean) => Promise<void>;
@@ -124,17 +125,18 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
           <FormControlErrorText>密码至少需要六位字符</FormControlErrorText>
         </FormControlError>
       </FormControl>
-      <View className={"flex flex-row justify-start items-center w-full mb-4"}>
+      <View className={"flex flex-row justify-between items-center w-full mb-4"}>
         <Checkbox value={"true"} onChange={(key) => remember.set(key)}>
           <CheckboxIndicator>
             <CheckboxIcon as={CheckIcon} />
           </CheckboxIndicator>
           <CheckboxLabel>记住我</CheckboxLabel>
         </Checkbox>
+        <LoginPagesMoreBtn />
       </View>
       <MyBlueBtn
         onPress={handleSubmit as any}
-        className="mb-4 mt-2"
+        className="mb-4 mt-2 m-auto"
         loading={loading}
       >
         登录

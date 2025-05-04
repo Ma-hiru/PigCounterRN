@@ -95,7 +95,12 @@ export const UserInfo: FC<props> = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <LinearGradient colors={["transparent", "#30cfd0"]} style={{ flex: 1 }}>
+      <LinearGradient
+        colors={["#d7d2cc", "#9bc5c3", "#9bc5c3", "#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
         <BigHeader
           title="用户信息"
           info={
@@ -104,9 +109,10 @@ export const UserInfo: FC<props> = () => {
           containerStyle={{
             backgroundColor: "transparent"
           }}
-        >
-        </BigHeader>
-        {Render()}
+        />
+        <View className="flex justify-center items-center w-[80%]">
+
+        </View>
       </LinearGradient>
     </>
   );

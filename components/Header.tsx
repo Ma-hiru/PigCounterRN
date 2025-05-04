@@ -45,7 +45,7 @@ const Header: FC<props> = (
             <Text className="text-3xl font-bold"
                   style={{
                     color: GlobalStyles.HeaderText,
-                    fontFamily: "FlyFlowerSongRegular" as Fonts,
+                    fontFamily: "baigetianxingtiRegular" as Fonts,
                     fontWeight: "normal",
                     lineHeight: 40,
                     ...titleStyle as object

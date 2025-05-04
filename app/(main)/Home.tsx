@@ -6,6 +6,7 @@ import Carousel from "@/components/home/Carousel";
 import Options from "@/components/home/Options";
 import { ExitApp } from "@/utils/exitAPP";
 import { Log } from "@/utils/logger";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -14,15 +15,22 @@ const Home = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <ScrollView className="flex-1 bg-gray-50">
+      <ScrollView className="flex-1" style={{ backgroundColor: "transparent" }}>
         <Head />
-        <View
-          className="flex-1 bg-gray-50"
-          style={{ position: "relative", top: -20, borderRadius: 18 }}
+        <LinearGradient
+          colors={["#dfe9f3", "#dfe9f3","#ffffff"]}
+          style={{ flex: 1, borderRadius: 18,top: -15, }}
+          end={{ x: 0, y: 0 }}
+          start={{ x: 1, y: 1 }}
         >
-          <Carousel />
-          <Options />
-        </View>
+          <View
+            className="flex-1 "
+            style={{ position: "relative" }}
+          >
+            <Carousel />
+            <Options />
+          </View>
+        </LinearGradient>
       </ScrollView>
     </>
   );

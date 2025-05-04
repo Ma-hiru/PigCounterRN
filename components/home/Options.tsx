@@ -64,7 +64,7 @@ const Options: FC<props> = () => {
   }, [TasksList]);
   return (
     <>
-      <View className=" flex-1 bg-gray-50" style={{
+      <View className=" flex-1 " style={{
         paddingLeft: 12,
         paddingRight: 12,
         position: "relative",

@@ -6,6 +6,7 @@ import NoticeItem from "@/components/notice/NoticeItem";
 import { useMyState } from "@/hooks/useMyState";
 import { useLogin } from "@/hooks/useLogin";
 import Blank from "@/components/Blank";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 type props = object;
@@ -42,41 +43,49 @@ const Notice: FC<props> = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <Pressable style={{ flex: 1 }} onPress={() => {
-        clickArea.set(true);
-      }}>
-        <View className="flex-1 bg-white">
-          <BigHeader title="公告"
-                     info={<BigHeader.InfoText content={`查看{${APP_NAME}}系统公告`} />
-                     }
-          >
-            <View style={{ marginTop: 30 }} />
-            {
-              hasToken && items.get().map((item, index) => {
-                return !item.del && <NoticeItem
-                  clickArea={clickArea}
-                  time={item.time}
-                  content={item.content}
-                  type={item.type}
-                  key={item.id}
-                  isRead={item.read}
-                  readItem={() => {
-                    items.set((draft) => {
-                      draft[index].read = !item.read;
-                    });
-                  }}
-                  deleteItem={() => {
-                    items.set(draft => {
-                      draft[index].del = true;
-                    });
-                  }}
-                />;
-              })
-            }
-          </BigHeader>
-          {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
-        </View>
-      </Pressable>
+      <LinearGradient
+        colors={["#d7d2cc", "#9bc5c3", "#9bc5c3", "#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          clickArea.set(true);
+        }}>
+          <View className="flex-1">
+            <BigHeader title="公告"
+                       info={<BigHeader.InfoText content={`查看{${APP_NAME}}系统公告`} />
+                       }
+                       containerStyle={{backgroundColor:"transparent"}}
+            >
+              <View style={{ marginTop: 30 }} />
+              {
+                hasToken && items.get().map((item, index) => {
+                  return !item.del && <NoticeItem
+                    clickArea={clickArea}
+                    time={item.time}
+                    content={item.content}
+                    type={item.type}
+                    key={item.id}
+                    isRead={item.read}
+                    readItem={() => {
+                      items.set((draft) => {
+                        draft[index].read = !item.read;
+                      });
+                    }}
+                    deleteItem={() => {
+                      items.set(draft => {
+                        draft[index].del = true;
+                      });
+                    }}
+                  />;
+                })
+              }
+            </BigHeader>
+            {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
+          </View>
+        </Pressable>
+      </LinearGradient>
     </>
   );
 };

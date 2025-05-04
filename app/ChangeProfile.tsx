@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/toast";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppSelector, userSelector } from "@/stores";
 import { fileSystem } from "@/utils/fileSystem";
+import { LinearGradient } from "expo-linear-gradient";
 
 type props = object;
 
@@ -68,36 +69,43 @@ const ChangeProfile: FC<props> = () => {
 
   return (
     <>
-      <ScrollView className="flex-1 w-screen h-screen">
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-        <BigHeader title="修改资料"
-                   info={<BigHeader.InfoText content={`修改登录在{${APP_NAME}}系统的个人信息`} />}
-                   containerStyle={{ backgroundColor: "none" }}>
-          <CheckPermission success={success} code={code} />
-        </BigHeader>
-        {
-          success.get() &&
-          <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
-            <View className="flex justify-center items-center w-[80%]">
-              <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
-                <Avatar size="xl">
-                  <AvatarImage source={avatar.get()} />
-                </Avatar>
-                {avatar.get() === defaultAvatar &&
-                  <Text className="text-sm mt-2">点击选择头像</Text>}
-              </Pressable>
-              <RegistryPagesForm
-                setRegistryInfo={registryInfo.set}
-                invalid={invalid.get()}
-                registryInfo={registryInfo.get()}
-              />
-              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
-                {"提交"}
-              </MyBlueBtn>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+      <LinearGradient
+        colors={["#d7d2cc", "#9bc5c3", "#9bc5c3", "#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
+        <ScrollView className="flex-1 w-screen h-screen">
+          <BigHeader title="修改资料"
+                     info={<BigHeader.InfoText content={`修改登录在{${APP_NAME}}系统的个人信息`} />}
+                     containerStyle={{ backgroundColor: "none" }}>
+            <CheckPermission success={success} code={code} />
+          </BigHeader>
+          {
+            success.get() &&
+            <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
+              <View className="flex justify-center items-center w-[80%]">
+                <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
+                  <Avatar size="xl">
+                    <AvatarImage source={avatar.get()} />
+                  </Avatar>
+                  {avatar.get() === defaultAvatar &&
+                    <Text className="text-sm mt-2">点击选择头像</Text>}
+                </Pressable>
+                <RegistryPagesForm
+                  setRegistryInfo={registryInfo.set}
+                  invalid={invalid.get()}
+                  registryInfo={registryInfo.get()}
+                />
+                <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
+                  {"提交"}
+                </MyBlueBtn>
+              </View>
             </View>
-          </View>
-        }
-      </ScrollView>
+          }
+        </ScrollView>
+      </LinearGradient>
     </>
   );
 };

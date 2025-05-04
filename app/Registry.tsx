@@ -18,13 +18,14 @@ import {
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useImmer } from "use-immer";
 import { APP_NAME } from "@/settings";
-import background from "@/assets/images/login/login_bg.png";
+import background from "@/assets/images/login/login_bg_1.jpg";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { Log } from "@/utils/logger";
 import { useToast } from "@/components/ui/toast";
 import { useMyState } from "@/hooks/useMyState";
 import { fileSystem } from "@/utils/fileSystem";
+import { LinearGradient } from "expo-linear-gradient";
 
 type props = object
 
@@ -87,33 +88,40 @@ const Registry: FC<props> = () => {
   };
   return (
     <>
-      <ImageBackground source={background} className="flex-1">
-        <ScrollView className="flex-1 w-screen h-screen">
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-          <BigHeader title="注册"
-                     info={<BigHeader.InfoText content={`注册{${APP_NAME}}系统`} />}
-                     containerStyle={{ backgroundColor: "none" }} />
-          <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
-            <View className="flex justify-center items-center w-[80%]">
-              <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
-                <Avatar size="xl">
-                  <AvatarImage source={avatar} />
-                </Avatar>
-                {avatar === defaultAvatar && <Text className="text-sm mt-2">点击选择头像</Text>}
-              </Pressable>
-              <RegistryPagesForm
-                setRegistryInfo={setRegistryInfo}
-                invalid={invalid}
-                registryInfo={registryInfo}
-              />
-              <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6"
-                         loading={loading.get()}>
-                注册
-              </MyBlueBtn>
+      <LinearGradient
+        colors={["#d7d2cc","#9bc5c3","#9bc5c3","#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
+        <ImageBackground className="flex-1">
+          <ScrollView className="flex-1 w-screen h-screen">
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+            <BigHeader title="注册"
+                       info={<BigHeader.InfoText content={`注册{${APP_NAME}}系统`} />}
+                       containerStyle={{ backgroundColor: "none" }} />
+            <View className="flex-1 justify-start items-center" style={{ marginTop: 30 }}>
+              <View className="flex justify-center items-center w-[80%]">
+                <Pressable onPress={pickAvatar} className="mb-6 justify-center items-center">
+                  <Avatar size="xl">
+                    <AvatarImage source={avatar} />
+                  </Avatar>
+                  {avatar === defaultAvatar && <Text className="text-sm mt-2" style={{color:"#666"}}>点击选择头像</Text>}
+                </Pressable>
+                <RegistryPagesForm
+                  setRegistryInfo={setRegistryInfo}
+                  invalid={invalid}
+                  registryInfo={registryInfo}
+                />
+                <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6"
+                           loading={loading.get()}>
+                  注册
+                </MyBlueBtn>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </ImageBackground>
+          </ScrollView>
+        </ImageBackground>
+      </LinearGradient>
     </>
   );
 };

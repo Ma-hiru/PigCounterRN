@@ -84,7 +84,8 @@ export const GlobalStyles = {
     color: "white",
     defaultIcon: 100
   },
-  ThemeColor: "#409eff",
+  ThemeColor: "#2b5876",
+  ThemeColorOld: "#409eff",
   SecondColor: "#F8F800F9",
   SecondColor2: "#f4c743",
   PressColorBlue: "#1280f2",
@@ -103,7 +104,7 @@ export const GlobalStyles = {
   ThemeColor4: "#bad0e8",
   ThemeColor5: "rgba(64,158,255,0.93)",
   DisabledColor: "#c8c8c8",
-  FocusBorderColor: "#000000",
+  FocusBorderColor: "rgba(255,255,255,0.8)",
   DefaultBorderColor: "#666666"
 } as const;
 

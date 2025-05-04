@@ -3,6 +3,7 @@ import MyPagesOptions from "@/components/my/MyPagesOptions";
 import { StatusBar, View } from "react-native";
 import { memo } from "react";
 import { Log } from "@/utils/logger";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 const My = () => {
@@ -10,10 +11,17 @@ const My = () => {
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1">
-        <MyPagesAvatar />
-        <MyPagesOptions />
-      </View>
+      <LinearGradient
+        colors={["#dfe9f3","#ffffff"]}
+        style={{ flex: 1 }}
+        end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
+      >
+        <View className="flex-1">
+          <MyPagesAvatar />
+          <MyPagesOptions />
+        </View>
+      </LinearGradient>
     </>
   );
 };
