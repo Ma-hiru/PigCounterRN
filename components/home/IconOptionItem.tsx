@@ -22,7 +22,7 @@ type props = {
 const IconOptionItem: FC<props> = ({ icon, title, iconStyle, titleStyle, onPress }) => {
   return (
     <>
-      <PressFeedback onPress={onPress} containerStyle={{ width: "45%" }}>
+      <PressFeedback onPress={onPress} containerStyle={{ width: "48%" }}>
         {
           ({ pressed }) => (
             <>

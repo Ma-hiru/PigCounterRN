@@ -8,24 +8,25 @@ export const countdownFormat = (time: number) => {
   return dayjs.duration(time, "milliseconds").format("HH时mm分ss秒");
 };
 export const useValidateTask = (task: Task) => {
-  const endTime = dayjs(task.endTime).toDate();
-  const startTime = dayjs(task.startTime).toDate();
+  const endTime = dayjs(task.endTime);
+  const nowTime = dayjs(Date.now());
+  const startTime = dayjs(task.startTime);
   const validation = useSyncExternalStore(
     (listener) => {
       const timer = setInterval(listener, 1000);
       return () => clearInterval(timer);
     },
-    () => (startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime())
+    () => (startTime.isBefore(nowTime) && endTime.isAfter(nowTime))
   );
-  const isOutdate = Date.now() >= endTime.getTime();
+  const isOutdate = endTime.isBefore(nowTime);
   return { validation, startTime, endTime, isOutdate };
 };
 export const getCurrentTask = (taskList: Task[]) => {
-  let currentTask: Task[] = [];
-  taskList.forEach((task) => {
-    const endTime = dayjs(task.endTime).toDate();
-    const startTime = dayjs(task.startTime).toDate();
-    startTime.getTime() <= Date.now() && Date.now() <= endTime.getTime() && currentTask.push(task);
-  });
-  return currentTask;
+  return taskList.reduce((pre, task) => {
+    const endTime = dayjs(task.endTime);
+    const nowTime = dayjs(Date.now());
+    const startTime = dayjs(task.startTime);
+    startTime.isBefore(nowTime) && endTime.isAfter(nowTime) && pre.push(task);
+    return pre;
+  }, [] as Task[]);
 };

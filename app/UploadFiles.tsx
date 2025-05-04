@@ -63,7 +63,7 @@ const UploadFiles: FC = () => {
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
   const [cacheCount, peopleCacheCount] = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    return [pen.penNum, pen?.peopleNum ?? -1];
+    return [pen.count, pen?.manualCount ?? -1];
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
 
   /** 选择、缓存图片 */

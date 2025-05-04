@@ -84,6 +84,7 @@ export const GlobalStyles = {
     color: "white",
     defaultIcon: 100
   },
+  BlurBgCardColor: "#b3d9d7",
   ThemeColor: "#2b5876",
   ThemeColorOld: "#409eff",
   SecondColor: "#F8F800F9",

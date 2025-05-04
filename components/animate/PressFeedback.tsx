@@ -19,6 +19,7 @@ type props = {
   ) => ReactNode) | ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
   minScale?: number;
+  className?: string;
 };
 
 const PressFeedback: FC<props> = (
@@ -27,7 +28,8 @@ const PressFeedback: FC<props> = (
     children,
     containerStyle,
     minScale = 0.95,
-    onLongPress
+    onLongPress,
+    className
   }) => {
   const AniRef = useRef<View>(null);
   const customZoomOut: CustomAnimation = {
@@ -65,6 +67,7 @@ const PressFeedback: FC<props> = (
   return (
     <>
       <View
+        className={className}
         ref={AniRef}
         useNativeDriver={true}
         style={containerStyle}

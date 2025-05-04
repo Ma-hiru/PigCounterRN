@@ -41,13 +41,13 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
               <Text style={styles.Tags}>任务</Text>
               <Text style={{ ...styles.HeadText, ...styles.HeadTitle }}
                     className="text-2xl font-bold justify-center items-center">
-                编号 {taskIndex + 1}
+                {task.taskName || task.id}
               </Text>
             </View>
             {
               validation ?
                 <Text style={{ ...styles.HeadText, textAlign: "left" }}>
-                  <CountDown endTime={endTime.getTime()} format={countdownFormat}
+                  <CountDown endTime={endTime.toDate().getTime()} format={countdownFormat}
                              endText="已过期" />
                 </Text> :
                 <Text style={{
@@ -87,7 +87,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                       {
                         ({ isExpanded }) =>
                           <>
-                            <AccordionTitleText>{"楼栋" + building.buildingId}</AccordionTitleText>
+                            <AccordionTitleText>{building.buildingName}</AccordionTitleText>
                             {
                               isExpanded ?
                                 <AccordionIcon as={ChevronUpIcon} className="ml-3" /> :
@@ -102,7 +102,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                       building.pens.map((pen, penIndex) => {
                           let action: btnAction = "negative";
                           if (pen.picturePath !== "")
-                            action = pen.penNum >= 0 ? "positive" : "secondary";
+                            action = pen.count >= 0 ? "positive" : "secondary";
                           return (
                             <Button
                               key={pen.penId}
@@ -111,7 +111,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                 {
                                   pathname: "/UploadFiles",
                                   params: {
-                                    title: `楼栋${building.buildingId} · 栏舍${pen.penId}`,
+                                    title: `${building.buildingName} · ${pen.penName}`,
                                     taskIndex: [taskIndex, buildingIndex, penIndex],
                                     penId: pen.penId,
                                     once: "false"
@@ -124,7 +124,7 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
                                 penIndex !== 0 || penIndex !== building.pens.length - 1 ? { marginBottom: 10 } : {}
                               }
                             >
-                              <ButtonText>{"栏舍" + pen.penId}</ButtonText>
+                              <ButtonText>{pen.penName}</ButtonText>
                             </Button>
                           );
                         }

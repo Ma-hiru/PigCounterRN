@@ -8,14 +8,14 @@ export type TaskIndexTuple = {
 }
 const { setTasksList, setOnceTask } = uploadActions;
 const dispatch = RootState.dispatch;
-export const updateTaskList = (TaskIndexTuple: TaskIndexTuple, newPath?: Pen["picturePath"], newType?: Pen["type"], newRes?: Pen["penNum"], newPeopleNum?: Pen["peopleNum"], Once?: boolean) => {
+export const updateTaskList = (TaskIndexTuple: TaskIndexTuple, newPath?: Pen["picturePath"], newType?: Pen["type"], newRes?: Pen["count"], newPeopleNum?: Pen["manualCount"], Once?: boolean) => {
   let newTaskList;
   if (Once) newTaskList = cloneDeep(RootState.getState().uploadStore?.OnceTask);
   else newTaskList = cloneDeep(RootState.getState().uploadStore?.TasksList);
   const pen = newTaskList[TaskIndexTuple.TaskIndex].buildings[TaskIndexTuple.BuildingIndex].pens[TaskIndexTuple.PenIndex];
   newPath !== undefined && (pen.picturePath = newPath);
-  newRes && (pen.penNum = newRes);
-  newPeopleNum && (pen.peopleNum = newPeopleNum);
+  newRes && (pen.count = newRes);
+  newPeopleNum && (pen.manualCount = newPeopleNum);
   newType !== undefined && (pen.type = newType);
   if (Once) dispatch(setOnceTask(newTaskList));
   else dispatch(setTasksList(newTaskList));

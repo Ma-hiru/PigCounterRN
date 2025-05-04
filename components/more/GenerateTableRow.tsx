@@ -20,7 +20,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
       goToPages(router, {
           pathname: "/UploadFiles",
           params: {
-            title: `楼栋${building.buildingId} · 栏舍${pen.penId}`,
+            title: `${building.buildingName} · ${pen.penName}`,
             taskIndex: [taskIndex, buildingIndex, penIndex],
             penId: pen.penId
           }
@@ -35,7 +35,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
     if (!validation) return [countNum, pensNum];
     task.buildings.forEach((building) => {
       building.pens.forEach((pen) => {
-        if (pen.penNum > DEFAULT_UPLOAD_RES) countNum += pen.peopleNum || pen.penNum;
+        if (pen.count > DEFAULT_UPLOAD_RES) countNum += pen.manualCount || pen.count;
         pensNum++;
       });
     });
@@ -57,7 +57,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
               key={`${taskIndex}-${buildingIndex}-${penIndex}`}>
               <Row buildingName={String(buildingIndex)}
                    penName={String(penIndex)}
-                   res={pen.peopleNum || pen.penNum}
+                   res={pen.manualCount || pen.count}
                    key={`${taskIndex}-${buildingIndex}-${penIndex}`}
                    gotoEdit={gotoEdit(buildingIndex, penIndex, building, pen)}
               />

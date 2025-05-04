@@ -50,7 +50,7 @@ const ForgetPassword: FC<props> = () => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <LinearGradient
-        colors={["#d7d2cc", "#9bc5c3", "#9bc5c3", "#d7d2cc"]}
+        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa","#d7d2cc"]}
         style={{ flex: 1 }}
         end={{ x: 0, y: 0 }}
         start={{ x: 1, y: 1 }}

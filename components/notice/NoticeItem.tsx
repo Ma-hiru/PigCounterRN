@@ -9,13 +9,9 @@ import read from "@/assets/images/has_read.svg";
 import notRead from "@/assets/images/not_read.svg";
 import { Image } from "expo-image";
 import PressFeedback from "@/components/animate/PressFeedback";
-import { BlurView } from "expo-blur";
 
 type props = {
-  time?: string;
-  type?: string;
-  content?: string;
-  isRead?: boolean;
+  notice: Notice;
   containerStyle?: StyleProp<ViewStyle>;
   readItem?: () => void;
   deleteItem?: () => void;
@@ -24,10 +20,7 @@ type props = {
 
 const NoticeItem: FC<props> = (
   {
-    time,
-    type,
-    content,
-    isRead,
+    notice,
     containerStyle,
     readItem,
     deleteItem,
@@ -57,70 +50,65 @@ const NoticeItem: FC<props> = (
         {
           ({ pressed }) =>
             <>
-              <BlurView style={{
-                marginBottom: 10,
-                borderRadius: 20,
-              }}>
-                <MyPagesCard
-                  className="shadow-2xl"
-                  cardStyle={{
-                    ...containerStyle as object,
-                    borderRadius: 20,
-                    overflow: "hidden",
-                    backgroundColor: "rgba(255,255,255,0.7)"
-                  }}
-                >
-                  <MyPopover
-                    open={popover.get()}
-                    options={
-                      <>
-                        <View className="flex-row">
-                          <View style={[styles.PopoverBtnContainer, styles.leftBtn]}>
-                            <Button color={GlobalStyles.ThemeColor} onPress={() => {
-                              popover.set(false);
-                              readItem && readItem();
-                            }}>{isRead ? "未读" : "已读"}</Button>
-                          </View>
-                          <View style={[styles.PopoverBtnContainer, styles.rightBtn]}>
-                            <Button color={GlobalStyles.ThemeColor} onPress={() => {
-                              popover.set(false);
-                              deleteItem && deleteItem();
-                            }}>删除</Button>
-                          </View>
+              <MyPagesCard
+                className="shadow-2xl"
+                cardStyle={{
+                  ...containerStyle as object,
+                  borderRadius: 20,
+                  marginTop: 10,
+                  backgroundColor: GlobalStyles.BlurBgCardColor
+                }}
+              >
+                <MyPopover
+                  open={popover.get()}
+                  options={
+                    <>
+                      <View className="flex-row">
+                        <View style={[styles.PopoverBtnContainer, styles.leftBtn]}>
+                          <Button color={GlobalStyles.ThemeColor} onPress={() => {
+                            popover.set(false);
+                            readItem && readItem();
+                          }}>{notice.read ? "未读" : "已读"}</Button>
                         </View>
-                      </>
-                    }
-                  >
-                    <View style={[pressed && styles.Shadow, containerStyle]}>
-                      <View className="flex-row justify-between" style={{ padding: 2 }}>
-                        <View style={{ width: "auto" }}>
-                          <View
-                            style={{
-                              backgroundColor: GlobalStyles.ThemeColor1,
-                              padding: 2,
-                              paddingHorizontal: 5,
-                              borderRadius: 5,
-                              width: "auto"
-                            }}>
-                            <Text style={{ color: "#fff" }}>{type}</Text>
-                          </View>
-                        </View>
-                        <View className="flex-row justify-center items-center">
-                          <Text className="text-sm"
-                                style={{ fontWeight: "normal", textAlign: "right" }}>
-                            {time}
-                          </Text>
-                          <Image source={isRead ? read : notRead}
-                                 style={{ width: 20, height: 20 }} />
+                        <View style={[styles.PopoverBtnContainer, styles.rightBtn]}>
+                          <Button color={GlobalStyles.ThemeColor} onPress={() => {
+                            popover.set(false);
+                            deleteItem && deleteItem();
+                          }}>删除</Button>
                         </View>
                       </View>
-                      <View style={{ marginTop: 10 }}>
-                        <Text>{content}</Text>
+                    </>
+                  }
+                >
+                  <View style={[pressed && styles.Shadow, containerStyle]}>
+                    <View className="flex-row justify-between" style={{ padding: 2 }}>
+                      <View style={{ width: "auto" }}>
+                        <View
+                          style={{
+                            backgroundColor: GlobalStyles.ThemeColor1,
+                            padding: 2,
+                            paddingHorizontal: 5,
+                            borderRadius: 5,
+                            width: "auto"
+                          }}>
+                          <Text style={{ color: "#fff" }}>{notice.type}</Text>
+                        </View>
+                      </View>
+                      <View className="flex-row justify-center items-center">
+                        <Text className="text-sm"
+                              style={{ fontWeight: "normal", textAlign: "right" }}>
+                          {notice.time}
+                        </Text>
+                        <Image source={notice.read ? read : notRead}
+                               style={{ width: 20, height: 20 }} />
                       </View>
                     </View>
-                  </MyPopover>
-                </MyPagesCard>
-              </BlurView>
+                    <View style={{ marginTop: 10 }}>
+                      <Text style={{ color: "#333" }}>{notice.content}</Text>
+                    </View>
+                  </View>
+                </MyPopover>
+              </MyPagesCard>
             </>
         }
       </PressFeedback>
