@@ -1,14 +1,15 @@
 package com.zlz.pigcounter.service;
 
 import com.common.pojo.entity.Building;
+import com.common.pojo.entity.Pen;
 import com.common.result.PageResult;
 
 public interface PenService {
-    void addBuilding(Building building);
+    void addPen(Pen pen);
 
-    void deleteBuilding(Long id);
+    void deletePen(Long id);
 
-    PageResult page(int pageNum, int pageSize,int orgId);
+    PageResult page(int pageNum, int pageSize,int BuildingId);
 
-    void updateBuilding(Building building);
+    void updatePen(Pen pen);
 }

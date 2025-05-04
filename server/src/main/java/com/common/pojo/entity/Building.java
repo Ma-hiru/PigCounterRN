@@ -11,5 +11,5 @@ public class Building {
     private String buildingName;
 
     @NotBlank(message = "所属组织不能为空")
-    private String orgId;
+    private Long orgId;
 }

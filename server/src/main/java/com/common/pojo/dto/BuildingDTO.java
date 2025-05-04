@@ -10,6 +10,7 @@ import java.util.List;
 public class BuildingDTO implements Serializable {
     private Long buildingId;
 
+    private String buildingName;
 
     @NotNull(message = "选择的猪栏不能为空")
     private List<PenDTO> pens;

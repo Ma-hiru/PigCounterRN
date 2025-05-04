@@ -35,6 +35,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public Result<String> handleExpiredJwtException(ExpiredJwtException ex) {
         log.error("JWT令牌已过期: {}", ex.getMessage());
-        return Result.error(ex.getMessage());
+        return Result.error(401,"JWT令牌已过期");
     }
 }

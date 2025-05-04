@@ -1,4 +1,4 @@
-package com.zlz.pigcounter.controller.admin;
+package com.zlz.pigcounter.controller;
 
 
 import com.common.pojo.dto.EmployeeLoginDTO;
@@ -57,24 +57,12 @@ public class EmployeeController {
         return Result.success();
     }
 
-    /**
-     * 根据id 查询员工
-     */
-    @GetMapping("/{id}")
-    @Cacheable(cacheNames = "employee", key = "#id")
-    public Result<Employee> getById(@PathVariable Long id) {
-        log.info("根据id查询员工信息：{}", id);
-        Employee employee = employeeService.getById(id);
-        return Result.success(employee);
-    }
 
     /**
      * 修改员工信息
      */
     @PutMapping
-    @Caching(evict = {
-            @CacheEvict(cacheNames = "employee", key = "#employee.id"),
-            @CacheEvict(cacheNames = "employee_page", allEntries = true)})
+    @CacheEvict(cacheNames = "employee_page", allEntries = true)
     public Result update(@ModelAttribute @Validated(EmployeeValidation.update.class) Employee employee, @RequestParam(value = "picture", required = false) MultipartFile profilePicture) {
         log.info("修改员工信息：{}", employee);
         employeeService.update(employee, profilePicture);
@@ -88,9 +76,7 @@ public class EmployeeController {
      * @return
      */
     @DeleteMapping("/{id}")
-    @Caching(evict = {
-            @CacheEvict(cacheNames = "employee", key = "#id"),
-            @CacheEvict(cacheNames = "employee_page", allEntries = true)})
+    @CacheEvict(cacheNames = "employee_page", allEntries = true)
     public Result deleteById(@PathVariable Long id) {
         log.info("删除员工：{}", id);
         employeeService.deleteById(id);

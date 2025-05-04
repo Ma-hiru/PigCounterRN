@@ -13,8 +13,12 @@ public interface BuildingMapper {
     void deleteBuilding(Long id);
 
 
+    @Select("select id, org_id, building_name from building where org_id= #{orgId}")
     Page<Building> page(int orgId);
 
     @Update("update building set building_name=#{buildingName}, org_id=#{orgId} where id=#{id}")
     void updateBuilding(Building building);
+
+    @Select("select building_name from building where id=#{buildingId}")
+    String getBuildingNameById(Long buildingId);
 }

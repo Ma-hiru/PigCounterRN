@@ -13,7 +13,6 @@ public interface EmployeeService {
 
     void update( Employee employee, MultipartFile profilePicture) ;
 
-    Employee getById(Long id);
 
     void deleteById(Long id);
 
