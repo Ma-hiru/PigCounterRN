@@ -13,6 +13,7 @@ import { useMyState } from "@/hooks/useMyState";
 import { useFetchData } from "@/utils/fetchData";
 import { Log } from "@/utils/logger";
 import Blank from "@/components/Blank";
+import { LinearGradient } from "expo-linear-gradient";
 
 type props = object
 
@@ -44,9 +45,9 @@ export const UserInfo: FC<props> = () => {
         (res, createToast) => {
           createToast("请求出错！", res?.message);
         }
-      ).then()
+      ).then();
     }
-  }, [API.reqUserInfo, detailProfile, fetchData, hasToken, profile.id]);
+  }, [fetchData, API.reqUserInfo, hasToken, profile.id, detailProfile]);
 
 
   const NoDataRender = useMemo(() => <Blank tips={NO_LOGIN_TIPS} style={{
@@ -94,13 +95,19 @@ export const UserInfo: FC<props> = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 bg-white">
-        <BigHeader title="用户信息" info={
-          <BigHeader.InfoText content={`查看登陆在{${APP_NAME}}系统的用户信息`} />
-        }>
+      <LinearGradient colors={["transparent", "#30cfd0"]} style={{ flex: 1 }}>
+        <BigHeader
+          title="用户信息"
+          info={
+            <BigHeader.InfoText content={`查看登陆在{${APP_NAME}}系统的用户信息`} />
+          }
+          containerStyle={{
+            backgroundColor: "transparent"
+          }}
+        >
         </BigHeader>
         {Render()}
-      </View>
+      </LinearGradient>
     </>
   );
 };

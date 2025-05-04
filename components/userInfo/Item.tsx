@@ -12,8 +12,8 @@ const Item: FC<props> = ({ children, title }) => {
   const navigation = useNavigation();
   return (
     <>
-      <View className="mb-4 w-full flex-row justify-between items-center shadow-2xl bg-white p-4 h-auto"
-            style={{ borderRadius: 5 }}>
+      <View className="mb-4 w-full flex-row justify-between items-center shadow-2xl p-4 h-auto"
+            style={{ borderRadius: 5,backgroundColor:"rgba(255,255,255,0.8)" }}>
         <Text className="text-xl">{title}</Text>
         {children}
       </View>

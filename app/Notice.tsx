@@ -41,10 +41,10 @@ const Notice: FC<props> = () => {
   const { hasToken } = useLogin();
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Pressable style={{ flex: 1 }} onPress={() => {
         clickArea.set(true);
       }}>
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <View className="flex-1 bg-white">
           <BigHeader title="公告"
                      info={<BigHeader.InfoText content={`查看{${APP_NAME}}系统公告`} />
@@ -74,9 +74,7 @@ const Notice: FC<props> = () => {
               })
             }
           </BigHeader>
-          {
-            !hasToken && <Blank tips={NO_LOGIN_TIPS} />
-          }
+          {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
         </View>
       </Pressable>
     </>

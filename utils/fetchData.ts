@@ -36,6 +36,7 @@ const _fetchData = async <T extends ResponseData<any>, P extends any[]>(
 };
 
 export const useFetchData = () => {
+  //  toast 并不是不变的！！！
   const toast = useToast();
   const Pages = usePages();
   const Logout = useCallback(() => {
@@ -61,7 +62,8 @@ export const useFetchData = () => {
       }
     }
     return status;
-  }, [Logout, toast]);
+    // eslint-disable-next-line
+  }, [Logout]);
 
   return useMemo(() => ({ fetchData, API }), [fetchData]);
 };

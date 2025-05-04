@@ -8,6 +8,7 @@ import { MyState, useMyState } from "@/hooks/useMyState";
 import read from "@/assets/images/has_read.svg";
 import notRead from "@/assets/images/not_read.svg";
 import { Image } from "expo-image";
+import PressFeedback from "@/components/animate/PressFeedback";
 
 type props = {
   time?: string;
@@ -43,9 +44,7 @@ const NoticeItem: FC<props> = (
   }, [clickArea, popover]);
   return (
     <>
-      <MyPagesCard
-        cardStyle={{ marginBottom: 10, paddingBottom: 15, ...containerStyle as object }}
-      >
+      <MyPagesCard cardStyle={{ marginBottom: 10, paddingBottom: 15, ...containerStyle as object }}>
         <MyPopover open={popover.get()}
                    options={
                      <>
@@ -65,33 +64,40 @@ const NoticeItem: FC<props> = (
                        </View>
                      </>
                    }>
-          <MyPagesCard.CanPress onLongPress={() => {
-            popover.set(true);
-          }}>
-            <View className="flex-row justify-between" style={{ padding: 2 }}>
-              <View style={{ width: "auto" }}>
-                <View
-                  style={{
-                    backgroundColor: GlobalStyles.ThemeColor1,
-                    padding: 2,
-                    paddingHorizontal: 5,
-                    borderRadius: 5,
-                    width: "auto"
-                  }}>
-                  <Text style={{ color: "#fff" }}>{type}</Text>
+          <PressFeedback
+            onLongPress={() => {
+              popover.set(true);
+            }}
+          >
+            {
+              ({ pressed }) =>
+                <View style={[pressed && styles.Shadow, containerStyle]}>
+                  <View className="flex-row justify-between" style={{ padding: 2 }}>
+                    <View style={{ width: "auto" }}>
+                      <View
+                        style={{
+                          backgroundColor: GlobalStyles.ThemeColor1,
+                          padding: 2,
+                          paddingHorizontal: 5,
+                          borderRadius: 5,
+                          width: "auto"
+                        }}>
+                        <Text style={{ color: "#fff" }}>{type}</Text>
+                      </View>
+                    </View>
+                    <View className="flex-row">
+                      <Text style={{ fontWeight: "bold", textAlign: "right" }}>
+                        {time}
+                      </Text>
+                      <Image source={isRead ? read : notRead} style={{ width: 20, height: 20 }} />
+                    </View>
+                  </View>
+                  <View style={{ marginTop: 10 }}>
+                    <Text>{content}</Text>
+                  </View>
                 </View>
-              </View>
-              <View className="flex-row">
-                <Text style={{ fontWeight: "bold", textAlign: "right" }}>
-                  {time}
-                </Text>
-                <Image source={isRead ? read : notRead} style={{ width: 20, height: 20 }} />
-              </View>
-            </View>
-            <View style={{ marginTop: 10 }}>
-              <Text>{content}</Text>
-            </View>
-          </MyPagesCard.CanPress>
+            }
+          </PressFeedback>
         </MyPopover>
       </MyPagesCard>
     </>
@@ -111,5 +117,13 @@ const styles = StyleSheet.create({
   rightBtn: {
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0
+  },
+  container: {
+    padding: 10,
+    borderRadius: 5
+  },
+  Shadow: {
+    backgroundColor: "rgba(153,153,153,0.17)",
+    borderRadius: 5
   }
 });

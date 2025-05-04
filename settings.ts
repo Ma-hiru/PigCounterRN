@@ -85,7 +85,7 @@ export const GlobalStyles = {
     defaultIcon: 100
   },
   ThemeColor: "#409eff",
-  SecondColor: "rgba(248,248,0,0.98)",
+  SecondColor: "#F8F800F9",
   SecondColor2: "#f4c743",
   PressColorBlue: "#1280f2",
   PositiveColor: "rgb(52,131,82)",

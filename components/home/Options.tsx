@@ -160,16 +160,15 @@ const Options: FC<props> = () => {
                 <Image source={RestIcon} style={{ width: 25, height: 25, marginRight: 5 }} />
                 <Text
                   style={{
-                    fontFamily: "baigetianxingtiRegular" as Fonts,
                     fontSize: 18,
-                    lineHeight: 18
+                    lineHeight: 26,
+                    fontWeight: "normal"
                   }}>
                   {NO_ACTIVE_TASK}
                 </Text>
               </View>
             }
           </MyPagesCard>
-
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"每日一闻"}>
             {
               NewsList.map((news) =>

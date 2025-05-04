@@ -1,5 +1,6 @@
 type Task = {
   id: number;
+  taskName?: string;
   employeeId: number;
   startTime: string;
   endTime: string;
@@ -7,13 +8,17 @@ type Task = {
 }
 type Building = {
   buildingId: number;
+  buildingName: string;
   pens: Pen[];
 }
 type Pen = {
   penId: number;
-  penNum: number;
+  penName: string;
+  count: number;
+  manualCount: number;
   picturePath: string;
-  type: "" | "videos" | "images";
-  peopleNum?: number;
+  outputPicturePath: string;
+  status: boolean;
+  type?: "" | "videos" | "images";
 }
 type TaskList = Task[];

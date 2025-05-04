@@ -14,6 +14,7 @@ import { useMyState } from "@/hooks/useMyState";
 import { useSafeArea } from "@/hooks/useSafeArea";
 import colors from "tailwindcss/colors";
 import { Spinner } from "@/components/ui/spinner";
+import PressFeedback from "@/components/animate/PressFeedback";
 
 interface props {
   children?: ReactNode;
@@ -25,6 +26,7 @@ interface props {
   loading?: boolean;
   fullWidth?: number;
   duration?: number;
+  minScale?: number;
 }
 
 const MyBlueBtn: FC<props> = (
@@ -36,7 +38,8 @@ const MyBlueBtn: FC<props> = (
     containerStyle,
     buttonStyle,
     loading,
-    duration = 200
+    duration = 200,
+    minScale = 0.95
   }) => {
   const { screenWidth } = useSafeArea();
   const FullWidth = useMyState(screenWidth);
@@ -105,15 +108,27 @@ const MyBlueBtn: FC<props> = (
             ...containerStyle as object
           }
         }>
-        <Button color={color} onPress={onPress} style={buttonStyle}>
+        <PressFeedback minScale={minScale}>
           {
-            loading
-              ? <Spinner size="small" color={colors.white} />
-              : typeof children === "string"
-                ? <Text style={{ color: colors.white }}>{children}</Text>
-                : children
+            (
+              _, handlePressIn, handlePressOut
+            ) => <Button
+              color={color}
+              style={buttonStyle}
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}
+              onPress={onPress}
+            >
+              {
+                loading
+                  ? <Spinner size="small" color={colors.white} />
+                  : typeof children === "string"
+                    ? <Text style={{ color: colors.white }}>{children}</Text>
+                    : children
+              }
+            </Button>
           }
-        </Button>
+        </PressFeedback>
       </Animated.View>
     </>
   );
