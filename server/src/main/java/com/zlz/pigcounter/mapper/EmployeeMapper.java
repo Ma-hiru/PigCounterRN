@@ -5,12 +5,14 @@ import com.common.pojo.entity.Employee;
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface EmployeeMapper {
     @Select("select id, name, password,phone, sex, create_time, profile_picture, username, org_id,admin from employee where username = #{username}")
     Employee getByUsername(String username);
 
-    @Insert("insert into employee (username,password,name,sex,phone,create_time,profile_picture,org_id,admin) values (#{username},#{password},#{name},#{sex},#{phone},#{createTime},#{profilePicture},#{organization},#{admin})")
+    @Insert("insert into employee (username,password,name,sex,phone,create_time,profile_picture,org_id,admin) values (#{username},#{password},#{name},#{sex},#{phone},#{createTime},#{profilePicture},#{orgId},#{admin})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(Employee employee);
 
@@ -30,4 +32,6 @@ public interface EmployeeMapper {
 
 
     void deleteBatch(Long[] ids);
+
+    List<Employee> getEmployeesByAttributes(Employee employee);
 }

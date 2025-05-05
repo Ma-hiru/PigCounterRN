@@ -33,4 +33,26 @@
             #{id}
         </foreach>
     </delete>
+    <select id="getEmployeesByAttributes" resultType="com.common.pojo.entity.Employee">
+        select id, name, phone, sex, create_time, profile_picture, username,admin from employee
+        <where>
+            <if test="name !=null and name!=''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="phone !=null and phone!=''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="sex !=null and sex!=''">
+                and sex=#{sex}
+            </if>
+            <if test="username !=null and username!=''">
+                and username like concat('%',#{username},'%')
+            </if>
+            <if test="admin!= null and admin!=''">
+                and admin= #{admin}
+            </if>
+            and org_id=#{orgId}
+        </where>
+
+    </select>
 </mapper>

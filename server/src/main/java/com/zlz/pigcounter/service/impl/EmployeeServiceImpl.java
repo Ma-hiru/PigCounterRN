@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -204,10 +205,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public PageResult page(int pageNum, int pageSize, String organization) {
+    public PageResult page(int pageNum, int pageSize, Long orgId) {
         Long currentId = BaseContext.getCurrentId();
-        Long orgId = organizationService.getOrganizationIdByName(organization);
-        if(orgId==null){
+        String organization = organizationService.getOrganizationNameById(orgId);
+        if(organization==null){
             throw new NotFoundOrganization();
         }
         Employee currentEmployee = employeeMapper.getById(currentId);
@@ -236,6 +237,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         profilePictureHistoryMapper.deleteByEmployeeIds(ids);
         employeeMapper.deleteBatch(ids);
+    }
+
+    @Override
+    public PageResult getEmployeesByAttributes(Employee employee) {
+        if(employee!=null) {
+
+            Employee currentEmployee = employeeMapper.getById(BaseContext.getCurrentId());
+            if (!currentEmployee.getAdmin()) {
+                throw new UnauthorizedAccessException();
+            }
+            employee.setOrgId(currentEmployee.getOrgId());
+            List<Employee> employees = employeeMapper.getEmployeesByAttributes(employee);
+            return new PageResult(employees.size(), employees);
+        }
+        return new PageResult(0, new ArrayList<>());
     }
 
     private void deleteProfilePicture(Long id) {

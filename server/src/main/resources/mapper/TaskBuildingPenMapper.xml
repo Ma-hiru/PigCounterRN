@@ -17,12 +17,15 @@
     </resultMap>
 
     <insert id="insert">
-        insert into task_building_pen (task_id,building_id,pen_id) values 
-        <foreach collection="buildings" item="building" separator=",">
-            <foreach collection="building.pens" item="pen" separator=",">
-                (#{id},#{building.buildingId},#{pen.penId})
-            </foreach>
-         </foreach>
+        INSERT INTO task_building_pen (task_id, building_id, pen_id)
+        VALUES (#{id}, #{buildingId}, #{penId})
+    </insert>
+    <insert id="batchInsert">
+        INSERT INTO task_building_pen (task_id, building_id, pen_id)
+        VALUES
+        <foreach collection="list" item="mapItem" separator=",">
+            (#{mapItem.taskId}, #{mapItem.buildingId}, #{mapItem.penId})
+        </foreach>
     </insert>
 
     <select id="getTaskDetail" resultMap="TaskDTOResultMap">

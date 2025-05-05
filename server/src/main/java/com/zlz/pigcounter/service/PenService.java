@@ -9,7 +9,7 @@ public interface PenService {
 
     void deletePen(Long id);
 
-    PageResult page(int pageNum, int pageSize,int BuildingId);
+    PageResult page(int pageNum, int pageSize,Long BuildingId);
 
     void updatePen(Pen pen);
 }

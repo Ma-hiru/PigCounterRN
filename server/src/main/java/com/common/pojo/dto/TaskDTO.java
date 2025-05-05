@@ -13,6 +13,7 @@ import java.util.List;
 public class TaskDTO implements Serializable {
     private Long id;
     private Long employeeId;
+    private String taskName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -20,5 +21,5 @@ public class TaskDTO implements Serializable {
 
     @Valid
     @NotNull(message = "选择的楼栋不能为空")
-    private List<BuildingDTO> buildings;
+    private List<TaskBuildingDTO> buildings;
 }

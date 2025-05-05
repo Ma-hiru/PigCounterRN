@@ -55,7 +55,7 @@ public class PenController {
      */
     @GetMapping("/page")
     @Cacheable(cacheNames = "pen_page",key = "#pageNum+'-'+#pageSize")
-    public Result<PageResult> page(int pageNum, int pageSize, int buildingId){
+    public Result<PageResult> page(int pageNum, int pageSize, Long buildingId){
         log.info("分页查询猪圈");
         return Result.success(penService.page(pageNum,pageSize,buildingId));
     }

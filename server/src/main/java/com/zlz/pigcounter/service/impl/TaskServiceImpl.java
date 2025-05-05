@@ -4,16 +4,20 @@ import com.common.exception.NotFoundTaskException;
 import com.common.pojo.dto.PenDTO;
 import com.common.pojo.dto.PenPictureUploadDTO;
 import com.common.pojo.dto.TaskDTO;
+import com.common.pojo.dto.TaskPenDTO;
 import com.common.pojo.entity.PenPicture;
 import com.common.pojo.entity.Task;
 import com.common.pojo.vo.PenPictureVO;
 import com.common.result.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
+import com.zlz.pigcounter.mapper.PenMapper;
 import com.zlz.pigcounter.mapper.PenPictureMapper;
 import com.zlz.pigcounter.mapper.TaskBuildingPenMapper;
 import com.zlz.pigcounter.mapper.TaskMapper;
 import com.zlz.pigcounter.service.TaskService;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +36,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,24 +52,49 @@ public class TaskServiceImpl implements TaskService {
     private TaskBuildingPenMapper taskBuildingPenMapper;
     @Autowired
     private PenPictureMapper penPictureMapper;
+    @Autowired
+    private PenMapper penMapper;
 
     @Override
     @Transactional
     public void add(TaskDTO taskDTO) {
-
         //插入任务表
         Task task = new Task();
         BeanUtils.copyProperties(taskDTO,task);
-        task.setVaild(true);
+        task.setValid(true);
         taskMapper.insert(task);
         //插入任务详情表
         taskDTO.setId(task.getId());
-        taskBuildingPenMapper.insert(taskDTO);
+        int batchSize = 500;
+        List<Map<String, Object>> paramsList = taskDTO.getBuildings().stream()
+                .flatMap(building ->
+                {
+                    List<TaskPenDTO> pens = building.getPens();
+                    if (pens == null) {
+                        // 如果 getPens() 为 null，则从数据库查询该楼栋下所有猪圈
+                        pens = penMapper.getTaskPenDTOsByBuildingId(building.getBuildingId());
+                    }
+                    return pens.stream()
+                            .map(pen -> {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("taskId", task.getId());
+                                map.put("buildingId", building.getBuildingId());
+                                map.put("penId", pen.getPenId());
+                                return map;
+                            });
+                } )
+                .collect(Collectors.toList());
+
+        List<List<Map<String, Object>>> partitions = Lists.partition(paramsList, batchSize);
+
+        partitions.forEach(partition -> {
+            taskBuildingPenMapper.batchInsert(partition);
+        });
     }
 
     @Override
-    public PageResult getByEmployeeId(Long employeeid) {
-        List<Task> tasks = taskMapper.getByEmployeeId(employeeid);
+    public PageResult getByEmployeeId(Long employeeId) {
+        List<Task> tasks = taskMapper.getByEmployeeId(employeeId);
         if(tasks==null){
            throw new NotFoundTaskException();
         }
@@ -73,7 +104,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public PageResult getTasksPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
-        try(  Page<Task> page =taskMapper.getTasksPage()) {
+        try(Page<Task> page =taskMapper.getTasksPage()) {
             if (page==null){
                 throw  new  NotFoundTaskException();
             }

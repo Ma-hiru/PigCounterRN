@@ -15,7 +15,7 @@ spring:
   datasource:
     druid:
       driver-class-name: ${zlz.datasource.driver-class-name}
-      url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&cachePrepStmts=true
       username: ${zlz.datasource.username}
       password: ${zlz.datasource.password}
   data:
@@ -29,6 +29,7 @@ mybatis:
   type-aliases-package: com.zlz.entity
   configuration:
     map-underscore-to-camel-case: true
+    default-executor-type: batch
 jwt:
   admin-secret-key: ${zlz.jwt.admin-secret-key}
   admin-token-name: ${zlz.jwt.admin-token-name}

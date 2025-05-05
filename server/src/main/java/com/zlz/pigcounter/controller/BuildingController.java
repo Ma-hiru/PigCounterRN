@@ -1,6 +1,7 @@
 package com.zlz.pigcounter.controller;
 
 import com.common.pojo.entity.Building;
+import com.common.pojo.vo.OrgBuildingAndPenVO;
 import com.common.result.PageResult;
 import com.common.result.Result;
 import com.zlz.pigcounter.service.BuildingService;
@@ -52,7 +53,7 @@ public class BuildingController {
      */
     @GetMapping("/page")
     @Cacheable(cacheNames = "building_page",key = "#pageNum+'-'+#pageSize")
-    public Result<PageResult> page(int pageNum,int pageSize,int orgId){
+    public Result<PageResult> page(int pageNum,int pageSize,Long orgId){
         log.info("分页查询楼栋");
         return Result.success(buildingService.page(pageNum,pageSize,orgId));
     }
@@ -68,5 +69,17 @@ public class BuildingController {
         log.info("修改楼栋");
         buildingService.updateBuilding(building);
         return Result.success();
+    }
+
+    /**
+     * 根据组织id查询组织下楼栋和猪栏
+     * @param orgId
+     * @return
+     */
+    @GetMapping("/{orgId}")
+    @Cacheable(cacheNames = "building_and_pen_by_orgId",key = "#orgId")
+    public Result<OrgBuildingAndPenVO> getBuildingAndPenByOrgId(@PathVariable("orgId") Long orgId ){
+        log.info("查询组织下楼栋和猪栏");
+        return Result.success(buildingService.getBuildingAndPenByOrgId(orgId));
     }
 }

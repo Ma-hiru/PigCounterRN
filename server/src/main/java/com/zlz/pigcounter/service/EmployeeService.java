@@ -16,7 +16,9 @@ public interface EmployeeService {
 
     void deleteById(Long id);
 
-    PageResult page(int pageNum, int pageSize, String organization);
+    PageResult page(int pageNum, int pageSize, Long orgId);
 
     void deleteByIds(Long[] ids);
+
+    PageResult getEmployeesByAttributes(Employee employee);
 }

@@ -12,6 +12,7 @@ import com.zlz.pigcounter.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -83,13 +84,25 @@ public class EmployeeController {
         return Result.success();
     }
 
+    /**
+     * 根据属性查询员工
+     * @param employee
+     * @return
+     */
+    @PostMapping("/search")
+    public Result<PageResult> getEmployeesByAttributes(@RequestBody Employee employee ){
+        log.info("根据属性查询员工：{}", employee);
+        return Result.success(employeeService.getEmployeesByAttributes(employee));
+    }
+
     @DeleteMapping("/batch")
     @CacheEvict(cacheNames = "employee_page", allEntries = true)
     public Result deleteByIds(@RequestBody Long[] ids) {
         log.info("批量删除员工：{}", ids);
 
         for (Long id : ids) {
-            cacheManager.getCache("employee").evict(id.toString());
+            Cache employee = cacheManager.getCache("employee");
+            if(employee != null) employee.evict(id.toString());
         }
         employeeService.deleteByIds(ids);
         return Result.success();
@@ -100,10 +113,12 @@ public class EmployeeController {
      */
     @GetMapping("/page")
     @Cacheable(cacheNames = "employee_page", key = "#pageNum+'-'+#pageSize+'-'+#organization")
-    public Result<PageResult> page(int pageNum, int pageSize, String organization) {
+    public Result<PageResult> page(int pageNum, int pageSize, Long organization) {
         log.info("分页查询员工：{}", pageNum, pageSize, organization);
         return Result.success(employeeService.page(pageNum, pageSize, organization));
     }
+
+
     /**
      * 登出
      */
