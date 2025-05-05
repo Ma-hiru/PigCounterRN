@@ -1,6 +1,5 @@
 import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
-import logo from "@/assets/images/icons/icon.png";
 import {
   StatusBar,
   StyleSheet,
@@ -19,7 +18,6 @@ import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
 import localStore from "@/utils/localStore";
-import { Image } from "expo-image";
 
 const { setLogin } = userActions;
 const setRemember = (loginInfo: loginInfo, remember: boolean) => {

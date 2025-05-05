@@ -1,11 +1,12 @@
-//TODO 后端待解决头像路径
 import { baseUrl } from "@/settings";
 
-
-export const handleAvatarURL = (responseURL: string) => {
-  return (baseUrl + responseURL).replace("usr/local/", "").replace("profilePicture", "api/profilePicture");
+export const handleServerURL = (responseURL: string, mode: "companyLogo" | "upload" | "avatar") => {
+  switch (mode) {
+    case "companyLogo":
+      return baseUrl + "/api/image" + responseURL;
+    case "avatar":
+      return baseUrl + "/api/profilePicture/" + responseURL;
+    case "upload":
+      return baseUrl + "/api/image" + responseURL.replace("/app","").replace(".jpeg",".jpg");
+  }
 };
-export const handleUploadURL =
-  (responseURL: string) => {
-    return (baseUrl + responseURL).replace("jpeg", "jpg").replace("app", "api/image");
-  };

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/form-control";
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
-import { FC, memo, useMemo } from "react";
+import { FC, memo, useEffect, useMemo } from "react";
 import { Updater, useImmer } from "use-immer";
 import {
   Select,
@@ -25,6 +25,7 @@ import {
 import { ChevronDownIcon } from "@/components/ui/icon";
 import { GlobalStyles } from "@/settings";
 import Feather from "@expo/vector-icons/Feather";
+import { useReactive } from "ahooks";
 
 interface props {
   invalid: validateType;
@@ -42,6 +43,11 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
     organizationFocus: false
   });
   const Text = useMemo(() => validateRules(registryInfo), [registryInfo]);
+  const companyInfo = useReactive<{ name: string }[]>([]);
+  /*TODO 获取组织列表*/
+  useEffect(() => {
+    companyInfo.push({ name: "实验" });
+  }, [companyInfo]);
   return (
     <>
       <FormControl isInvalid={invalid.username} size="md" className="w-full mb-6">
@@ -208,7 +214,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
         <Select
           isRequired
           onValueChange={(text) => setRegistryInfo(draft => {
-            draft.organization = text;
+            draft.organization = text.trim();
           })}
         >
           <SelectTrigger
@@ -239,7 +245,11 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
                 <SelectDragIndicator />
               </SelectDragIndicatorWrapper>
               <SelectScrollView style={{ height: "auto", maxHeight: 500 }}>
-                <SelectItem label="湘潭大学" value="湘潭大学" />
+                {
+                  companyInfo.map((item, index) =>
+                    <SelectItem label={item.name} value={item.name} key={index} />)
+                }
+
               </SelectScrollView>
             </SelectContent>
           </SelectPortal>

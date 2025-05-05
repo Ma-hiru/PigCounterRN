@@ -51,7 +51,7 @@ type GetEmployeeListResponseData = {
 /** `getTask` */
 type GetTaskResponseData = {
   total: number;
-  list: unknown[]
+  list: BaseTask[]
 }
 /** `GetTaskList` */
 type getTaskQuery = {

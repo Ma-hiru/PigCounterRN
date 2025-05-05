@@ -13,8 +13,8 @@ import PressFeedback from "@/components/animate/PressFeedback";
 type props = {
   notice: Notice;
   containerStyle?: StyleProp<ViewStyle>;
-  readItem?: () => void;
-  deleteItem?: () => void;
+  readItem?: (id: number) => void;
+  deleteItem?: (id: number) => void;
   clickArea: MyState<boolean>;
 };
 
@@ -67,13 +67,13 @@ const NoticeItem: FC<props> = (
                         <View style={[styles.PopoverBtnContainer, styles.leftBtn]}>
                           <Button color={GlobalStyles.ThemeColor} onPress={() => {
                             popover.set(false);
-                            readItem && readItem();
+                            readItem && readItem(notice.id);
                           }}>{notice.read ? "未读" : "已读"}</Button>
                         </View>
                         <View style={[styles.PopoverBtnContainer, styles.rightBtn]}>
                           <Button color={GlobalStyles.ThemeColor} onPress={() => {
                             popover.set(false);
-                            deleteItem && deleteItem();
+                            deleteItem && deleteItem(notice.id);
                           }}>删除</Button>
                         </View>
                       </View>

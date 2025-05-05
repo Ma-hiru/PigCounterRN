@@ -3,15 +3,15 @@ import { RootStateType } from "@/stores";
 
 
 type initialType = {
-  Company: CompanyProfile
+  Company: Company
 }
-const newsSlice = createSlice({
+const companySlice = createSlice({
   name: "newsStore",
   initialState: {
     Company: {}
   } as initialType,
   reducers: {}
 });
-export const newsActions = newsSlice.actions;
-export const newsReducer = newsSlice.reducer;
-export const newsSelector = (root: RootStateType) => root.newsStore;
+export const companyActions =companySlice.actions;
+export const companyReducer = companySlice.reducer;
+export const companySelector = (root: RootStateType) => root.companyStore;

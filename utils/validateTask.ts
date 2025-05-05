@@ -7,7 +7,7 @@ dayjs.extend(duration);
 export const countdownFormat = (time: number) => {
   return dayjs.duration(time, "milliseconds").format("HH时mm分ss秒");
 };
-export const useValidateTask = (task: Task) => {
+export const useValidateTask = (task: BaseTask) => {
   const endTime = dayjs(task.endTime);
   const nowTime = dayjs(Date.now());
   const startTime = dayjs(task.startTime);

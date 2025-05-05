@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import { uploadSelector, useAppSelector } from "@/stores";
 import { ScrollView, StatusBar, Text, View } from "react-native";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/table";
 import { useMyState } from "@/hooks/useMyState";
 import BigHeader from "@/components/BigHeader";
+import { useFetchData } from "@/utils/fetchData";
+import { useReactive } from "ahooks";
 
 type props = object;
 
@@ -26,9 +28,8 @@ const DetailHistory: FC<props> = () => {
   const { TasksList } = useAppSelector(uploadSelector);
   const Total = useMyState({ countNum: 0, pensNum: 0 });
   const [currentTask, restTaskIds] = useMemo(() => {
-    const restTaskIds: number[] = [];
     const currentTask: Task[] = [];
-    //是否本地存在
+    const restTaskIds: number[] = [];
     taskIds.forEach((needId) => {
       for (const task of TasksList) {
         if (task.id === needId) {
@@ -40,60 +41,130 @@ const DetailHistory: FC<props> = () => {
     });
     return [currentTask, restTaskIds];
   }, [TasksList, taskIds]);
-  //TODO 根据restTaskIds请求非本地数据
+  const restTask = useReactive<Task[]>([]);
+  const { fetchData, API } = useFetchData();
+  useEffect(() => {
+    const allRestTaskInfo: Task[] = [];
+    restTaskIds.forEach(async (id) => {
+      await fetchData(
+        API.reqTaskInfo,
+        [id],
+        (res) => {
+          allRestTaskInfo.push(res.data);
+        },
+        (res, toast) => {
+          toast("", res?.message || "获取任务列表失败！请检查网络！");
+        }
+      );
+      restTask.push(...allRestTaskInfo);
+    });
+  }, [API.reqTaskInfo, fetchData, restTask, restTaskIds]);
+  const restTotal = useReactive<{ countNum: number, pensNum: number }[]>([]);
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <BigHeader title="记录详情"
-                 info={<BigHeader.InfoText content={`查看 {${Time}} 历史记录详细信息`} />
-                 }
+      <BigHeader
+        title="记录详情"
+        info={<BigHeader.InfoText content={`查看 {${Time}} 历史记录详细信息`} />
+        }
       />
       <ScrollView className="flex-1 bg-white">
         <View className="relative"
               style={{ paddingLeft: "5%", paddingRight: "5%", paddingTop: 30, paddingBottom: 30 }}>
-          <Shadow style={{
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%"
-          }}>
-            <Table className="w-full">
-              <TableHeader>
-                <TableRow className="flex-row justify-center">
+          {
+            currentTask.length > 0 &&
+            <Shadow style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%"
+            }}>
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow className="flex-row justify-center">
+                    {
+                      ["楼栋", "栏舍", "数量"].map((name) =>
+                        <TableHead {...PositionStyle} key={name}>
+                          <Text className="font-bold"
+                                style={{ color: GlobalStyles.ThemeColor1 }}>{name}</Text>
+                        </TableHead>
+                      )
+                    }
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {
-                    ["楼栋", "栏舍", "数量"].map((name) =>
-                      <TableHead {...PositionStyle} key={name}>
-                        <Text className="font-bold"
-                              style={{ color: GlobalStyles.ThemeColor1 }}>{name}</Text>
-                      </TableHead>
-                    )
+                    currentTask.map((task: Task, taskIndex: number) => (
+                      <GenerateTableRow
+                        task={task}
+                        taskIndex={taskIndex}
+                        key={taskIndex}
+                        total={Total}
+                      />
+                    ))
                   }
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {
-                  currentTask.map((task: Task, taskIndex: number) => (
-                    <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex}
-                                      total={Total} />
-                  ))
-                }
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableHead {...PositionStyle}>
-                    <Text>总数</Text>
-                  </TableHead>
-                  <TableHead {...PositionStyle}>
-                    <Text>{Total.get().pensNum}</Text>
-                  </TableHead>
-                  <TableHead {...PositionStyle}>
-                    <Text>{Total.get().countNum}</Text>
-                  </TableHead>
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </Shadow>
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableHead {...PositionStyle}>
+                      <Text>总数</Text>
+                    </TableHead>
+                    <TableHead {...PositionStyle}>
+                      <Text>{Total.get().pensNum}</Text>
+                    </TableHead>
+                    <TableHead {...PositionStyle}>
+                      <Text>{Total.get().countNum}</Text>
+                    </TableHead>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </Shadow>
+          }
+          {
+            restTask.length > 0 && restTask.map((task: Task, taskIndex: number) => <Shadow style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%"
+            }}>
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow className="flex-row justify-center">
+                    {
+                      ["楼栋", "栏舍", "数量"].map((name) =>
+                        <TableHead {...PositionStyle} key={name}>
+                          <Text className="font-bold"
+                                style={{ color: GlobalStyles.ThemeColor1 }}>{name}</Text>
+                        </TableHead>
+                      )
+                    }
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <GenerateTableRow
+                    task={task}
+                    taskIndex={taskIndex}
+                    key={taskIndex}
+                    isHistory={true}
+                    restTotal={restTotal}
+                  />
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableHead {...PositionStyle}>
+                      <Text>总数</Text>
+                    </TableHead>
+                    <TableHead {...PositionStyle}>
+                      <Text>{restTotal[taskIndex].pensNum}</Text>
+                    </TableHead>
+                    <TableHead {...PositionStyle}>
+                      <Text>{restTotal[taskIndex].countNum}</Text>
+                    </TableHead>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </Shadow>)
+          }
         </View>
       </ScrollView>
     </>

@@ -8,7 +8,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { GlobalStyles } from "@/settings";
 import ModalWindow from "@/components/ModalWindow";
 import { useMyState } from "@/hooks/useMyState";
-import  { Log } from "@/utils/logger";
+import { Log } from "@/utils/logger";
 import { View } from "react-native";
 import { Input, InputField } from "@/components/ui/input";
 
@@ -24,6 +24,7 @@ interface props {
   confirmData: () => void;
   addArtifact: (res: number) => void;
   count: number;
+  hasConfirm: boolean;
 }
 
 const UploadPagesOptionsCard: FC<props> = (
@@ -38,7 +39,8 @@ const UploadPagesOptionsCard: FC<props> = (
     isUpload,
     confirmData,
     addArtifact,
-    count
+    count,
+    hasConfirm
   }) => {
   const router = useRouter();
   const showModal = useMyState(false);
@@ -81,22 +83,25 @@ const UploadPagesOptionsCard: FC<props> = (
   ), [clearImg, router.back, submitFile]);
   const UploadDataRender = useMemo(() => (
     <>
-      <Button onPress={clearUpload} className="mt-4" action="negative">
+      <Button disabled={hasConfirm} onPress={clearUpload} className="mt-4" action="negative">
         <ButtonText>重新上传</ButtonText>
       </Button>
-      <Button onPress={() => {
+      <Button disabled={hasConfirm} onPress={() => {
         showModal.set(true);
       }} className="mt-4" action="primary">
         <ButtonText>修改数据</ButtonText>
       </Button>
-      <Button onPress={() => {
-        confirmData();
-        router.back();
-      }} className="mt-4" action="positive">
-        <ButtonText>确认</ButtonText>
+      <Button disabled={hasConfirm} onPress={confirmData} className="mt-4" action="positive">
+        <ButtonText>{hasConfirm ? "已确认" : "确认数据"}</ButtonText>
       </Button>
+      {
+        hasConfirm &&
+        <Button onPress={router.back} className="mt-4" action="positive">
+          <ButtonText>返回</ButtonText>
+        </Button>
+      }
     </>
-  ), [clearUpload, confirmData, router, showModal]);
+  ), [clearUpload, confirmData, hasConfirm, router, showModal]);
   const Render = useCallback(() => {
     if (previewVideo || previewImg || cachePath.path) {
       if (isUpload) return UploadDataRender;

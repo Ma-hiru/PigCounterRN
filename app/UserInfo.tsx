@@ -8,10 +8,9 @@ import { View, Text, StatusBar } from "react-native";
 import { useSelector } from "react-redux";
 import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import DefaultAvatar from "@/assets/images/logo_1.jpg";
-import { handleAvatarURL } from "@/utils/handleServerURL";
+import { handleServerURL } from "@/utils/handleServerURL";
 import { useMyState } from "@/hooks/useMyState";
 import { useFetchData } from "@/utils/fetchData";
-import { Log } from "@/utils/logger";
 import Blank from "@/components/Blank";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -39,7 +38,6 @@ export const UserInfo: FC<props> = () => {
         API.reqUserInfo,
         [profile.id],
         (res) => {
-          Log.Console("detailProfile", res.data);
           detailProfile.set(res.data);
         },
         (res, createToast) => {
@@ -60,7 +58,7 @@ export const UserInfo: FC<props> = () => {
       <Item title="头像">
         <Avatar>
           {profile.profilePicture ?
-            <AvatarImage source={{ uri: handleAvatarURL(profile.profilePicture) }} /> :
+            <AvatarImage source={{ uri: handleServerURL(profile.profilePicture, "avatar") }} /> :
             <AvatarImage source={DefaultAvatar} />
           }
         </Avatar>
@@ -96,22 +94,22 @@ export const UserInfo: FC<props> = () => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <LinearGradient
-        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa","#d7d2cc"]}
+        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa", "#d7d2cc"]}
         style={{ flex: 1 }}
         end={{ x: 0, y: 0 }}
         start={{ x: 1, y: 1 }}
       >
-        <BigHeader
-          title="用户信息"
-          info={
-            <BigHeader.InfoText content={`查看登陆在{${APP_NAME}}系统的用户信息`} />
-          }
-          containerStyle={{
-            backgroundColor: "transparent"
-          }}
-        />
-        <View className="flex justify-center items-center w-[80%]">
-
+        <View className="flex-1">
+          <BigHeader
+            title="用户信息"
+            info={
+              <BigHeader.InfoText content={`查看登陆在{${APP_NAME}}系统的用户信息`} />
+            }
+            containerStyle={{
+              backgroundColor: "transparent"
+            }}
+          />
+          {Render()}
         </View>
       </LinearGradient>
     </>

@@ -9,11 +9,13 @@ import { DEFAULT_UPLOAD_RES } from "@/settings";
 
 type props = {
   task: Task;
+  isHistory?: boolean;
   taskIndex: number;
-  total: MyState<{ countNum: number; pensNum: number }>
+  restTotal?: { countNum: number, pensNum: number }[];
+  total?: MyState<{ countNum: number; pensNum: number }>
 }
 
-const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
+const GenerateTableRow: FC<props> = ({ task, taskIndex, total, isHistory, restTotal }) => {
   const router = useRouter();
   const gotoEdit = (buildingIndex: number, penIndex: number, building: Building, pen: Pen) => {
     return () => {
@@ -32,7 +34,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
   const [countNum, pensNum] = useMemo(() => {
     let countNum = 0;
     let pensNum = 0;
-    if (!validation) return [countNum, pensNum];
+    if (!validation && !isHistory) return [countNum, pensNum];
     task.buildings.forEach((building) => {
       building.pens.forEach((pen) => {
         if (pen.count > DEFAULT_UPLOAD_RES) countNum += pen.manualCount || pen.count;
@@ -40,24 +42,29 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total }) => {
       });
     });
     return [countNum, pensNum];
-  }, [task.buildings, validation]);
+  }, [isHistory, task.buildings, validation]);
   useEffect(() => {
-    total.set((draft) => {
-      draft.pensNum = pensNum;
-      draft.countNum = countNum;
-    });
+    if (isHistory) {
+      restTotal && (restTotal[taskIndex] = { pensNum, countNum });
+    } else {
+      total?.set((draft) => {
+        draft.pensNum = pensNum;
+        draft.countNum = countNum;
+      });
+    }
     // eslint-disable-next-line
-  }, [countNum, pensNum]);
+  }, [countNum, isHistory, pensNum, restTotal, taskIndex]);
   return (
     <>
       {
-        validation &&
+        (validation || isHistory) &&
         task.buildings.map((building, buildingIndex) =>
           building.pens.map((pen, penIndex) => <TableRow
               key={`${taskIndex}-${buildingIndex}-${penIndex}`}>
               <Row buildingName={String(buildingIndex)}
                    penName={String(penIndex)}
                    res={pen.manualCount || pen.count}
+                   isHistory={isHistory}
                    key={`${taskIndex}-${buildingIndex}-${penIndex}`}
                    gotoEdit={gotoEdit(buildingIndex, penIndex, building, pen)}
               />

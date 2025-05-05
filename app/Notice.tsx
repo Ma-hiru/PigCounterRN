@@ -20,7 +20,7 @@ const Notice: FC<props> = () => {
       employeeId: 0,
       time: "2025-04-22",
       type: "系统",
-      content: "系统提示：识别系统全新升级，敬请使用！系统提示：识别系统全新升级，敬请使用！系统提示：识别系统全新升级，敬请使用！系统提示：识别系统全新升级，敬请使用！",
+      content: "系统提示：识别系统全新升级，敬请使用！",
       read: false,
       del: false
     },
@@ -73,11 +73,30 @@ const Notice: FC<props> = () => {
                   return !item.del && <NoticeItem
                     clickArea={clickArea}
                     notice={item}
-                    readItem={() => {/*TODO*/
+                    readItem={(id) => {/*TODO*/
+                      items.set((draft) => {
+                        draft = draft.map((item) => {
+                          if (item.id === id) {
+                            item.read = true;
+                            return item;
+                          }
+                          return item;
+                        });
+                      });
                     }}
-                    deleteItem={() => {
+                    deleteItem={(id) => {
                       /*TODO*/
+                      items.set((draft) => {
+                        draft = draft.map((item) => {
+                          if (item.id === id) {
+                            item.del = true;
+                            return item;
+                          }
+                          return item;
+                        });
+                      });
                     }}
+                    key={index}
                   />;
                 })
               }

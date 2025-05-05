@@ -1,4 +1,4 @@
-type CompanyProfile = {
+type Company = {
   id: number;
   name: string;
   logo: string;

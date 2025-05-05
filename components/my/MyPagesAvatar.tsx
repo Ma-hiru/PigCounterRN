@@ -10,7 +10,7 @@ import { FC, memo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Log } from "@/utils/logger";
-import { handleAvatarURL } from "@/utils/handleServerURL";
+import { handleServerURL } from "@/utils/handleServerURL";
 import { usePages } from "@/hooks/usePages";
 
 
@@ -22,11 +22,11 @@ const MyPagesAvatar: FC<props> = () => {
   const { profile } = useSelector(userSelector);
   const Pages = usePages();
   const username = profile.name ? profile.name : "点击登录";
-  const avatar = profile.profilePicture ? handleAvatarURL(profile.profilePicture) : defaultAvatar;
+  const avatar = profile.profilePicture ? handleServerURL(profile.profilePicture, "avatar") : defaultAvatar;
   Log.Echo({ avatar });
   const handleAvatarPress = () => {
     if (!hasToken) handleLogin();
-    else Pages.set("/UserInfo","MOVE")
+    else Pages.set("/UserInfo", "MOVE");
   };
   return (
     <>

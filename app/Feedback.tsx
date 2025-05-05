@@ -8,6 +8,8 @@ import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import { useMyState } from "@/hooks/useMyState";
 import Blank from "@/components/Blank";
+import { LinearGradient } from "expo-linear-gradient";
+import { info } from "expo/build/devtools/logger";
 
 type props = object
 
@@ -52,7 +54,7 @@ export const Feedback: FC<props> = () => {
                    key={feedbackInfo.get().feedbackImg.length} />
     </View>
     <View className="w-[80%] justify-center items-center">
-      <MyBlueBtn className="mb-4" loading={loading.get()} onPress={submit}>提交</MyBlueBtn>
+      <MyBlueBtn className="mb-8" loading={loading.get()} onPress={submit}>提交</MyBlueBtn>
     </View>
   </View>, [feedbackInfo, loading, submit]);
 
@@ -63,13 +65,20 @@ export const Feedback: FC<props> = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 bg-white" style={{ paddingBottom: 25 }}>
-        <BigHeader title="问题反馈" info={
-          <BigHeader.InfoText content={`反馈使用{${APP_NAME}}系统的问题信息`} />
-        }>
-        </BigHeader>
-        {Render()}
-      </View>
+      <LinearGradient
+        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa", "#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
+        <View className="flex-1" style={{ paddingBottom: 25 }}>
+          <BigHeader title="问题反馈" containerStyle={{ backgroundColor: "transparent" }} info={
+            <BigHeader.InfoText content={`反馈使用{${APP_NAME}}系统的问题信息`} />
+          }>
+          </BigHeader>
+          {Render()}
+        </View>
+      </LinearGradient>
     </>
   );
 };

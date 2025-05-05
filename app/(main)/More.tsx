@@ -18,7 +18,7 @@ const More = () => {
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <Header title={profile?.admin ? "管理" : "数据"} />
         {
-          (hasToken && (profile?.admin ? <Manage /> : <Report />)) ||
+          (hasToken && <Report />) ||
           <Blank tips={NO_LOGIN_TIPS} />
         }
       </View>

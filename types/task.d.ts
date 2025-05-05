@@ -1,9 +1,12 @@
-type Task = {
+type BaseTask = {
   id: number;
   taskName?: string;
   employeeId: number;
   startTime: string;
   endTime: string;
+  valid?: boolean;
+}
+type Task = BaseTask & {
   buildings: Building[]
 }
 type Building = {

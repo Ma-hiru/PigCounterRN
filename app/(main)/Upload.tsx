@@ -8,14 +8,16 @@ import { uploadSelector, useAppSelector } from "@/stores";
 import { useMyState } from "@/hooks/useMyState";
 import { useLogin } from "@/hooks/useLogin";
 import Blank from "@/components/Blank";
+import { useGetTaskListAsync } from "@/utils/getTaskListAsync";
 
 const Upload = () => {
   const router = useRouter();
   const { TasksList } = useAppSelector(uploadSelector);
   const refreshing = useMyState(false);
+  const getTaskList = useGetTaskListAsync();
   const onRefresh = async () => {
     refreshing.set(true);
-    // TODO: 刷新数据
+    getTaskList();
     refreshing.set(false);
   };
   const { hasToken } = useLogin();
@@ -25,6 +27,12 @@ const Upload = () => {
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <Header title="计数" />
         {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
+        {
+          TasksList.length === 0 && hasToken &&
+          <View className="flex-1 justify-center items-center w-full h-full">
+            <Blank tips={"暂无任务，休息一下吧！"} />
+          </View>
+        }
         {
           hasToken && <ScrollView
             className="flex-1 bg-gray-50"
