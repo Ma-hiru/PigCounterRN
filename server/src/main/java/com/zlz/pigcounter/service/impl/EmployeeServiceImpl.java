@@ -254,6 +254,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(0, new ArrayList<>());
     }
 
+    @Override
+    public Employee getById(Long id) {
+        if(!id.equals(BaseContext.getCurrentId())){
+            throw new UnauthorizedAccessException();
+        }
+        return employeeMapper.getById(id);
+    }
+
     private void deleteProfilePicture(Long id) {
         String employeeProfilePicture = employeeMapper.getProfilePictureById(id);
         if (employeeProfilePicture == null) {

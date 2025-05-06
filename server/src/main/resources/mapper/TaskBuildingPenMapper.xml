@@ -4,15 +4,15 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
 <mapper namespace="com.zlz.pigcounter.mapper.TaskBuildingPenMapper">
-    <resultMap id="TaskDTOResultMap" type="com.common.pojo.dto.TaskDTO">
+    <resultMap id="DetailTaskDTOResultMap" type="com.common.pojo.dto.DetailTaskDTO">
         <id property="id" column="task_id"/>
-        <collection property="buildings" ofType="com.common.pojo.dto.BuildingDTO" column="task_id"
+        <collection property="buildings" ofType="com.common.pojo.dto.DetailBuildingDTO" column="task_id"
                     javaType="ArrayList" select="getBuildingsByTaskId"/>
     </resultMap>
 
-    <resultMap id="BuildingsDTOResultMap" type="com.common.pojo.dto.BuildingDTO">
+    <resultMap id="BuildingsDTOResultMap" type="com.common.pojo.dto.DetailBuildingDTO">
         <id property="buildingId" column="building_id"/>
-        <collection property="pens" ofType="com.common.pojo.dto.PenDTO" column="{building_id=building_id, task_id=task_id}"
+        <collection property="pens" ofType="com.common.pojo.dto.DetailPenDTO" column="{building_id=building_id, task_id=task_id}"
                     javaType="ArrayList" select="getPensByBuildingId"/>
     </resultMap>
 
@@ -28,8 +28,20 @@
         </foreach>
     </insert>
 
-    <select id="getTaskDetail" resultMap="TaskDTOResultMap">
-        select task_id from task_building_pen where task_id = #{taskId}
+    <select id="getTaskDetail" resultMap="DetailTaskDTOResultMap">
+        SELECT
+        task_id,
+        task_name,
+        start_time,
+        end_time,
+        employee_id
+        FROM
+        task_building_pen
+        INNER JOIN
+        task ON task.id = task_building_pen.task_id
+        WHERE
+        task_building_pen.task_id = #{taskId}
+
     </select>
 
     <select id="getBuildingsByTaskId" resultMap="BuildingsDTOResultMap">
@@ -37,7 +49,7 @@
         LEFT JOIN building b
         ON t.building_id = b.id
     </select>
-    <select id="getPensByBuildingId" resultType="com.common.pojo.dto.PenDTO">
+    <select id="getPensByBuildingId" resultType="com.common.pojo.dto.DetailPenDTO">
         SELECT
         t.pen_id,
         pp.output_picture_path,
@@ -51,7 +63,7 @@
         LEFT JOIN pen_picture pp
         ON pp.pen_id = t.pen_id
         AND pp.task_id = #{task_id}
-        WHERE t.building_id = #{building_id}
+        WHERE t.building_id = #{building_id} AND t.task_id = #{task_id}
     </select>
 
 </mapper>

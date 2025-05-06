@@ -127,4 +127,16 @@ public class EmployeeController {
         log.info("登出");
         return Result.success();
     }
+
+    /**
+     * 根据id查询员工
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result<Employee> getById(@PathVariable Long id) {
+        log.info("根据id查询员工：{}", id);
+        return Result.success(employeeService.getById(id));
+    }
 }

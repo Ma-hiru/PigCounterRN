@@ -1,5 +1,7 @@
 package com.zlz.pigcounter.controller;
 
+import com.common.pojo.dto.ConfirmPenPictureDTO;
+import com.common.pojo.dto.DetailTaskDTO;
 import com.common.pojo.dto.TaskDTO;
 import com.common.pojo.dto.PenPictureUploadDTO;
 import com.common.pojo.vo.PenPictureVO;
@@ -7,6 +9,7 @@ import com.common.result.PageResult;
 import com.common.result.Result;
 import com.zlz.pigcounter.service.TaskService;
 import jakarta.validation.Valid;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -69,7 +72,7 @@ public class TaskController {
      */
     @GetMapping("/detail/{taskId}")
     @Cacheable(cacheNames = "task_detail",key = "#taskId")
-    public Result<TaskDTO> getTaskDetail(@PathVariable Long taskId){
+    public Result<DetailTaskDTO> getTaskDetail(@PathVariable Long taskId){
         log.info("查询任务详情：{}",taskId);
         return Result.success(taskService.getTaskDetail(taskId));
     }
@@ -98,4 +101,15 @@ public class TaskController {
         return Result.success();
     }
 
+    /**
+     * 确认任务图片
+     * @param confirmPenPictureDTO
+     * @return
+     */
+    @PostMapping("/confirm")
+    public Result confirmPicture(@RequestBody ConfirmPenPictureDTO confirmPenPictureDTO){
+        log.info("确认图片：{}",confirmPenPictureDTO);
+        taskService.confirmPicture(confirmPenPictureDTO);
+        return Result.success();
+    }
 }

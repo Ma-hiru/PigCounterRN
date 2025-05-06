@@ -1,5 +1,6 @@
 package com.zlz.pigcounter.mapper;
 
+import com.common.pojo.dto.DetailTaskDTO;
 import com.common.pojo.dto.TaskDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +12,7 @@ public interface TaskBuildingPenMapper {
 
     void insert(TaskDTO taskDTO);
 
-    TaskDTO getTaskDetail(Long taskId);
+    DetailTaskDTO getTaskDetail(Long taskId);
 
     void batchInsert(List<Map<String, Object>> partition);
 }

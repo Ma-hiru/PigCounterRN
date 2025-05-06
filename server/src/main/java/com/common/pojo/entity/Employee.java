@@ -41,5 +41,6 @@ public class Employee implements Serializable {
     @NotNull(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)
     private Boolean admin;
 
+    @NotNull(message = "所属组织不能为空",groups = EmployeeValidation.update.class)
     private Long orgId;
 }

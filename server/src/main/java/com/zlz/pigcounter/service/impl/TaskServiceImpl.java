@@ -1,10 +1,7 @@
 package com.zlz.pigcounter.service.impl;
 
 import com.common.exception.NotFoundTaskException;
-import com.common.pojo.dto.PenDTO;
-import com.common.pojo.dto.PenPictureUploadDTO;
-import com.common.pojo.dto.TaskDTO;
-import com.common.pojo.dto.TaskPenDTO;
+import com.common.pojo.dto.*;
 import com.common.pojo.entity.PenPicture;
 import com.common.pojo.entity.Task;
 import com.common.pojo.vo.PenPictureVO;
@@ -17,7 +14,6 @@ import com.zlz.pigcounter.mapper.PenPictureMapper;
 import com.zlz.pigcounter.mapper.TaskBuildingPenMapper;
 import com.zlz.pigcounter.mapper.TaskMapper;
 import com.zlz.pigcounter.service.TaskService;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,8 +66,8 @@ public class TaskServiceImpl implements TaskService {
                 .flatMap(building ->
                 {
                     List<TaskPenDTO> pens = building.getPens();
-                    if (pens == null) {
-                        // 如果 getPens() 为 null，则从数据库查询该楼栋下所有猪圈
+                    if (pens.isEmpty()) {
+                        // 如果 getPens() 为 空，则从数据库查询该楼栋下所有猪圈
                         pens = penMapper.getTaskPenDTOsByBuildingId(building.getBuildingId());
                     }
                     return pens.stream()
@@ -114,9 +110,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO getTaskDetail(Long taskId) {
+    public DetailTaskDTO getTaskDetail(Long taskId) {
 
-        TaskDTO taskDetail = taskBuildingPenMapper.getTaskDetail(taskId);
+        DetailTaskDTO taskDetail = taskBuildingPenMapper.getTaskDetail(taskId);
 
         if (taskDetail==null){
             throw new NotFoundTaskException();
@@ -125,6 +121,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public Mono<PenPictureVO> upload(PenPictureUploadDTO uploadDTO) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         Arrays.stream(uploadDTO.getFiles()).forEach(file ->
@@ -144,7 +141,8 @@ public class TaskServiceImpl implements TaskService {
                 penPicture.setPenId(uploadDTO.getPenId());
                 penPicture.setTaskId(uploadDTO.getTaskId());
             }
-
+            //TODO删除本地文件(未实现)
+            penPictureMapper.deletePicture(uploadDTO.getTaskId(), uploadDTO.getPenId());
            penPictureMapper.insertBatch(result);
 
             // 提取信息并构建 penPictureVO
@@ -169,8 +167,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void deletePicture(Long taskId, Long penId) {
-        PenDTO picturePath = penPictureMapper.getPicturePath(taskId, penId);
+        DetailPenDTO picturePath = penPictureMapper.getPicturePath(taskId, penId);
         if (picturePath==null){
             throw new NotFoundTaskException();
         }
@@ -187,5 +186,11 @@ public class TaskServiceImpl implements TaskService {
             throw new RuntimeException(e);
         }
         penPictureMapper.deletePicture(taskId,penId);
+    }
+
+    @Override
+    public void confirmPicture(ConfirmPenPictureDTO confirmPenPictureDTO) {
+        //TODO  权限验证
+        penPictureMapper.confirmPicture(confirmPenPictureDTO);
     }
 }

@@ -28,6 +28,7 @@ WebMvcConfiguration implements WebMvcConfigurer {
     @Value("${zlz.image.save-path}")
     private String imageSavePath;
 
+
     /**
      * 注册拦截器
      * @param registry

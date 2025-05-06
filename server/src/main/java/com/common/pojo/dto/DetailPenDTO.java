@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class PenDTO implements Serializable {
+public class DetailPenDTO implements Serializable {
     private Long penId;
     private Integer count;
     private String picturePath;

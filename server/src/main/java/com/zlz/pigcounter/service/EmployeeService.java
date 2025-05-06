@@ -21,4 +21,6 @@ public interface EmployeeService {
     void deleteByIds(Long[] ids);
 
     PageResult getEmployeesByAttributes(Employee employee);
+
+    Employee getById(Long id);
 }
