@@ -17,7 +17,7 @@ const LoginPagesMoreBtn: FC<props> = () => {
         offset={20}
         crossOffset={10}
         trigger={({ ...triggerProps }) => {
-          return <View className="flex flex-row w-full justify-end">
+          return <View className="flex flex-row justify-end">
             <Button {...triggerProps} variant="link" size="md" className="p-0">
               <ButtonText>更多选项</ButtonText>
             </Button>

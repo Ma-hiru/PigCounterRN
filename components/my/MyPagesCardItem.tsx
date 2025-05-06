@@ -2,6 +2,7 @@ import { FC, memo, useState } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Image, ImageSource } from "expo-image";
 import { setImageScale } from "@/utils/setImageScale";
+import PressFeedback from "@/components/animate/PressFeedback";
 
 interface props {
   text: string;
@@ -14,7 +15,7 @@ const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => {
   const [scale, setScale] = useState(1);
   return (
     <>
-      <Pressable onPress={onPress}>
+      <PressFeedback onPress={onPress} minScale={0.98}>
         {
           ({ pressed }) =>
             (
@@ -40,7 +41,7 @@ const MyPagesCardItem: FC<props> = ({ text, img, onPress, iconSize }) => {
               </>
             )
         }
-      </Pressable>
+      </PressFeedback>
     </>
   );
 };

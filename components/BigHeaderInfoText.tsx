@@ -14,7 +14,7 @@ const BigHeaderInfoText: FC<props> = (
   {
     content,
     emphasizeColor = GlobalStyles.ThemeColor1,
-    normalColor = "#999999",
+    normalColor = "#444",
     children,
     textStyle
   }) => {

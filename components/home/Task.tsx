@@ -1,18 +1,18 @@
 import TaskItem from "@/components/home/TaskItem";
-import { uploadSelector, useAppSelector } from "@/stores";
 import { FC, memo } from "react";
 import { View } from "react-native";
+import { GlobalStyles } from "@/settings.theme";
 
 type props = {
-  TasksList: TaskList
+  TasksList: BaseTask[]
 }
 
 const Task: FC<props> = ({ TasksList }) => {
   return (
     <>
-      <View>
+      <View style={{ backgroundColor: GlobalStyles.BlurBgCardColor }}>
         {
-          TasksList.map((item: Task, index: number) =>
+          TasksList.map((item, index) =>
             <TaskItem task={item} key={index} taskIndex={index} />
           )
         }

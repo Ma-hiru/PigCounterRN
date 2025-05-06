@@ -5,6 +5,7 @@ import { NewsList } from "@/types/news";
 import { useImageLoadedScale } from "@/hooks/useImageScale";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
+import PressFeedback from "@/components/animate/PressFeedback";
 
 
 type props = {
@@ -16,7 +17,7 @@ const News: FC<props> = ({ news }) => {
   const router = useRouter();
   return (
     <>
-      <Pressable className="w-full" onPress={goToPages(router, {
+      <PressFeedback className="w-full" onPress={goToPages(router, {
         pathname: "/NewsDetail",
         params: {
           id: news.id
@@ -24,7 +25,7 @@ const News: FC<props> = ({ news }) => {
       }, "FN")}>
         {
           ({ pressed }) =>
-            <View style={[pressed && styles.Shadow,{padding:5}]}>
+            <View style={[pressed && styles.Shadow, { padding: 5 }]}>
               <Image {...CoverProps} />
               <Text style={{
                 marginTop: 10,
@@ -35,7 +36,7 @@ const News: FC<props> = ({ news }) => {
               </Text>
             </View>
         }
-      </Pressable>
+      </PressFeedback>
     </>
   );
 };

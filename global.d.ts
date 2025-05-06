@@ -1,5 +1,4 @@
 import { FC } from "react";
-import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
 
 
 declare global {

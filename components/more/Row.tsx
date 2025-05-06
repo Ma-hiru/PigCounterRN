@@ -7,10 +7,11 @@ type props = {
   buildingName: string;
   penName: string;
   res: number;
-  gotoEdit: () => void;
+  gotoEdit?: () => void;
+  isHistory?: boolean;
 }
 
-const Row: FC<props> = ({ buildingName, penName, res, gotoEdit }) => {
+const Row: FC<props> = ({ buildingName, penName, res, gotoEdit, isHistory }) => {
   buildingName = useMemo(() => {
     const num = Number(buildingName);
     if (!Number.isNaN(num)) {
@@ -31,7 +32,9 @@ const Row: FC<props> = ({ buildingName, penName, res, gotoEdit }) => {
     switch (res) {
       case DEFAULT_UPLOAD_RES:
         return <Text className="font-bold" style={{ color: GlobalStyles.ErrorColor }}
-                     onPress={gotoEdit}>
+                     onPress={() => {
+                       if (!isHistory) gotoEdit && gotoEdit();
+                     }}>
           暂未清点
         </Text>;
       default:

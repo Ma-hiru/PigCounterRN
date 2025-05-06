@@ -7,7 +7,7 @@ import { FC, memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, Dimensions } from "react-native";
 import { Updater } from "use-immer";
 import { fileSystem } from "@/utils/fileSystem";
-import { UPLOAD_FEEDBACK_QUALITY } from "@/settings";
+import { GlobalStyles, UPLOAD_FEEDBACK_QUALITY } from "@/settings";
 
 interface props {
   source?: ImageSource;
@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
     marginBottom: gap,
     padding: 5,
     width: size,
-    height: size
+    height: size,
+    backgroundColor: GlobalStyles.BlurBgCardColor
   },
   DelIcon: {
     position: "absolute",

@@ -69,7 +69,7 @@ const ImageCarousel: FC<props> = ({ data, width, height, containerStyle }) => {
       <Pagination.Basic
         progress={progress}
         data={data}
-        activeDotStyle={{ backgroundColor: GlobalStyles.SecondColor }}
+        activeDotStyle={{ backgroundColor: "#999" }}
         dotStyle={{ backgroundColor: "#fff", borderRadius: 50 }}
         containerStyle={{ gap: 5, marginTop: -15 }}
         onPress={onPressPagination}

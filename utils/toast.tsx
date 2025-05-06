@@ -25,6 +25,7 @@ export const showNewToast = (
           style={{
             marginTop: topInset + 5,
             backgroundColor: GlobalStyles.ThemeColor1,
+            borderWidth:0
           }}
         >
           {
@@ -32,14 +33,14 @@ export const showNewToast = (
             <Text style={{
               color: GlobalStyles.SecondColor,
               fontSize: 16,
-              fontFamily: "baigetianxingtiRegular" as Fonts
+              fontFamily: "FlyFlowerSongRegular" as Fonts
             }}>
               {title}
             </Text>
           }
           <Text style={{
             color: "#fff",
-            fontFamily: "baigetianxingtiRegular" as Fonts
+            fontFamily: "FlyFlowerSongRegular" as Fonts
           }}>
             {desc}
           </Text>

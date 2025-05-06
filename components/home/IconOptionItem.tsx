@@ -1,7 +1,15 @@
 import { FC, memo } from "react";
-import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View
+} from "react-native";
 import { Image, ImageSource, ImageStyle } from "expo-image";
+import PressFeedback from "@/components/animate/PressFeedback";
 import MyPagesCard from "@/components/my/MyPagesCard";
+
 
 type props = {
   title: string;
@@ -14,11 +22,11 @@ type props = {
 const IconOptionItem: FC<props> = ({ icon, title, iconStyle, titleStyle, onPress }) => {
   return (
     <>
-      <MyPagesCard cardStyle={{ marginBottom: 15, width: "45%" }}>
-        <Pressable onPress={onPress}>
-          {
-            ({ pressed }) => (
-              <>
+      <PressFeedback onPress={onPress} containerStyle={{ width: "48%" }}>
+        {
+          ({ pressed }) => (
+            <>
+              <MyPagesCard cardStyle={{ marginBottom: 15, width: "100%" }}>
                 <View className="justify-between flex-row items-center"
                       style={[pressed && styles.Shadow]}>
                   <Text className="text-center"
@@ -31,11 +39,11 @@ const IconOptionItem: FC<props> = ({ icon, title, iconStyle, titleStyle, onPress
                          }}
                   />
                 </View>
-              </>
-            )
-          }
-        </Pressable>
-      </MyPagesCard>
+              </MyPagesCard>
+            </>
+          )
+        }
+      </PressFeedback>
     </>
   );
 };

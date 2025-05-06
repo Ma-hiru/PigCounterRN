@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import { APP_NAME, GetWeatherIconUrl, GlobalStyles } from "@/settings";
 import { Text, View } from "react-native";
 import { Image } from "expo-image";
-import WeatherBg from "@/assets/images/bg_2(1).jpg";
+import WeatherBg from "@/assets/images/login/login_bg_1(1).jpg";
 import { setImageScale } from "@/utils/setImageScale";
 import { useWeather } from "@/hooks/useWeather";
 import { Log } from "@/utils/logger";
@@ -40,7 +40,7 @@ const Head: FC<props> = () => {
       >
         <View className="w-auto items-center flex-row "
               style={{
-                backgroundColor: GlobalStyles.SecondColor,
+                backgroundColor: "rgba(255,255,255,0.85)",
                 marginTop: 3,
                 borderRadius: 20,
                 padding: 2,

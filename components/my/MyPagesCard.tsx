@@ -7,7 +7,8 @@ type props = {
   children?: ReactNode;
   contentStyle?: StyleProp<ViewStyle>;
   cardStyle?: StyleProp<ViewStyle>;
-  titleStyle?: StyleProp<TextStyle>
+  titleStyle?: StyleProp<TextStyle>;
+  className?: string;
 }
 type CanPressType = {
   children: ReactNode;
@@ -21,13 +22,15 @@ const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
     children,
     contentStyle,
     cardStyle,
-    titleStyle
+    titleStyle,
+    className
   }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigation = useNavigation();
   return (
     <>
-      <View className="w-full bg-white shadow-hard-2" style={[cardStyle, styles.container]}>
+      <View className={"w-full bg-white shadow-hard-2 " + className}
+            style={[cardStyle, styles.container]}>
         {
           title &&
           <Text

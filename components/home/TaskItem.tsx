@@ -5,12 +5,12 @@ import { FC, memo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 interface props {
-  task: Task;
+  task: BaseTask;
   taskIndex: number;
 }
 
 const TaskItem: FC<props> = ({ task, taskIndex }) => {
-  const { validation, endTime } = useValidateTask(task);
+  const { validation, endTime, isOutdate } = useValidateTask(task);
   return (
     <>
       <View style={styles.Header} className="mt-4">
@@ -19,7 +19,7 @@ const TaskItem: FC<props> = ({ task, taskIndex }) => {
             <Text style={styles.Tags}>任务</Text>
             <Text style={{ ...styles.HeadText, ...styles.HeadTitle }}
                   className="text-2xl font-bold justify-center items-center">
-              编号 {taskIndex + 1}
+              {task.taskName || "未命名"}
             </Text>
           </View>
           <View>
@@ -27,7 +27,7 @@ const TaskItem: FC<props> = ({ task, taskIndex }) => {
               validation ?
                 <Text
                   style={{ ...styles.HeadText, textAlign: "left" }}>
-                  <CountDown endTime={endTime.getTime()} format={countdownFormat}
+                  <CountDown endTime={endTime.toDate().getTime()} format={countdownFormat}
                              endText={"已过期"} />
                 </Text> :
                 <Text style={{
@@ -35,7 +35,7 @@ const TaskItem: FC<props> = ({ task, taskIndex }) => {
                   color: validation ? GlobalStyles.PositiveColor : GlobalStyles.ErrorColor,
                   textAlign: "left"
                 }}>
-                  未开放
+                  {isOutdate ? "已过期" : "未开放"}
                 </Text>
             }
           </View>
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
+    backgroundColor: GlobalStyles.BlurBgCardColor
   }
 });

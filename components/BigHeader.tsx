@@ -54,10 +54,10 @@ const BigHeader: FC<props> & { InfoText: typeof BigHeaderInfoText } = (
               style={{ paddingTop: topInset + 20, ...contentStyle as object }}>
           {
             hasBackIcon &&
-            <Pressable className="w-full justify-center items-start mb-4" onPress={back}
+            <Pressable className="w-full justify-center items-start" onPress={back}
                        style={backContainerStyle}>
               <Image source={backIcon}
-                     style={{ height: 25, width: 25, ...backIconStyle as object }} />
+                     style={{ height: 30, width: 30, ...backIconStyle as object }} />
             </Pressable>
           }
           <View

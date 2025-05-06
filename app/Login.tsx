@@ -1,22 +1,24 @@
 import BigHeader from "@/components/BigHeader";
 import LoginPagesForm from "@/components/login/LoginPagesForm";
-import LoginPagesMoreBtn from "@/components/login/LoginPagesMoreBtn";
 import {
   StatusBar,
   StyleSheet,
   InteractionManager,
   ImageBackground,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  View,
+  Text
 } from "react-native";
 import { useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
 import { useFetchData } from "@/utils/fetchData";
 import { useRouter } from "expo-router";
-import background from "@/assets/images/login/login_bg.png";
+import background from "@/assets/images/login/login_bg_1.jpg";
 import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
 import localStore from "@/utils/localStore";
+
 const { setLogin } = userActions;
 const setRemember = (loginInfo: loginInfo, remember: boolean) => {
   if (remember) {
@@ -50,7 +52,9 @@ const Login = () => {
         (res, createToast) => {
           createToast("请求出错！", res?.message);
         });
-      loading.set(false);
+      InteractionManager.runAfterInteractions(() => {
+        loading.set(false);
+      });
     });
   }, [API.reqLogin, dispatch, fetchData, loading]);
   useEffect(() => {
@@ -61,15 +65,21 @@ const Login = () => {
   Log.Console("LoginShow");
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <ImageBackground source={background} style={{ flex: 1 }}>
-        <KeyboardAvoidingView className="flex-1 relative" style={{ zIndex: 1 }}>
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
+        <KeyboardAvoidingView className="flex-1 relative justify-between items-center"
+                              style={{ zIndex: 1 }}>
           <BigHeader
-            title={APP_NAME}
+            title={(defaultStyle) => {
+              return (
+                <Text style={defaultStyle}>{APP_NAME}</Text>
+              );
+            }}
             info={
               <BigHeader.InfoText
                 content={APP_WELCOME}
                 textStyle={{ fontFamily: "FlyFlowerSongRegular" as Fonts }}
+                normalColor={GlobalStyles.ThemeColor}
               />
             }
             font="baigetianxingtiRegular"
@@ -80,10 +90,13 @@ const Login = () => {
             backContainerStyle={styles.HeaderBackContainer}
             contentStyle={styles.HeaderContent}
             hasBackIcon={false}
-          >
-            <LoginPagesForm handleLogin={handleSubmit} loading={loading.get()} />
-            <LoginPagesMoreBtn />
-          </BigHeader>
+          />
+          <View className="w-screen flex flex-row justify-center items-center"
+                style={styles.FormContainer}>
+            <View className="w-[85%] relative flex justify-center items-center">
+              <LoginPagesForm handleLogin={handleSubmit} loading={loading.get()} />
+            </View>
+          </View>
         </KeyboardAvoidingView>
       </ImageBackground>
     </>
@@ -91,11 +104,11 @@ const Login = () => {
 };
 // noinspection JSUnusedGlobalSymbols
 export default Login;
+
 const styles = StyleSheet.create({
   HeaderContainer: {
     backgroundColor: "none",
-    height: "100%",
-    justifyContent: "center"
+    marginTop: (StatusBar.currentHeight || 0) + 100
   },
   HeaderTitleContainer: {
     justifyContent: "center",
@@ -106,16 +119,17 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     fontSize: 60,
     lineHeight: 75,
-    color: GlobalStyles.ThemeColor
+    color: "#2b5876"
   },
   HeaderInfoContainer: {
-    justifyContent: "center",
-    marginBottom: 40,
-    paddingBottom: 0
+    justifyContent: "center"
 
   },
   HeaderBackContainer: {},
   HeaderContent: {
     paddingTop: 0
+  },
+  FormContainer: {
+    marginBottom: 250
   }
 });

@@ -22,6 +22,7 @@ import { Image } from "expo-image";
 import ForbidIcon from "@/assets/images/forbid.svg";
 import RestIcon from "@/assets/images/home/rest.svg";
 import { useLogin } from "@/hooks/useLogin";
+import PressFeedback from "@/components/animate/PressFeedback";
 
 type props = object;
 const Options: FC<props> = () => {
@@ -45,14 +46,13 @@ const Options: FC<props> = () => {
       for (const [taskIndex, task] of CurrentTask.entries()) {
         for (const [buildingIndex, building] of task.buildings.entries()) {
           for (const [penIndex, pen] of building.pens.entries()) {
-            if (pen.penNum === -1) {
-              //TODO Name
+            if (pen.count === -1) {
               return LastCount.set({
                 taskIndex,
                 buildingIndex,
                 penIndex,
-                buildingName: String(building.buildingId),
-                penName: String(pen.penId),
+                buildingName: building.buildingName,
+                penName: pen.penName,
                 penId: pen.penId
               });
             }
@@ -64,14 +64,14 @@ const Options: FC<props> = () => {
   }, [TasksList]);
   return (
     <>
-      <View className=" flex-1 bg-gray-50" style={{
+      <View className=" flex-1 " style={{
         paddingLeft: 12,
         paddingRight: 12,
         position: "relative",
         top: -30,
         borderRadius: 15
       }}>
-        <View className="flex-row justify-evenly">
+        <View className="flex-row justify-between">
           <IconOptionItem
             title="单次计数"
             icon={SingleIcon}
@@ -97,7 +97,7 @@ const Options: FC<props> = () => {
             onPress={goToPages(router, "/(main)/More", "FN")}
             iconStyle={{ width: 40, height: 40 }} />
         </View>
-        <View className="flex-row justify-evenly">
+        <View className="flex-row justify-between">
           <IconOptionItem
             title="查看公告"
             icon={NoticeIcon}
@@ -115,7 +115,7 @@ const Options: FC<props> = () => {
               goToPages(router, {
                 pathname: "/UploadFiles",
                 params: {
-                  title: `楼栋${LastCount.get().buildingName} · 栏舍${LastCount.get().penName}`,
+                  title: `${LastCount.get().buildingName} · ${LastCount.get().penName}`,
                   taskIndex: [LastCount.get().taskIndex, LastCount.get().buildingIndex, LastCount.get().penIndex],
                   penId: LastCount.get().penId
                 }
@@ -124,52 +124,56 @@ const Options: FC<props> = () => {
           />
         </View>
         <View>
-          <MyPagesCard cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
-                       title={"今日任务"}>
-            <MyPagesCard.CanPress
+          {/*任务*/}
+          <MyPagesCard
+            cardStyle={{ marginBottom: 15, paddingBottom: 15 }}
+            title={"今日任务"}
+          >
+            <PressFeedback
               containerStyle={{ paddingLeft: 5, paddingRight: 5 }}
               onPress={goToPages(router, "/Upload", "FN")}
             >
               <Task TasksList={CurrentTask} />
-            </MyPagesCard.CanPress>
-            {(!hasToken) &&
-              <View style={{
-                padding: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row"
-              }}>
-                <Image source={ForbidIcon} style={{ width: 20, height: 20, marginRight: 5 }} />
-                <Text
-                  style={{
-                    fontFamily: "baigetianxingtiRegular" as Fonts,
-                    fontSize: 16,
-                    lineHeight: 16
-                  }}>
-                  {NO_LOGIN_TIPS}
-                </Text>
-              </View>
-            }
-            {(hasToken && CurrentTask.length === 0) &&
-              <View style={{
-                padding: 10,
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row"
-              }}>
-                <Image source={RestIcon} style={{ width: 25, height: 25, marginRight: 5 }} />
-                <Text
-                  style={{
-                    fontFamily: "baigetianxingtiRegular" as Fonts,
-                    fontSize: 18,
-                    lineHeight: 18
-                  }}>
-                  {NO_ACTIVE_TASK}
-                </Text>
-              </View>
-            }
+            </PressFeedback>
+            <PressFeedback>
+              {(!hasToken) &&
+                <View style={{
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row"
+                }}>
+                  <Image source={ForbidIcon} style={{ width: 25, height: 25, marginRight: 5 }} />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      lineHeight: 20
+                    }}>
+                    {NO_LOGIN_TIPS}
+                  </Text>
+                </View>
+              }
+              {(hasToken && CurrentTask.length === 0) &&
+                <View style={{
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row"
+                }}>
+                  <Image source={RestIcon} style={{ width: 25, height: 25, marginRight: 5 }} />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      lineHeight: 26,
+                      fontWeight: "normal"
+                    }}>
+                    {NO_ACTIVE_TASK}
+                  </Text>
+                </View>
+              }
+            </PressFeedback>
           </MyPagesCard>
-
+          {/*新闻*/}
           <MyPagesCard cardStyle={{ marginBottom: 15 }} title={"每日一闻"}>
             {
               NewsList.map((news) =>

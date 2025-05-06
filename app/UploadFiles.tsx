@@ -21,12 +21,14 @@ import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
 import background from "@/assets/images/bg_1.jpg";
 import { Image } from "expo-image";
-import { Log } from "@/utils/logger";
-import { handleUploadURL } from "@/utils/handleServerURL";
+import { Log, PauseLog } from "@/utils/logger";
+import { handleServerURL } from "@/utils/handleServerURL";
 import MyPortal from "@/components/MyPortal";
 import { useMyState } from "@/hooks/useMyState";
 import { fileSystem } from "@/utils/fileSystem";
 import UploadFilesHeader from "@/components/upload/UploadFilesHeader";
+import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const _ = undefined;
 
@@ -63,9 +65,11 @@ const UploadFiles: FC = () => {
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
   const [cacheCount, peopleCacheCount] = useMemo(() => {
     const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    return [pen.penNum, pen?.peopleNum ?? -1];
+    return [Number(pen.count), Number(pen?.manualCount) || -1];
   }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
-
+  const HasConfirm = useMemo(() =>
+      TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex].status
+    , [BuildingIndex, PenIndex, TaskIndex, TasksList]);
   /** 选择、缓存图片 */
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos" | "") => {
     switch (mode) {
@@ -131,7 +135,7 @@ const UploadFiles: FC = () => {
   }, [clearImg]);
 
   /** 上传预览 */
-  const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES);
+  const [isUpload, setIsUpload] = useState(cacheCount !== DEFAULT_UPLOAD_RES && cacheCount > 0);
 
   /** 提交 */
   const { fetchData, API } = useFetchData();
@@ -141,16 +145,19 @@ const UploadFiles: FC = () => {
     if (file.uri === "") return;
     loading.set(true);
     try {
+      PauseLog.Console("上传文件ID", TasksList[TaskIndex].id)
+      PauseLog.Console("上传文件penID", PenId)
+      PauseLog.Console("上传文件file", file)
       await fetchData(
         API.reqUpload,
         [{
-          taskId: TaskIndex,
+          taskId: TasksList[TaskIndex].id,
           penId: PenId,
           files: [file]
         }],
         async (res) => {
           Log.Console("uploadResponse", res);
-          const resURL = handleUploadURL(res.data.outputPicturePath[0]);
+          const resURL = handleServerURL(res.data.outputPicturePath[0], "upload");
           Log.Echo({ resURL });
           const file = await fileSystem.DownloadFile(resURL);
           if (!file) {
@@ -176,64 +183,75 @@ const UploadFiles: FC = () => {
     } finally {
       loading.set(false);
     }
-  }, [API.reqUpload, PenId, TaskIndex, TaskIndexTuple, cachePath.path, cachePath.type, fetchData, loading, toast]);
+  }, [API.reqUpload, PenId, TaskIndex, TaskIndexTuple, TasksList, cachePath.path, cachePath.type, fetchData, loading, toast]);
+  const Pages = useRouter();
   const confirmData = useCallback(() => {
-    //TODO 确认数据
-  }, []);
+    fetchData(
+      API.reqConfirmTask,
+      [TasksList[TaskIndex].id, PenId, true],
+      () => {
+        Pages.back();
+      },
+      (res, toast) => {
+        toast("", res?.message || "确认任务失败！请检查网络！");
+      }
+    ).then();
+  }, [API.reqConfirmTask, Pages, PenId, TaskIndex, TasksList, fetchData]);
   const addArtifact = useCallback((res: number) => {
     updateTaskList(TaskIndexTuple, _, _, _, res, isOnceUpload.current);
   }, [TaskIndexTuple]);
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
-      <View className="flex-1 relative">
-        <Image source={background} style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          inset: 0
-        }} contentFit={"cover"}
-        />
-        <UploadFilesHeader
-          isUpload={isUpload}
-          peopleCacheCount={peopleCacheCount}
-          isOnceUpload={isOnceUpload.current} routeTitle={routeTitle.current}
-        />
-        <ScrollView className="pl-8 pr-8 flex-1 "
-                    key={TaskIndex << 20 + BuildingIndex << 10 + PenIndex}
-                    style={{ marginTop: 30 }}
-        >
-          <View className="flex-1">
-            <UploadPagesPreviewCard
-              setPreviewVisible={setPreviewVisible}
-              previewImg={previewImg}
-              previewVideo={previewVideo}
-              setScale={setScale}
-              cachePath={cachePath}
-              scale={scale}
-            />
-            <UploadPagesOptionsCard
-              previewImg={previewImg}
-              previewVideo={previewVideo}
-              cachePath={cachePath}
-              clearImg={clearImg}
-              takeAssets={takeAssets}
-              submitFile={submitFile}
-              clearUpload={clearUpload}
-              isUpload={isUpload}
-              confirmData={confirmData}
-              addArtifact={addArtifact}
-              count={cacheCount}
-            />
-            <MyPortal visible={loading.get()} text="分析中" />
-          </View>
-        </ScrollView>
-        <ImagePreview
-          isPreviewVisible={previewVisible}
-          setPreviewVisible={setPreviewVisible}
-          source={{ uri: previewImg?.uri || cachePath.path }}
-        />
-      </View>
+      <LinearGradient
+        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa", "#d7d2cc"]}
+        style={{ flex: 1 }}
+        end={{ x: 0, y: 0 }}
+        start={{ x: 1, y: 1 }}
+      >
+        <View className="flex-1 relative">
+          <UploadFilesHeader
+            isUpload={isUpload}
+            peopleCacheCount={peopleCacheCount}
+            isOnceUpload={isOnceUpload.current} routeTitle={routeTitle.current}
+          />
+          <ScrollView className="pl-8 pr-8 flex-1 "
+                      key={TaskIndex << 20 + BuildingIndex << 10 + PenIndex}
+                      style={{ marginTop: 30 }}
+          >
+            <View className="flex-1">
+              <UploadPagesPreviewCard
+                setPreviewVisible={setPreviewVisible}
+                previewImg={previewImg}
+                previewVideo={previewVideo}
+                setScale={setScale}
+                cachePath={cachePath}
+                scale={scale}
+              />
+              <UploadPagesOptionsCard
+                previewImg={previewImg}
+                previewVideo={previewVideo}
+                cachePath={cachePath}
+                clearImg={clearImg}
+                takeAssets={takeAssets}
+                submitFile={submitFile}
+                clearUpload={clearUpload}
+                isUpload={isUpload}
+                confirmData={confirmData}
+                addArtifact={addArtifact}
+                count={cacheCount}
+                hasConfirm={HasConfirm}
+              />
+              <MyPortal visible={loading.get()} text="分析中" />
+            </View>
+          </ScrollView>
+          <ImagePreview
+            isPreviewVisible={previewVisible}
+            setPreviewVisible={setPreviewVisible}
+            source={{ uri: previewImg?.uri || cachePath.path }}
+          />
+        </View>
+      </LinearGradient>
     </>
   );
 };
