@@ -15,8 +15,8 @@ export const useGetTaskListAsync = () => {
   const dispatch = useAppDispatch();
   return useCallback(() => {
     if (hasToken) {
-      const BaseList: BaseTask[] = [];
-      const List: Task[] = [];
+      let BaseList: BaseTask[] = [];
+      let List: Task[] = [];
       fetchData(
         API.reqGetTask,
         [profile.id],
@@ -30,29 +30,28 @@ export const useGetTaskListAsync = () => {
       )
         .then(async () => {
             const today = dayjs(Date.now()).startOf("day");
-            await new Promise((resolve) => {
-              BaseList.forEach(async ({ id, startTime }, index) => {
-                const start = dayjs(startTime);
-                PauseLog.Console("获取详情", id, startTime, start.isSame(today, "day"));
-                if (start.isSame(today, "day")) {
-                  await fetchData(
-                    API.reqTaskInfo,
-                    [id],
-                    (res) => {
-                      PauseLog.Console("获取详细任务成功", res.data.buildings);
-                      List.push(getSafeValue(res.data, DEFAULT_TASK_VAL, true, [null, undefined]));
-                      PauseLog.Console("详细任务checkNull", JSON.stringify(getSafeValue(res.data, DEFAULT_TASK_VAL, true,[null, undefined])));
-                    },
-                    (res, toast) => {
-                      PauseLog.Console("获取详细任务列表失败", res);
-                      toast("", res?.message || "获取任务列表失败！请检查网络！");
-                    }
-                  );
-                }
-                if (index === BaseList.length - 1) resolve(true);
-              });
+            BaseList.forEach(({ id, startTime }, index) => {
+              const start = dayjs(startTime);
+              PauseLog.Console("获取详情", id, startTime, start.isSame(today, "day"));
+              if (start.isSame(today, "day")) {
+                fetchData(
+                  API.reqTaskInfo,
+                  [id],
+                  (res) => {
+                    PauseLog.Console("获取详细任务成功", res.data.buildings[0].pens[0]);
+                    const newTask = getSafeValue(res.data, DEFAULT_TASK_VAL, true, [null, undefined]);
+                    let newArr = [...List];
+                    newArr.push(newTask);
+                    List = newArr;
+                    dispatch(setTasksList(List));
+                  },
+                  (res, toast) => {
+                    PauseLog.Console("获取详细任务列表失败", res);
+                    toast("", res?.message || "获取任务列表失败！请检查网络！");
+                  }
+                );
+              }
             });
-            dispatch(setTasksList(List));
             dispatch(setAllTaskList(BaseList));
           }
         );

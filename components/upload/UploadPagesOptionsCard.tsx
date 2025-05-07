@@ -51,21 +51,21 @@ const UploadPagesOptionsCard: FC<props> = (
         <Feather name="camera" color="white" />
         <ButtonText style={{ color: "white" }}>拍照上传</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "take")} className="mt-4" variant="link"
-              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
-        <Feather name="video" color="white" />
-        <ButtonText style={{ color: "white" }}>录像上传</ButtonText>
-      </Button>
+      {/*<Button onPress={takeAssets("videos", "take")} className="mt-4" variant="link"*/}
+      {/*        style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>*/}
+      {/*  <Feather name="video" color="white" />*/}
+      {/*  <ButtonText style={{ color: "white" }}>录像上传</ButtonText>*/}
+      {/*</Button>*/}
       <Button onPress={takeAssets("images", "pick")} className="mt-4" variant="link"
               style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
         <AntDesign name="picture" color="white" />
         <ButtonText style={{ color: "white" }}>本地图片</ButtonText>
       </Button>
-      <Button onPress={takeAssets("videos", "pick")} className="mt-4" variant="link"
-              style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>
-        <Entypo name="folder-video" color="white" />
-        <ButtonText style={{ color: "white" }}>本地视频</ButtonText>
-      </Button>
+      {/*<Button onPress={takeAssets("videos", "pick")} className="mt-4" variant="link"*/}
+      {/*        style={{ backgroundColor: GlobalStyles.ThemeColor1 }}>*/}
+      {/*  <Entypo name="folder-video" color="white" />*/}
+      {/*  <ButtonText style={{ color: "white" }}>本地视频</ButtonText>*/}
+      {/*</Button>*/}
     </>
   ), [takeAssets]);
   const PreViewDataRender = useMemo(() => (
