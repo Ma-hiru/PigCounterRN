@@ -58,7 +58,7 @@ export const HistoryInfo: FC<props> = () => {
                           time: "今日"
                         } satisfies DetailHistoryRouteParams
                       }, "FN")}>
-                      <Task TasksList={TasksList} />
+                      <Task TasksList={TasksList} HasBlur={true}/>
                     </PressFeedback>
                   </MyPagesCard>
                 }
@@ -79,7 +79,7 @@ export const HistoryInfo: FC<props> = () => {
                         time: "所有"
                       } satisfies DetailHistoryRouteParams
                     }, "FN")}>
-                    <Task TasksList={AllTaskList} />
+                    <Task TasksList={AllTaskList} HasBlur={true}/>
                   </PressFeedback>
                 </MyPagesCard>
               </>

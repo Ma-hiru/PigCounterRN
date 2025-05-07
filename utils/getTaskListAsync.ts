@@ -4,6 +4,8 @@ import { useLogin } from "@/hooks/useLogin";
 import { useFetchData } from "@/utils/fetchData";
 import { uploadActions, useAppDispatch, useAppSelector, userSelector } from "@/stores";
 import { useCallback } from "react";
+import { getSafeValue } from "@/utils/checkNullValue";
+import { DEFAULT_TASK_VAL } from "@/settings.app";
 
 const { setTasksList, setAllTaskList } = uploadActions;
 export const useGetTaskListAsync = () => {
@@ -19,7 +21,7 @@ export const useGetTaskListAsync = () => {
         API.reqGetTask,
         [profile.id],
         (res) => {
-          PauseLog.Console("获取详细任务列表成功=>", res.data.list);
+          PauseLog.Console("获取基本任务列表成功=>", res.data.list);
           BaseList.push(...res.data.list);
         },
         (res, toast) => {
@@ -37,8 +39,9 @@ export const useGetTaskListAsync = () => {
                     API.reqTaskInfo,
                     [id],
                     (res) => {
-                      PauseLog.Console("获取详细任务列表成功", res.data);
-                      List.push(res.data);
+                      PauseLog.Console("获取详细任务成功", res.data.buildings);
+                      List.push(getSafeValue(res.data, DEFAULT_TASK_VAL, true, [null, undefined]));
+                      PauseLog.Console("详细任务checkNull", JSON.stringify(getSafeValue(res.data, DEFAULT_TASK_VAL, true,[null, undefined])));
                     },
                     (res, toast) => {
                       PauseLog.Console("获取详细任务列表失败", res);

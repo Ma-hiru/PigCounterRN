@@ -133,7 +133,7 @@ const Options: FC<props> = () => {
               containerStyle={{ paddingLeft: 5, paddingRight: 5 }}
               onPress={goToPages(router, "/Upload", "FN")}
             >
-              <Task TasksList={CurrentTask} />
+              <Task TasksList={CurrentTask} HasBlur={false}/>
             </PressFeedback>
             <PressFeedback>
               {(!hasToken) &&

@@ -6,7 +6,7 @@ import {
 } from "@/settings";
 import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { useFetchData } from "@/utils/fetchData";
-import { TaskIndexTuple, updateTaskList } from "@/utils/updateTaskStore";
+import { TaskIndexTuple, updateTaskList, updateTaskListStatus } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { ScrollView, StatusBar, View } from "react-native";
 import { ImagePickerResult } from "expo-image-picker";
@@ -19,8 +19,6 @@ import ImagePreview from "@/components/upload/ImagePreview";
 import UploadPagesPreviewCard from "@/components/upload/UploadPagesPreviewCard";
 import UploadPagesOptionsCard from "@/components/upload/UploadPagesOptionsCard";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
-import background from "@/assets/images/bg_1.jpg";
-import { Image } from "expo-image";
 import { Log, PauseLog } from "@/utils/logger";
 import { handleServerURL } from "@/utils/handleServerURL";
 import MyPortal from "@/components/MyPortal";
@@ -59,17 +57,24 @@ const UploadFiles: FC = () => {
   Log.Console("isOnceUpload.current", isOnceUpload.current);
   if (isOnceUpload.current) TasksList = OnceTask;
   /** 获取缓存 */
-  const cachePath = useMemo(() => {
-    const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    return { path: pen.picturePath ?? "", type: pen.type ?? "" };
-  }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
-  const [cacheCount, peopleCacheCount] = useMemo(() => {
-    const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
-    return [Number(pen.count), Number(pen?.manualCount) || -1];
-  }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
   const HasConfirm = useMemo(() =>
       TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex].status
     , [BuildingIndex, PenIndex, TaskIndex, TasksList]);
+  const cachePath = useMemo(() => {
+    const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
+    if (HasConfirm && pen.outputPicturePath && pen.type === "") {
+      return {
+        path: handleServerURL(pen.outputPicturePath, "upload"),
+        type: (handleServerURL(pen.outputPicturePath, "upload").match("jpg") ? "images" : "videos") as "images" | "videos"
+      };
+    }
+    return { path: pen.picturePath ?? "", type: pen.type ?? "" };
+  }, [BuildingIndex, HasConfirm, PenIndex, TaskIndex, TasksList]);
+  const [cacheCount, peopleCacheCount] = useMemo(() => {
+    const pen = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex];
+    return [Number(pen.count), Number(pen.manualCount)];
+  }, [BuildingIndex, PenIndex, TaskIndex, TasksList]);
+
   /** 选择、缓存图片 */
   const resolveTemp = useCallback(async (tempUri: string, mode: "save" | "delete", type?: "images" | "videos" | "") => {
     switch (mode) {
@@ -145,9 +150,6 @@ const UploadFiles: FC = () => {
     if (file.uri === "") return;
     loading.set(true);
     try {
-      PauseLog.Console("上传文件ID", TasksList[TaskIndex].id)
-      PauseLog.Console("上传文件penID", PenId)
-      PauseLog.Console("上传文件file", file)
       await fetchData(
         API.reqUpload,
         [{
@@ -188,15 +190,30 @@ const UploadFiles: FC = () => {
   const confirmData = useCallback(() => {
     fetchData(
       API.reqConfirmTask,
-      [TasksList[TaskIndex].id, PenId, true],
-      () => {
+      [TasksList[TaskIndex].id, PenId, true, peopleCacheCount],
+      (res) => {
+        PauseLog.Console("ConfirmDataRes", res);
         Pages.back();
+        fetchData(
+          API.reqTaskInfo,
+          [TasksList[TaskIndex].id],
+          (res) => {
+            const BuildingId = TasksList[TaskIndex].buildings[BuildingIndex].buildingId;
+            const PenId = TasksList[TaskIndex].buildings[BuildingIndex].pens[PenIndex].penId;
+            const resPen = res.data.buildings.find(building => building.buildingId === BuildingId)?.pens?.find(pen => pen.penId === PenId);
+            if (resPen && resPen.status) {
+              updateTaskListStatus(TaskIndexTuple, true);
+            }
+          },
+          () => {
+          }
+        ).then();
       },
       (res, toast) => {
-        toast("", res?.message || "确认任务失败！请检查网络！");
+        toast("", res?.message ?? "确认任务失败！请检查网络！");
       }
     ).then();
-  }, [API.reqConfirmTask, Pages, PenId, TaskIndex, TasksList, fetchData]);
+  }, [API.reqConfirmTask, API.reqTaskInfo, BuildingIndex, Pages, PenId, PenIndex, TaskIndex, TaskIndexTuple, TasksList, fetchData, peopleCacheCount]);
   const addArtifact = useCallback((res: number) => {
     updateTaskList(TaskIndexTuple, _, _, _, res, isOnceUpload.current);
   }, [TaskIndexTuple]);
@@ -213,7 +230,8 @@ const UploadFiles: FC = () => {
           <UploadFilesHeader
             isUpload={isUpload}
             peopleCacheCount={peopleCacheCount}
-            isOnceUpload={isOnceUpload.current} routeTitle={routeTitle.current}
+            isOnceUpload={isOnceUpload.current}
+            routeTitle={routeTitle.current}
           />
           <ScrollView className="pl-8 pr-8 flex-1 "
                       key={TaskIndex << 20 + BuildingIndex << 10 + PenIndex}

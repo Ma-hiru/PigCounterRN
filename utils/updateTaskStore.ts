@@ -20,3 +20,10 @@ export const updateTaskList = (TaskIndexTuple: TaskIndexTuple, newPath?: Pen["pi
   if (Once) dispatch(setOnceTask(newTaskList));
   else dispatch(setTasksList(newTaskList));
 };
+export const updateTaskListStatus = (TaskIndexTuple: TaskIndexTuple, Status?: boolean) => {
+  const newTaskList = cloneDeep(RootState.getState().uploadStore?.TasksList);
+  if (Status !== undefined) {
+    newTaskList[TaskIndexTuple.TaskIndex].buildings[TaskIndexTuple.BuildingIndex].pens[TaskIndexTuple.PenIndex].status = Status;
+  }
+  dispatch(setTasksList(newTaskList));
+};
