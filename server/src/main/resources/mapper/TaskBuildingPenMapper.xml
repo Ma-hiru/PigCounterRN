@@ -30,22 +30,20 @@
 
     <select id="getTaskDetail" resultMap="DetailTaskDTOResultMap">
         SELECT
-        task_id,
+        id as task_id,
         task_name,
         start_time,
         end_time,
         employee_id
         FROM
-        task_building_pen
-        INNER JOIN
-        task ON task.id = task_building_pen.task_id
+        task
         WHERE
-        task_building_pen.task_id = #{taskId}
+        id = #{taskId}
 
     </select>
 
     <select id="getBuildingsByTaskId" resultMap="BuildingsDTOResultMap">
-        select  t.building_id , b.building_name , #{task_id} as task_id from (select building_id from task_building_pen where task_id = #{task_id}) as t
+        select  t.building_id , b.building_name , #{task_id} as task_id from (select distinct building_id from task_building_pen where task_id = #{task_id}) as t
         LEFT JOIN building b
         ON t.building_id = b.id
     </select>

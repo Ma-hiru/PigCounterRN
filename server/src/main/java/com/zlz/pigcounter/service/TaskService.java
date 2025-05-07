@@ -14,7 +14,7 @@ public interface TaskService {
 
     PageResult getByEmployeeId(Long id);
 
-    PageResult getTasksPage(int pageNum, int pageSize);
+    PageResult getTasksPage(int pageNum, int pageSize,Long orgId);
 
     DetailTaskDTO getTaskDetail(Long taskId);
 

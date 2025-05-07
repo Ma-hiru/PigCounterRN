@@ -18,9 +18,9 @@ public class Employee implements Serializable {
     @NotBlank(message = "用户名不能为空",groups = {EmployeeValidation.add.class})
     private String username;
 
-    @NotBlank(message = "密码不能为空")
-    @Size(min = 8,message = "密码长度不能小于8",groups = EmployeeValidation.update.class)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "密码必须包含大小写字母和数字",groups = EmployeeValidation.update.class)
+    @NotBlank(message = "密码不能为空",groups = EmployeeValidation.add.class)
+    @Size(min = 8,message = "密码长度不能小于8",groups = EmployeeValidation.add.class)
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",message = "密码必须包含大小写字母和数字",groups = EmployeeValidation.add.class)
     private String password;
 
     @NotBlank(message = "姓名不能为空",groups = EmployeeValidation.update.class)
@@ -35,7 +35,7 @@ public class Employee implements Serializable {
 
     private String profilePicture;
 
-    @NotBlank(message = "组织不能为空",groups = EmployeeValidation.update.class)
+    @NotBlank(message = "组织不能为空",groups = EmployeeValidation.add.class)
     private String organization;
 
     @NotNull(message = "是否为管理员不能为空",groups = EmployeeValidation.update.class)

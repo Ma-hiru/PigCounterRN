@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface PenMapper {
-    @Insert("insert into pen (building_id, pen_name) values (#{buidingId},#{penName})")
+    @Insert("insert into pen (building_id, pen_name) values (#{buildingId},#{penName})")
     void addPen(Pen pen);
 
     @Delete("delete from pen where id=#{id}")
@@ -34,4 +34,7 @@ public interface PenMapper {
 
     @Select("select id as penId from pen where building_id= #{buildingId}")
     List<TaskPenDTO> getTaskPenDTOsByBuildingId(Long buildingId);
+
+    @Select("select id from pen where building_id= #{buildingId}")
+    List<Long> getPenIdsByBuildingId(Long buildingId);
 }

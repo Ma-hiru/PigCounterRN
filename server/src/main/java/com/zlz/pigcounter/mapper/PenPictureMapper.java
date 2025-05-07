@@ -23,4 +23,6 @@ public interface PenPictureMapper {
 
     @Update("update pen_picture set status = #{status} ,manual_count=#{manualCount} where pen_id = #{penId} and task_id = #{taskId}")
     void confirmPicture(ConfirmPenPictureDTO confirmPenPictureDTO);
+    @Delete("delete from pen_picture where pen_id = #{penId}")
+    void deletePenPictureByPenId(Long penId);
 }

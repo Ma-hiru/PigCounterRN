@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -60,10 +61,10 @@ public class TaskController {
      * @return
      */
     @GetMapping("/page")
-    @Cacheable(cacheNames = "task",key = "#pageNum+'-'+#pageSize")
-    public Result<PageResult> getTasksPage(int pageNum, int pageSize){
-        log.info("分页查询任务：{}",pageNum,pageSize);
-        return Result.success(taskService.getTasksPage(pageNum,pageSize));
+    @Cacheable(cacheNames = "task",key = "#pageNum+'-'+#pageSize+'-'+#orgId")
+    public Result<PageResult> getTasksPage(int pageNum, int pageSize,Long orgId){
+        log.info("分页查询任务：{}",pageNum,pageSize,orgId);
+        return Result.success(taskService.getTasksPage(pageNum,pageSize,orgId));
     }
     /**
      * 根据id查询任务详情

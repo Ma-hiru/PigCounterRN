@@ -1,5 +1,6 @@
 package com.common.pojo.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,4 +14,6 @@ public class Task implements Serializable {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Boolean valid;
+
+    private Long orgId;
 }

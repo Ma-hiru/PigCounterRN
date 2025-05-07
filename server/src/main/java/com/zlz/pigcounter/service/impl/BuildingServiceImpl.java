@@ -15,6 +15,7 @@ import com.zlz.pigcounter.mapper.BuildingMapper;
 import com.zlz.pigcounter.mapper.EmployeeMapper;
 import com.zlz.pigcounter.mapper.PenMapper;
 import com.zlz.pigcounter.service.BuildingService;
+import com.zlz.pigcounter.service.PenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -28,6 +29,8 @@ import java.util.List;
 @Slf4j
 public class BuildingServiceImpl implements BuildingService {
     @Autowired
+    private PenService penService;
+    @Autowired
     private BuildingMapper buildingMapper;
 
     @Autowired
@@ -37,6 +40,7 @@ public class BuildingServiceImpl implements BuildingService {
     private PenMapper penMapper;
     @Autowired
     private CacheManager cacheManager;
+
     @Override
     public void addBuilding(Building building) {
         //确保只有管理员账号能添加楼栋信息
@@ -64,7 +68,10 @@ public class BuildingServiceImpl implements BuildingService {
         buildingMapper.deleteBuilding(id);
 
         //删除该楼栋下所有猪圈信息
-        penMapper.deletePenByBuildingId(id);
+        List<Long> penIdsByBuildingId = penService.getPenIdsByBuildingId(id);
+        penIdsByBuildingId.forEach(penId -> {
+            penService.deletePen(penId);
+        });
         evictBuildingAndPenCacheByOrgId(building.getOrgId());
     }
 

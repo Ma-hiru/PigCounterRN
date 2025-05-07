@@ -10,15 +10,14 @@ import com.common.pojo.vo.PenVO;
 import com.common.result.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.zlz.pigcounter.mapper.BuildingMapper;
-import com.zlz.pigcounter.mapper.EmployeeMapper;
-import com.zlz.pigcounter.mapper.PenMapper;
+import com.zlz.pigcounter.mapper.*;
 import com.zlz.pigcounter.service.PenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,11 @@ public class PenServiceImpl implements PenService {
     private BuildingMapper buildingMapper;
     @Autowired
     private CacheManager cacheManager;
+    @Autowired
+    private PenPictureMapper  penPictureMapper;
+    @Autowired
+    private TaskBuildingPenMapper taskBuildingPenMapper;
+
     @Override
     public void addPen(Pen pen) {
         Long currentId = BaseContext.getCurrentId();
@@ -47,6 +51,7 @@ public class PenServiceImpl implements PenService {
     }
 
     @Override
+    @Transactional
     public void deletePen(Long id) {
         Long currentId = BaseContext.getCurrentId();
         Pen pen = penMapper.getById(id);
@@ -58,6 +63,8 @@ public class PenServiceImpl implements PenService {
             throw new UnauthorizedModificationException("只有同组织管理员能删除猪圈信息");
         }
         penMapper.deletePen(id);
+        penPictureMapper.deletePenPictureByPenId(id);
+        taskBuildingPenMapper.deleteByPenId(id);
         evictBuildingAndPenCacheByOrgId(orgId);
     }
 
@@ -91,6 +98,16 @@ public class PenServiceImpl implements PenService {
         }
         penMapper.updatePen(pen);
         evictBuildingAndPenCacheByOrgId(orgId);
+    }
+
+    @Override
+    public List<Long> getPenIdsByBuildingId(Long buildingId) {
+        List<Long> penIds ;
+        penIds  = penMapper.getPenIdsByBuildingId(buildingId);
+        if(penIds==null){
+            return new ArrayList<>();
+        }
+        return penIds;
     }
 
     private void evictBuildingAndPenCacheByOrgId(Long orgId) {

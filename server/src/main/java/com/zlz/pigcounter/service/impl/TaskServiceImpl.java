@@ -58,6 +58,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         BeanUtils.copyProperties(taskDTO,task);
         task.setValid(true);
+        task.setOrgId(taskDTO.getOrgId());
         taskMapper.insert(task);
         //插入任务详情表
         taskDTO.setId(task.getId());
@@ -98,9 +99,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public PageResult getTasksPage(int pageNum, int pageSize) {
+    public PageResult getTasksPage(int pageNum, int pageSize,Long orgId) {
+        //TODO鉴权
         PageHelper.startPage(pageNum,pageSize);
-        try(Page<Task> page =taskMapper.getTasksPage()) {
+        try(Page<Task> page =taskMapper.getTasksPage(orgId)) {
             if (page==null){
                 throw  new  NotFoundTaskException();
             }
@@ -111,7 +113,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public DetailTaskDTO getTaskDetail(Long taskId) {
-
+        //TODO组织鉴权
         DetailTaskDTO taskDetail = taskBuildingPenMapper.getTaskDetail(taskId);
 
         if (taskDetail==null){

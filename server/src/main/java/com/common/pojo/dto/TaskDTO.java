@@ -22,5 +22,8 @@ public class TaskDTO implements Serializable {
     @Valid
     @NotNull(message = "选择的楼栋不能为空")
     private List<TaskBuildingDTO> buildings;
+    @NotNull(message = "组织不能为空")
+    private Long orgId;
+
 
 }

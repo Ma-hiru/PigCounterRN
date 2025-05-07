@@ -156,35 +156,35 @@ public class EmployeeServiceImpl implements EmployeeService {
            throw new UnauthorizedModificationException();
         }
         String filePath="";
-        String  password = passwordEncoder.encode(employee.getPassword());
-        employee.setPassword(password);
+        if(employee.getPassword()!=null&&!employee.getPassword().isEmpty()) {
+            String password = passwordEncoder.encode(employee.getPassword());
+            employee.setPassword(password);
+        }
         if(profilePicture !=null&&!profilePicture.isEmpty()){
             // 检查文件类型
             if (!ImageUtil.isValidImageFile(profilePicture)) {
                 throw new ProfilePictureUploadException("上传的文件不是有效的图片文件");
             }
             filePath= ImageUtil.getNewImagePath(profilePicture, imageSavePath, ImageConstant.PROFILE_PICTURE_PATH);
+            employee.setProfilePicture(ImageUtil.getFileNameWithExtension(filePath));
+            ProfilePicture profilePictureHistory = ProfilePicture.builder()
+                    .employeeId(employee.getId())
+                    .profilePicture(filePath)
+                    .isCurrent(true)
+                    .uploadTime(LocalDateTime.now())
+                    .build();
+            try {
+                ImageUtil.uploadImage(profilePicture,filePath,imageSavePath);
+            } catch (IOException e) {
+                throw new ProfilePictureUploadException("头像文件上传失败",e);
+            }
+            profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()),false);
+            profilePictureHistoryMapper.insert(profilePictureHistory);
         }
-        employee.setProfilePicture(ImageUtil.getFileNameWithExtension(filePath));
-        ProfilePicture profilePictureHistory = ProfilePicture.builder()
-                .employeeId(employee.getId())
-                .profilePicture(filePath)
-                .isCurrent(true)
-                .uploadTime(LocalDateTime.now())
-                .build();
-
-        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()),false);
 
         employeeMapper.update(employee);
 
-        profilePictureHistoryMapper.insert(profilePictureHistory);
 
-
-        try {
-            ImageUtil.uploadImage(profilePicture,filePath,imageSavePath);
-        } catch (IOException e) {
-            throw new ProfilePictureUploadException("头像文件上传失败",e);
-        }
 
     }
 
