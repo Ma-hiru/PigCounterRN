@@ -1,6 +1,8 @@
 package com.zlz.pigcounter.service;
 
 
+import com.common.pojo.dto.ConfirmPenPictureDTO;
+import com.common.pojo.dto.DetailTaskDTO;
 import com.common.pojo.dto.PenPictureUploadDTO;
 import com.common.pojo.dto.TaskDTO;
 import com.common.pojo.vo.PenPictureVO;
@@ -12,11 +14,13 @@ public interface TaskService {
 
     PageResult getByEmployeeId(Long id);
 
-    PageResult getTasksPage(int pageNum, int pageSize);
+    PageResult getTasksPage(int pageNum, int pageSize,Long orgId);
 
-    TaskDTO getTaskDetail(Long taskId);
+    DetailTaskDTO getTaskDetail(Long taskId);
 
     Mono<PenPictureVO> upload(PenPictureUploadDTO uploadDTO);
 
     void deletePicture(Long taskId, Long penId);
+
+    void confirmPicture(ConfirmPenPictureDTO confirmPenPictureDTO);
 }

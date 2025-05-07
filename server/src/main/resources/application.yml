@@ -4,8 +4,8 @@ server:
     max-http-form-post-size: 10MB
   ssl:
     enabled: true
-    key-store: classpath:ssl/renmen321.cn.jks
-    key-store-password: 8f8yrvoo
+    key-store: classpath:ssl/abc.renmen321.cn.jks
+    key-store-password: m4ib05eu
     key-store-type: JKS
   servlet:
     context-path: /api
@@ -15,7 +15,7 @@ spring:
   datasource:
     druid:
       driver-class-name: ${zlz.datasource.driver-class-name}
-      url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://${zlz.datasource.host}:${zlz.datasource.port}/${zlz.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&cachePrepStmts=true
       username: ${zlz.datasource.username}
       password: ${zlz.datasource.password}
   data:
@@ -29,6 +29,7 @@ mybatis:
   type-aliases-package: com.zlz.entity
   configuration:
     map-underscore-to-camel-case: true
+    default-executor-type: batch
 jwt:
   admin-secret-key: ${zlz.jwt.admin-secret-key}
   admin-token-name: ${zlz.jwt.admin-token-name}

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -155,35 +156,35 @@ public class EmployeeServiceImpl implements EmployeeService {
            throw new UnauthorizedModificationException();
         }
         String filePath="";
-        String  password = passwordEncoder.encode(employee.getPassword());
-        employee.setPassword(password);
+        if(employee.getPassword()!=null&&!employee.getPassword().isEmpty()) {
+            String password = passwordEncoder.encode(employee.getPassword());
+            employee.setPassword(password);
+        }
         if(profilePicture !=null&&!profilePicture.isEmpty()){
             // 检查文件类型
             if (!ImageUtil.isValidImageFile(profilePicture)) {
                 throw new ProfilePictureUploadException("上传的文件不是有效的图片文件");
             }
             filePath= ImageUtil.getNewImagePath(profilePicture, imageSavePath, ImageConstant.PROFILE_PICTURE_PATH);
+            employee.setProfilePicture(ImageUtil.getFileNameWithExtension(filePath));
+            ProfilePicture profilePictureHistory = ProfilePicture.builder()
+                    .employeeId(employee.getId())
+                    .profilePicture(filePath)
+                    .isCurrent(true)
+                    .uploadTime(LocalDateTime.now())
+                    .build();
+            try {
+                ImageUtil.uploadImage(profilePicture,filePath,imageSavePath);
+            } catch (IOException e) {
+                throw new ProfilePictureUploadException("头像文件上传失败",e);
+            }
+            profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()),false);
+            profilePictureHistoryMapper.insert(profilePictureHistory);
         }
-        employee.setProfilePicture(ImageUtil.getFileNameWithExtension(filePath));
-        ProfilePicture profilePictureHistory = ProfilePicture.builder()
-                .employeeId(employee.getId())
-                .profilePicture(filePath)
-                .isCurrent(true)
-                .uploadTime(LocalDateTime.now())
-                .build();
-
-        profilePictureHistoryMapper.updateIsCurrent(employeeMapper.getProfilePictureById(employee.getId()),false);
 
         employeeMapper.update(employee);
 
-        profilePictureHistoryMapper.insert(profilePictureHistory);
 
-
-        try {
-            ImageUtil.uploadImage(profilePicture,filePath,imageSavePath);
-        } catch (IOException e) {
-            throw new ProfilePictureUploadException("头像文件上传失败",e);
-        }
 
     }
 
@@ -204,10 +205,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public PageResult page(int pageNum, int pageSize, String organization) {
+    public PageResult page(int pageNum, int pageSize, Long orgId) {
         Long currentId = BaseContext.getCurrentId();
-        Long orgId = organizationService.getOrganizationIdByName(organization);
-        if(orgId==null){
+        String organization = organizationService.getOrganizationNameById(orgId);
+        if(organization==null){
             throw new NotFoundOrganization();
         }
         Employee currentEmployee = employeeMapper.getById(currentId);
@@ -236,6 +237,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         profilePictureHistoryMapper.deleteByEmployeeIds(ids);
         employeeMapper.deleteBatch(ids);
+    }
+
+    @Override
+    public PageResult getEmployeesByAttributes(Employee employee) {
+        if(employee!=null) {
+
+            Employee currentEmployee = employeeMapper.getById(BaseContext.getCurrentId());
+            if (!currentEmployee.getAdmin()) {
+                throw new UnauthorizedAccessException();
+            }
+            employee.setOrgId(currentEmployee.getOrgId());
+            List<Employee> employees = employeeMapper.getEmployeesByAttributes(employee);
+            return new PageResult(employees.size(), employees);
+        }
+        return new PageResult(0, new ArrayList<>());
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        if(!id.equals(BaseContext.getCurrentId())){
+            throw new UnauthorizedAccessException();
+        }
+        return employeeMapper.getById(id);
     }
 
     private void deleteProfilePicture(Long id) {

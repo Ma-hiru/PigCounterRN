@@ -15,12 +15,13 @@ public class OrganizationController {
     @Autowired
     private OrganizationService organizationService;
 
-    @PostMapping ("/add")
-    public Result addOrganization(@RequestBody @Validated Organization organization){
-        log.info("添加组织");
-        organizationService.addOrganization();
-        return Result.success();
-    }
+//    @PostMapping ("/add")
+//    public Result addOrganization(@RequestBody @Validated Organization organization){
+//        log.info("添加组织");
+//        organizationService.addOrganization();
+//        return Result.success();
+//    }
+
 
 
 }

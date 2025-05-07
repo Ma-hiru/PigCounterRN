@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TaskDTO implements Serializable {
+public class DetailTaskDTO implements Serializable {
     private Long id;
     private Long employeeId;
     private String taskName;
@@ -21,9 +21,5 @@ public class TaskDTO implements Serializable {
 
     @Valid
     @NotNull(message = "选择的楼栋不能为空")
-    private List<TaskBuildingDTO> buildings;
-    @NotNull(message = "组织不能为空")
-    private Long orgId;
-
-
+    private List<DetailBuildingDTO> buildings;
 }

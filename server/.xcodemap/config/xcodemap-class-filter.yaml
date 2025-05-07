@@ -1,0 +1,32 @@
+autoDetectedPackages:
+- com.common.constant
+- com.common.context
+- com.common.exception
+- com.common.pojo.dto
+- com.common.pojo.entity
+- com.common.pojo.vo
+- com.common.properties
+- com.common.result
+- com.common.validation
+- com.zlz.pigcounter
+enableAutoDetect: true
+entryDisplayConfig:
+  excludedPathPatterns: []
+  skipJsCss: true
+funcDisplayConfig:
+  skipConstructors: false
+  skipFieldAccess: true
+  skipFieldChange: true
+  skipGetters: false
+  skipNonProjectPackages: false
+  skipPrivateMethods: false
+  skipSetters: false
+ignoreSameClassCall: null
+ignoreSamePackageCall: null
+includedPackagePrefixes: null
+includedParentClasses: null
+name: xcodemap-filter
+recordMode: all
+sourceDisplayConfig:
+  color: blue
+startOnDebug: false
