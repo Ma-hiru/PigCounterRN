@@ -5,17 +5,32 @@
 <!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
 <mapper namespace="com.zlz.pigcounter.mapper.TaskBuildingPenMapper">
     <resultMap id="DetailTaskDTOResultMap" type="com.common.pojo.dto.DetailTaskDTO">
+        <!-- 主任务字段 -->
         <id property="id" column="task_id"/>
-        <collection property="buildings" ofType="com.common.pojo.dto.DetailBuildingDTO" column="task_id"
-                    javaType="ArrayList" select="getBuildingsByTaskId"/>
-    </resultMap>
+        <result property="taskName" column="task_name"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
 
-    <resultMap id="BuildingsDTOResultMap" type="com.common.pojo.dto.DetailBuildingDTO">
-        <id property="buildingId" column="building_id"/>
-        <collection property="pens" ofType="com.common.pojo.dto.DetailPenDTO" column="{building_id=building_id, task_id=task_id}"
-                    javaType="ArrayList" select="getPensByBuildingId"/>
-    </resultMap>
+        <!-- 楼栋集合 -->
+        <collection property="buildings" ofType="com.common.pojo.dto.DetailBuildingDTO"
+                   >
+            <id property="buildingId" column="building_id"/>
+            <result property="buildingName" column="building_name"/>
 
+            <!-- 栏位集合 -->
+            <collection property="pens" ofType="com.common.pojo.dto.DetailPenDTO"
+                        >
+                <id property="penId" column="pen_id"/>
+                <result property="penName" column="pen_name"/>
+                <result property="outputPicturePath" column="output_picture_path"/>
+                <result property="count" column="count"/>
+                <result property="picturePath" column="picture_path"/>
+                <result property="manualCount" column="manual_count"/>
+                <result property="status" column="status"/>
+            </collection>
+        </collection>
+    </resultMap>
     <insert id="insert">
         INSERT INTO task_building_pen (task_id, building_id, pen_id)
         VALUES (#{id}, #{buildingId}, #{penId})
@@ -30,38 +45,27 @@
 
     <select id="getTaskDetail" resultMap="DetailTaskDTOResultMap">
         SELECT
-        id as task_id,
-        task_name,
-        start_time,
-        end_time,
-        employee_id
-        FROM
-        task
-        WHERE
-        id = #{taskId}
-
-    </select>
-
-    <select id="getBuildingsByTaskId" resultMap="BuildingsDTOResultMap">
-        select  t.building_id , b.building_name , #{task_id} as task_id from (select distinct building_id from task_building_pen where task_id = #{task_id}) as t
-        LEFT JOIN building b
-        ON t.building_id = b.id
-    </select>
-    <select id="getPensByBuildingId" resultType="com.common.pojo.dto.DetailPenDTO">
-        SELECT
-        t.pen_id,
+        t.id as task_id,
+        t.task_name,
+        t.start_time,
+        t.end_time,
+        t.employee_id,
+        b.id as building_id,
+        b.building_name,
+        p.id as pen_id,
         pp.output_picture_path,
         pp.count,
         pp.picture_path,
         pp.manual_count,
         pp.status,
         p.pen_name
-        FROM task_building_pen t
-        LEFT JOIN pen p ON p.id = t.pen_id
-        LEFT JOIN pen_picture pp
-        ON pp.pen_id = t.pen_id
-        AND pp.task_id = #{task_id}
-        WHERE t.building_id = #{building_id} AND t.task_id = #{task_id}
+        FROM task t
+        LEFT JOIN task_building_pen tbp ON t.id = tbp.task_id
+        LEFT JOIN building b ON tbp.building_id = b.id
+        LEFT JOIN pen p ON tbp.pen_id = p.id
+        LEFT JOIN pen_picture pp ON pp.pen_id = p.id AND pp.task_id = t.id
+        WHERE t.id = #{taskId}
     </select>
+
 
 </mapper>

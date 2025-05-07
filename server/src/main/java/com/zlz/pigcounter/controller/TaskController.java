@@ -61,7 +61,7 @@ public class TaskController {
      * @return
      */
     @GetMapping("/page")
-    @Cacheable(cacheNames = "task",key = "#pageNum+'-'+#pageSize+'-'+#orgId")
+    @Cacheable(cacheNames = "task_page",key = "#pageNum+'-'+#pageSize+'-'+#orgId")
     public Result<PageResult> getTasksPage(int pageNum, int pageSize,Long orgId){
         log.info("分页查询任务：{}",pageNum,pageSize,orgId);
         return Result.success(taskService.getTasksPage(pageNum,pageSize,orgId));
@@ -108,6 +108,7 @@ public class TaskController {
      * @return
      */
     @PostMapping("/confirm")
+    @CacheEvict(cacheNames = "task_detail",key = "#confirmPenPictureDTO.taskId")
     public Result confirmPicture(@RequestBody ConfirmPenPictureDTO confirmPenPictureDTO){
         log.info("确认图片：{}",confirmPenPictureDTO);
         taskService.confirmPicture(confirmPenPictureDTO);
