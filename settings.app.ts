@@ -30,3 +30,32 @@ export const UPLOAD_FEEDBACK_QUALITY = 0.5;
 export const CACHE_DIR = "cacheDir";
 export const NO_LOGIN_TIPS = "登录之后再开始吧！";
 export const NO_ACTIVE_TASK = "暂无活跃任务，休息一下吧！";
+export const DEFAULT_BASE_TASK_VAL: BaseTask = {
+  id: -1,
+  taskName: "",
+  employeeId: -1,
+  startTime: "",
+  endTime: "",
+  valid: false
+};
+export const DEFAULT_TASK_VAL: Task = {
+  ...DEFAULT_BASE_TASK_VAL,
+  buildings: [
+    {
+      buildingId: -1,
+      buildingName: "",
+      pens: [
+        {
+          penId: -1,
+          penName: "",
+          count: -1,
+          manualCount: -1,
+          picturePath: "",
+          outputPicturePath: "",
+          status: false,
+          type: ""
+        }
+      ]
+    }
+  ]
+};

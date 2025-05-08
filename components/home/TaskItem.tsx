@@ -7,13 +7,15 @@ import { StyleSheet, Text, View } from "react-native";
 interface props {
   task: BaseTask;
   taskIndex: number;
+  HasBlur?: boolean;
 }
 
-const TaskItem: FC<props> = ({ task, taskIndex }) => {
+const TaskItem: FC<props> = ({ task, taskIndex, HasBlur }) => {
   const { validation, endTime, isOutdate } = useValidateTask(task);
   return (
     <>
-      <View style={styles.Header} className="mt-4">
+      <View style={[styles.Header, HasBlur ? undefined : { backgroundColor: "#fff" }]}
+            className="mt-4">
         <View className="justify-between flex-row w-full items-center">
           <View style={styles.Head}>
             <Text style={styles.Tags}>任务</Text>

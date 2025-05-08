@@ -46,7 +46,7 @@ const RegistryPagesForm: FC<props> = ({ invalid, registryInfo, setRegistryInfo }
   const companyInfo = useReactive<{ name: string }[]>([]);
   /*TODO 获取组织列表*/
   useEffect(() => {
-    companyInfo.push({ name: "实验" });
+    companyInfo.push({ name: "湘潭大学" });
   }, [companyInfo]);
   return (
     <>

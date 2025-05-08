@@ -2,7 +2,7 @@ import localStore from "@/utils/localStore";
 
 /** baseURL */
 const weatherUrl = "https://shiina-mahiru.cn/weatherIcon";
-export const DEFAULT_BASE_URL = "https://renmen321.cn:8080";
+export const DEFAULT_BASE_URL = "https://abc.renmen321.cn:23451";
 export let baseUrl = DEFAULT_BASE_URL;
 localStore.getItem("baseUrl").then((data) => {
   if (data !== "") {

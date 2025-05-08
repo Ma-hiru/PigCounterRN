@@ -9,8 +9,9 @@ export const reqTaskList = (taskQuery: getTaskQuery): Promise<ResponseData<GetTa
 });
 /** 详细TASK */
 export const reqTaskInfo = (taskId: number): Promise<ResponseData<Task>> => request.get(API.TASK_INFO_URL + taskId);
-export const reqConfirmTask = (taskId: number, penId: number, status: boolean): Promise<ResponseData<object>> => request.post(API.TASK_CONFIRM_URL, {
+export const reqConfirmTask = (taskId: number, penId: number, status: boolean, manualCount: number): Promise<ResponseData<object>> => request.post(API.TASK_CONFIRM_URL, {
   taskId,
   penId,
-  status
+  status,
+  manualCount
 });

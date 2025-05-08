@@ -16,6 +16,7 @@ import { Divider } from "@/components/ui/divider";
 import { useRouter } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "@/settings";
+import dayjs from "dayjs";
 
 interface props {
   task: Task;
@@ -63,11 +64,11 @@ const UploadPagesList: FC<props> = ({ task, router, taskIndex }) => {
             <Text style={{
               ...styles.HeadText,
               color: GlobalStyles.ThemeColor
-            }}>任务起始：{task.startTime}</Text>
+            }}>起始：{dayjs(task.startTime).format("MM-DD HH:mm")}</Text>
             <Text style={{
               ...styles.HeadText,
               color: GlobalStyles.ThemeColor
-            }}>任务结束：{task.endTime}</Text>
+            }}>结束：{dayjs(task.endTime).format("MM-DD HH:mm")}</Text>
           </View>
         </View>
         <Accordion

@@ -26,15 +26,8 @@ const Upload = () => {
       <View className="flex-1 bg-gray-50">
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <Header title="计数" />
-        {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
         {
-          TasksList.length === 0 && hasToken &&
-          <View className="flex-1 justify-center items-center w-full h-full">
-            <Blank tips={"暂无任务，休息一下吧！"} />
-          </View>
-        }
-        {
-          hasToken && <ScrollView
+          <ScrollView
             className="flex-1 bg-gray-50"
             refreshControl={
               <RefreshControl
@@ -45,18 +38,28 @@ const Upload = () => {
               />
             }
           >
-            <View className="w-full items-center mt-[30]">
-              {
-                TasksList.map((task: Task, index: number) =>
-                  <UploadPagesList
-                    task={task}
-                    key={index}
-                    router={router}
-                    taskIndex={index}
-                  />
-                )
-              }
-            </View>
+            {
+              hasToken &&
+              <View className="w-full items-center mt-[30]">
+                {
+                  TasksList.map((task: Task, index: number) =>
+                    <UploadPagesList
+                      task={task}
+                      key={index}
+                      router={router}
+                      taskIndex={index}
+                    />
+                  )
+                }
+              </View>
+            }
+            {!hasToken && <Blank tips={NO_LOGIN_TIPS} />}
+            {
+              TasksList.length === 0 && hasToken &&
+              <View className="flex-1 justify-center items-center w-full h-full">
+                <Blank tips={"暂无任务，休息一下吧！"} />
+              </View>
+            }
           </ScrollView>
         }
       </View>
