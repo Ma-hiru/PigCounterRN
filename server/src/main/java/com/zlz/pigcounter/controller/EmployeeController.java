@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @Slf4j
 @RequestMapping("/user")
-@CrossOrigin(origins = "*")
 public class EmployeeController {
     @Autowired
     @Qualifier("employeeServiceImpl")

@@ -22,3 +22,4 @@ zlz:
     #过期时间
     admin-ttl: 86400000
   AI: http://localhost:8000
+  allowedOrigins: https://shiina-mahiru.cn:3005

@@ -119,6 +119,7 @@ public class TaskServiceImpl implements TaskService {
         if (taskDetail==null){
             throw new NotFoundTaskException();
         }
+
         return taskDetail;
     }
 

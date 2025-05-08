@@ -53,11 +53,11 @@
         b.id as building_id,
         b.building_name,
         p.id as pen_id,
-        pp.output_picture_path,
-        pp.count,
-        pp.picture_path,
-        pp.manual_count,
-        pp.status,
+        COALESCE(pp.output_picture_path, '') AS output_picture_path,
+        COALESCE(pp.count, -1) AS count,
+        COALESCE(pp.picture_path, '') AS picture_path,
+        COALESCE(pp.manual_count, -1) AS manual_count,
+        COALESCE(pp.status,false) AS status,
         p.pen_name
         FROM task t
         LEFT JOIN task_building_pen tbp ON t.id = tbp.task_id

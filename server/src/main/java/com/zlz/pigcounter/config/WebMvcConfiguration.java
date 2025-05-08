@@ -52,4 +52,13 @@ WebMvcConfiguration implements WebMvcConfigurer {
         System.out.println(imageSavePath+ ImageConstant.IMAGE_PATH);
     }
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("https://shiina-mahiru.cn:3005","https://shiina-mahiru.cn")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","HEAD")
+                .allowedHeaders("*")
+                .exposedHeaders("*")
+                .allowCredentials(true);
+    }
 }
