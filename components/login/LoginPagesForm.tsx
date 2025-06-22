@@ -43,7 +43,8 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
         });
       }
     });
-  });
+    //eslint-disable-next-line
+  }, []);
   const isInvalid = useMyState({
     username: false,
     password: false
@@ -126,7 +127,11 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
         </FormControlError>
       </FormControl>
       <View className={"flex flex-row justify-between items-center w-full mb-4"}>
-        <Checkbox value={"true"} onChange={(key) => remember.set(key)}>
+        <Checkbox
+          value={"true"}
+          onChange={(key) => remember.set(key)}
+          defaultIsChecked={remember.get()}
+        >
           <CheckboxIndicator>
             <CheckboxIcon as={CheckIcon} />
           </CheckboxIndicator>

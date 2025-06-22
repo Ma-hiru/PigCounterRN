@@ -1,22 +1,13 @@
-import React, { FC, memo, ReactNode, useEffect, useRef } from "react";
-import {
-  StyleProp,
-  View,
-  ViewStyle,
-  Animated,
-  Easing,
-  Text,
-  InteractionManager
-} from "react-native";
+import { FC, memo, ReactNode, useEffect, useRef } from "react";
+import { StyleProp, Text, ViewStyle } from "react-native";
 import { Button } from "@rneui/themed";
-import { GlobalStyles } from "@/settings";
-import { useMyState } from "@/hooks/useMyState";
-import { useSafeArea } from "@/hooks/useSafeArea";
 import colors from "tailwindcss/colors";
 import { Spinner } from "@/components/ui/spinner";
 import PressFeedback from "@/components/animate/PressFeedback";
+import { CustomAnimation, View } from "react-native-animatable";
+import { GlobalStyles } from "@/settings";
 
-interface props {
+type props = {
   children?: ReactNode;
   onPress?: () => void;
   className?: string;
@@ -29,85 +20,62 @@ interface props {
   minScale?: number;
 }
 
-const MyBlueBtn: FC<props> = (
+const loadInAni: CustomAnimation = {
+  easing: "ease-in-out",
+  0: {
+    width: "100%",
+    borderRadius: 0
+  },
+  1: {
+    width: "15%",
+    borderRadius: 999
+  }
+};
+const loadOutAni: CustomAnimation = {
+  easing: "ease-in-out",
+  0: {
+    width: "15%",
+    borderRadius: 999
+  },
+  1: {
+    width: "100%",
+    borderRadius: 0
+  }
+};
+const AppBtn: FC<props> = (
   {
     children,
     onPress,
     className,
-    color = GlobalStyles.ThemeColor,
     containerStyle,
     buttonStyle,
-    loading,
+    color = GlobalStyles.ThemeColor,
+    loading = false,
     duration = 200,
     minScale = 0.95
   }) => {
-  const { screenWidth } = useSafeArea();
-  const FullWidth = useMyState(screenWidth);
-  // eslint-disable-next-line react-compiler/react-compiler
-  const borderRadius = useRef(new Animated.Value(5)).current;
-  // eslint-disable-next-line react-compiler/react-compiler
-  const width = useRef(new Animated.Value(screenWidth)).current;
+  const AniRef = useRef<View>(null);
+
   useEffect(() => {
-    if (loading) {
-      InteractionManager.runAfterInteractions(() => {
-        Animated.timing(borderRadius, {
-          toValue: 999,
-          duration: duration,
-          easing: Easing.linear,
-          useNativeDriver: false
-        }).start();
-      });
-    } else {
-      InteractionManager.runAfterInteractions(() => {
-        Animated.timing(borderRadius, {
-          toValue: 5,
-          duration: duration,
-          easing: Easing.linear,
-          useNativeDriver: false
-        }).start();
-      });
+    const Ani = AniRef.current;
+    if (Ani) {
+      loading && Ani.animate(loadInAni, duration);
+      !loading && Ani.animate(loadOutAni, duration);
     }
-  }, [borderRadius, duration, loading]);
-  useEffect(() => {
-    if (loading) {
-      InteractionManager.runAfterInteractions(() => {
-        Animated.timing(width, {
-          toValue: 40,
-          duration: duration,
-          easing: Easing.linear,
-          useNativeDriver: false
-        }).start();
-      });
-    } else {
-      InteractionManager.runAfterInteractions(() => {
-        Animated.timing(width, {
-          toValue: FullWidth.get(),
-          duration: duration,
-          easing: Easing.linear,
-          useNativeDriver: false
-        }).start();
-      });
-    }
-    // eslint-disable-next-line react-compiler/react-compiler
-  }, [FullWidth, duration, loading, width]);
+  }, [duration, loading]);
   return (
     <>
-      <View style={{ width: "100%" }} onLayout={(e) => {
-        FullWidth.set(e.nativeEvent.layout.width);
-      }} />
-      <Animated.View
+      <View
+        ref={AniRef}
         className={className}
         onLayout={() => {
         }}
-        style={
-          /*eslint-disable-next-line*/
-          {
-            borderRadius,
-            width,
-            overflow: "hidden",
-            ...containerStyle as object
-          }
-        }>
+        style={{
+          overflow: "hidden",
+          margin: "auto",
+          backgroundColor: "transparent",
+          ...containerStyle as object
+        }}>
         <PressFeedback minScale={minScale}>
           {
             (
@@ -129,8 +97,8 @@ const MyBlueBtn: FC<props> = (
             </Button>
           }
         </PressFeedback>
-      </Animated.View>
+      </View>
     </>
   );
 };
-export default memo(MyBlueBtn);
+export default memo(AppBtn);

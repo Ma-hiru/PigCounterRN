@@ -12,7 +12,13 @@ const App = () => {
   useFonts({ FlyFlowerSongRegular, baigetianxingtiRegular });
   Log.Console("LoadedFonts", getLoadedFonts());
   return (
-    <Stack>
+    <Stack screenOptions={{
+      animation: "fade",
+      animationDuration: 350,
+      gestureEnabled: true,
+      animationTypeForReplace: "pop",
+      fullScreenGestureEnabled: true
+    }}>
       <Stack.Screen name="(main)" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="Login" options={{ headerShown: false }} />

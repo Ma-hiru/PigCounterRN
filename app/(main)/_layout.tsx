@@ -35,6 +35,7 @@ const MainLayout = () => {
       <Tabs
         backBehavior="firstRoute"
         screenOptions={{
+          animation:"shift",
           tabBarButton: (props) => (
             <Pressable
               android_ripple={{
