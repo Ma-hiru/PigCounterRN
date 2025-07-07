@@ -7,7 +7,6 @@ import Options from "@/components/home/Options";
 import { ExitApp } from "@/utils/exitAPP";
 import { Log } from "@/utils/logger";
 import { LinearGradient } from "expo-linear-gradient";
-
 import { useGetTaskListAsync } from "@/utils/getTaskListAsync";
 
 

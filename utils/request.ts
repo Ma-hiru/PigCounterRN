@@ -1,10 +1,8 @@
 import axios from "axios";
 import { baseUrl, RES_TIMEOUT, tokenPrefix } from "@/settings";
-import RootState, { userActions } from "@/stores";
 import { Log } from "@/utils/logger";
+import { useUserZustandStore } from "@/stores/zustand/user";
 
-const { setToken } = userActions;
-const { dispatch } = RootState;
 
 /** axios实例 */
 const request = axios.create({
@@ -12,7 +10,7 @@ const request = axios.create({
 });
 /** 请求拦截器 */
 request.interceptors.request.use(config => {
-  const { token } = RootState.getState().userStore;
+  const { token } = useUserZustandStore.getState();
   config.headers.Authorization = tokenPrefix + token;
   if (config.url) {
     if (!(config.url.startsWith("http")))
@@ -24,7 +22,8 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
   res => {
     const newToken = res.headers["x-auth-token"] || res.headers.authorization;
-    if (newToken) dispatch(setToken(newToken));
+    const { setToken } = useUserZustandStore.getState();
+    if (newToken) setToken(newToken);
     return res.data;
   },
   err => {

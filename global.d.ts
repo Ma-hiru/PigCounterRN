@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { Log } from "@/utils/logger";
 
 
 declare global {
@@ -42,10 +43,21 @@ declare global {
     export default any;
   }
 
-  interface RNFile {
-    uri: string;
-    name: string;
-    type: string;
+  declare class RNFile {
+    public readonly uri: string;
+    public readonly name: string;
+    public readonly type: string;
+    public InitialExist: boolean;
+
+    constructor(uri?: string, name?: string, type?: string): void
+
+    toString(): string
+
+    async IsExistAsync(): Promise<boolean>
+
+    async DeleteAsync(): Promise<boolean>
+
+    DeleteSync(): void
   }
 
   type Fonts =

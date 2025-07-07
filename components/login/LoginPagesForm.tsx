@@ -1,5 +1,5 @@
 import { validate } from "@/components/login/validate";
-import MyBlueBtn from "@/components/MyBlueBtn";
+import AppBtn from "@/components/AppBtn";
 import {
   FormControl,
   FormControlError,
@@ -139,13 +139,13 @@ const LoginPagesForm: FC<props> = ({ handleLogin, loading }) => {
         </Checkbox>
         <LoginPagesMoreBtn />
       </View>
-      <MyBlueBtn
+      <AppBtn
         onPress={handleSubmit as any}
         className="mb-4 mt-2 m-auto"
         loading={loading}
       >
         登录
-      </MyBlueBtn>
+      </AppBtn>
     </>
   );
 };

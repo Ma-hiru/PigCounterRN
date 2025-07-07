@@ -1,5 +1,5 @@
 import BigHeader from "@/components/BigHeader";
-import MyBlueBtn from "@/components/MyBlueBtn";
+import AppBtn from "@/components/AppBtn";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import { validate, validateType } from "@/components/registry/validate";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
@@ -37,11 +37,7 @@ const Registry: FC<props> = () => {
     sex: "",
     phone: "",
     organization: "",
-    picture: {
-      uri: "",
-      name: "",
-      type: ""
-    },
+    picture: new fileSystem.RNFile(),
     admin: false
   });
   const [invalid, setInvalid] = useImmer<validateType>({
@@ -113,10 +109,10 @@ const Registry: FC<props> = () => {
                   invalid={invalid}
                   registryInfo={registryInfo}
                 />
-                <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6"
+                <AppBtn onPress={handleSubmit as any} className="w-full mb-6"
                            loading={loading.get()}>
                   注册
-                </MyBlueBtn>
+                </AppBtn>
               </View>
             </View>
           </ScrollView>

@@ -2,10 +2,8 @@ import BigHeader from "@/components/BigHeader";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Item from "@/components/userInfo/Item";
 import { useLogin } from "@/hooks/useLogin";
-import { userSelector } from "@/stores";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
-import { useSelector } from "react-redux";
 import { APP_NAME, NO_LOGIN_TIPS } from "@/settings";
 import DefaultAvatar from "@/assets/images/logo_1.jpg";
 import { handleServerURL } from "@/utils/handleServerURL";
@@ -13,11 +11,19 @@ import { useMyState } from "@/hooks/useMyState";
 import { useFetchData } from "@/utils/fetchData";
 import Blank from "@/components/Blank";
 import { LinearGradient } from "expo-linear-gradient";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 type props = object
 
 export const UserInfo: FC<props> = () => {
-  const { profile } = useSelector(userSelector);
+  const { profile } = useUserZustandStore(
+    useShallow(
+      state => ({
+        profile: state.profile
+      })
+    )
+  );
   const { hasToken } = useLogin();
   const detailProfile = useMyState<UserInfo>({
     admin: false,

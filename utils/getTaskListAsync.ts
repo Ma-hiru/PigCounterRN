@@ -2,16 +2,22 @@ import { PauseLog } from "@/utils/logger";
 import dayjs from "dayjs";
 import { useLogin } from "@/hooks/useLogin";
 import { useFetchData } from "@/utils/fetchData";
-import { uploadActions, useAppDispatch, useAppSelector, userSelector } from "@/stores";
+import { uploadActions, useAppDispatch } from "@/stores";
 import { useCallback } from "react";
 import { getSafeValue } from "@/utils/checkNullValue";
 import { DEFAULT_TASK_VAL } from "@/settings.app";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 const { setTasksList, setAllTaskList } = uploadActions;
 export const useGetTaskListAsync = () => {
   const { hasToken } = useLogin();
   const { fetchData, API } = useFetchData();
-  const { profile } = useAppSelector(userSelector);
+  const { profile } = useUserZustandStore(
+    useShallow(state => ({
+      profile: state.profile
+    }))
+  );
   const dispatch = useAppDispatch();
   return useCallback(() => {
     if (hasToken) {

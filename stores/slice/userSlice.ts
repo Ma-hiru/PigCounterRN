@@ -50,5 +50,5 @@ const userSlice = createSlice({
   }
 });
 export const userReducer = userSlice.reducer;
-export const userSelector = (root: RootStateType) => root.userStore;
+// export const userSelector = (root: RootStateType) => root.userStore;
 export const userActions = userSlice.actions;

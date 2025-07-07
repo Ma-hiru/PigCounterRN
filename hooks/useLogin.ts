@@ -1,9 +1,9 @@
-import { useAppSelector, userSelector } from "@/stores";
 import { useCallback, useMemo } from "react";
 import { usePages } from "@/hooks/usePages";
 import { useFetchData } from "@/utils/fetchData";
 import { Log } from "@/utils/logger";
-import { logout } from "@/utils/user";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 
 interface returnType {
@@ -14,8 +14,14 @@ interface returnType {
 }
 
 export const useLogin = (): returnType => {
-  Log.Console("useLogin");
-  const { token } = useAppSelector(userSelector);
+  const { token, setLogout: logout } = useUserZustandStore(
+    useShallow(
+      state => ({
+        token: state.token,
+        setLogout: state.setLogout
+      })
+    )
+  );
   const { fetchData, API } = useFetchData();
   const Pages = usePages();
   const sendLogout = useCallback(() => {
@@ -27,7 +33,7 @@ export const useLogin = (): returnType => {
   const safeLogout = useCallback(() => {
     logout();
     sendLogout();
-  }, [sendLogout]);
+  }, [logout, sendLogout]);
 
   const handleLogout = useCallback(() => {
     safeLogout();

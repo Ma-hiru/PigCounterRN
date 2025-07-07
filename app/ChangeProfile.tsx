@@ -6,14 +6,15 @@ import CheckPermission from "@/components/CheckPermission";
 import { useMyState } from "@/hooks/useMyState";
 import defaultAvatar from "@/assets/images/logo_1.jpg";
 import RegistryPagesForm from "@/components/registry/RegistryPagesForm";
-import MyBlueBtn from "@/components/MyBlueBtn";
+import AppBtn from "@/components/AppBtn";
 import { validate, validateType } from "@/components/registry/validate";
 import { useFetchData } from "@/utils/fetchData";
 import { useToast } from "@/components/ui/toast";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useAppSelector, userSelector } from "@/stores";
 import { fileSystem } from "@/utils/fileSystem";
 import { LinearGradient } from "expo-linear-gradient";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 type props = object;
 
@@ -21,7 +22,11 @@ const ChangeProfile: FC<props> = () => {
   const success = useMyState(false);
   const code = useMyState("");
   const { fetchData, API } = useFetchData();
-  const { profile } = useAppSelector(userSelector);
+  const { profile } = useUserZustandStore(
+    useShallow(state => ({
+      profile: state.profile
+    }))
+  );
   //TODO 还需要查询用户信息
   const registryInfo = useMyState<registryInfo>({
     username: profile.username,
@@ -71,7 +76,7 @@ const ChangeProfile: FC<props> = () => {
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <LinearGradient
-        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa","#d7d2cc"]}
+        colors={["#d7d2cc", "#d4fcfa", "#d4fcfa", "#d4fcfa", "#d7d2cc"]}
         style={{ flex: 1 }}
         end={{ x: 0, y: 0 }}
         start={{ x: 1, y: 1 }}
@@ -98,9 +103,9 @@ const ChangeProfile: FC<props> = () => {
                   invalid={invalid.get()}
                   registryInfo={registryInfo.get()}
                 />
-                <MyBlueBtn onPress={handleSubmit as any} className="w-full mb-6">
+                <AppBtn onPress={handleSubmit as any} className="w-full mb-6">
                   {"提交"}
-                </MyBlueBtn>
+                </AppBtn>
               </View>
             </View>
           }

@@ -10,7 +10,7 @@ import {
   Text
 } from "react-native";
 import { useCallback, useEffect } from "react";
-import { useAppDispatch, useAppSelector, userActions, userSelector } from "@/stores";
+import { useAppDispatch, userActions } from "@/stores";
 import { useFetchData } from "@/utils/fetchData";
 import { useRouter } from "expo-router";
 import background from "@/assets/images/login/login_bg_1.jpg";
@@ -18,6 +18,8 @@ import { APP_NAME, APP_WELCOME, GlobalStyles } from "@/settings";
 import { Log } from "@/utils/logger";
 import { useMyState } from "@/hooks/useMyState";
 import localStore from "@/utils/localStore";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 const { setLogin } = userActions;
 const setRemember = (loginInfo: loginInfo, remember: boolean) => {
@@ -33,7 +35,15 @@ const setRemember = (loginInfo: loginInfo, remember: boolean) => {
 };
 const Login = () => {
   const router = useRouter();
-  const { token } = useAppSelector(userSelector);
+  const { token } = useUserZustandStore(
+    useShallow(
+      (state) => {
+        return {
+          token: state.token
+        };
+      }
+    )
+  );
   const dispatch = useAppDispatch();
   const { fetchData, API } = useFetchData();
   const loading = useMyState(false);

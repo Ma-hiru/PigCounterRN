@@ -4,7 +4,6 @@ import {
   DEFAULT_UPLOAD_TYPE,
   UPLOAD_QUALITY
 } from "@/settings";
-import { AssetsToRNFile, UriToRNFile } from "@/utils/convertToRNFile";
 import { useFetchData } from "@/utils/fetchData";
 import { TaskIndexTuple, updateTaskList, updateTaskListStatus } from "@/utils/updateTaskStore";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
@@ -116,7 +115,7 @@ const UploadFiles: FC = () => {
       result = res;
     }
     const file = result.assets[0];
-    const fileInfo = AssetsToRNFile(file);
+    const fileInfo = fileSystem.AssetsToRNFile(file);
     switch (mode) {
       case "images":
         setPreviewImg(fileInfo);
@@ -146,7 +145,7 @@ const UploadFiles: FC = () => {
   const { fetchData, API } = useFetchData();
   const loading = useMyState(false);
   const submitFile = useCallback(async () => {
-    const file = await UriToRNFile(cachePath.path);
+    const file = await fileSystem.UriToRNFile(cachePath.path);
     if (file.uri === "") return;
     loading.set(true);
     try {

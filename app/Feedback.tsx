@@ -1,6 +1,6 @@
 import BigHeader from "@/components/BigHeader";
 import ImgUploader from "@/components/feedback/ImgUploader";
-import MyBlueBtn from "@/components/MyBlueBtn";
+import AppBtn from "@/components/AppBtn";
 import { useLogin } from "@/hooks/useLogin";
 import { FC, useCallback, useMemo } from "react";
 import { View, Text, StatusBar } from "react-native";
@@ -54,7 +54,7 @@ export const Feedback: FC<props> = () => {
                    key={feedbackInfo.get().feedbackImg.length} />
     </View>
     <View className="w-[80%] justify-center items-center">
-      <MyBlueBtn className="mb-8" loading={loading.get()} onPress={submit}>提交</MyBlueBtn>
+      <AppBtn className="mb-8" loading={loading.get()} onPress={submit}>提交</AppBtn>
     </View>
   </View>, [feedbackInfo, loading, submit]);
 

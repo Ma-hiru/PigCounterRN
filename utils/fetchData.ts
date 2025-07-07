@@ -4,8 +4,9 @@ import { Log } from "@/utils/logger";
 import { showNewToast } from "@/utils/toast";
 import { API } from "@/api";
 import { useCallback, useMemo } from "react";
-import { logout } from "@/utils/user";
 import { usePages } from "@/hooks/usePages";
+import { useUserZustandStore } from "@/stores/zustand/user";
+import { useShallow } from "zustand/react/shallow";
 
 
 const _fetchData = async <T extends ResponseData<any>, P extends any[]>(
@@ -39,11 +40,17 @@ export const useFetchData = () => {
   //  toast 并不是不变的！！！
   const toast = useToast();
   const Pages = usePages();
+  const { setLogout } = useUserZustandStore(
+    useShallow(
+      (state) => ({
+        setLogout: state.setLogout
+      })
+    )
+  );
   const Logout = useCallback(() => {
-    logout();
+    setLogout();
     Pages.set("/Login", "MOVE");
-  }, [Pages]);
-  Log.Console("useFetchData");
+  }, [Pages, setLogout]);
   const fetchData = useCallback(async <T extends ResponseData<any>, P extends any[]>(
     reqFn: (...args: P) => Promise<T>,
     reqData: P,
