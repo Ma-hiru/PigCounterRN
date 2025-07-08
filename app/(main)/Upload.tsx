@@ -1,24 +1,31 @@
 import Header from "@/components/Header";
 import { GlobalStyles, NO_LOGIN_TIPS } from "@/settings";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { View, ScrollView, StatusBar, RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import UploadPagesList from "@/components/upload/UploadPagesList";
-import { uploadSelector, useAppSelector } from "@/stores";
-import { useMyState } from "@/hooks/useMyState";
 import { useLogin } from "@/hooks/useLogin";
 import Blank from "@/components/Blank";
 import { useGetTaskListAsync } from "@/utils/getTaskListAsync";
+import { useTaskZustandStore } from "@/stores/zustand/task";
+import { useShallow } from "zustand/react/shallow";
 
 const Upload = () => {
   const router = useRouter();
-  const { TasksList } = useAppSelector(uploadSelector);
-  const refreshing = useMyState(false);
+  const { TasksList } = useTaskZustandStore(
+    useShallow(
+      state => ({
+        TasksList: state.TasksList
+      })
+    )
+  );
+  const [refreshing, setRefreshing] = useState(false);
   const getTaskList = useGetTaskListAsync();
   const onRefresh = async () => {
-    refreshing.set(true);
-    getTaskList();
-    refreshing.set(false);
+    setRefreshing(true);
+    getTaskList().finally(() => {
+      setRefreshing(false);
+    });
   };
   const { hasToken } = useLogin();
   return (
@@ -31,7 +38,7 @@ const Upload = () => {
             className="flex-1 bg-gray-50"
             refreshControl={
               <RefreshControl
-                refreshing={refreshing.get()}
+                refreshing={refreshing}
                 onRefresh={onRefresh}
                 tintColor={GlobalStyles.ThemeColor}
                 colors={[GlobalStyles.ThemeColor1]}

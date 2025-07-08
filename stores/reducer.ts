@@ -5,7 +5,7 @@ import { companyReducer } from "@/stores/slice/companySlice";
 
 export default {
   // userStore: userReducer,
-  uploadStore: uploadReducer,
+  // uploadStore: uploadReducer,
   newsStore: newsReducer,
-  companyStore: companyReducer
+  // companyStore: companyReducer
 };

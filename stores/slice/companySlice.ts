@@ -12,6 +12,6 @@ const companySlice = createSlice({
   } as initialType,
   reducers: {}
 });
-export const companyActions =companySlice.actions;
+// export const companyActions =companySlice.actions;
 export const companyReducer = companySlice.reducer;
-export const companySelector = (root: RootStateType) => root.companyStore;
+// export const companySelector = (root: RootStateType) => root.companyStore;

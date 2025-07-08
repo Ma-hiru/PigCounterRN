@@ -1,6 +1,5 @@
 import { FC, useEffect, useMemo } from "react";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
-import { uploadSelector, useAppSelector } from "@/stores";
 import { ScrollView, StatusBar, Text, View } from "react-native";
 import { GlobalStyles } from "@/settings";
 import { Shadow } from "react-native-shadow-2";
@@ -13,10 +12,12 @@ import {
   TableHead,
   TableRow
 } from "@/components/ui/table";
-import { useMyState } from "@/hooks/useMyState";
 import BigHeader from "@/components/BigHeader";
 import { useFetchData } from "@/utils/fetchData";
 import { useReactive } from "ahooks";
+import { useTaskZustandStore } from "@/stores/zustand/task";
+import { useShallow } from "zustand/react/shallow";
+import { useImmer } from "use-immer";
 
 type props = object;
 
@@ -25,8 +26,14 @@ const DetailHistory: FC<props> = () => {
     const data = params.taskId.split(",");
     return [data.map(Number), params.time];
   });
-  const { TasksList } = useAppSelector(uploadSelector);
-  const Total = useMyState({ countNum: 0, pensNum: 0 });
+  const { TasksList } = useTaskZustandStore(
+    useShallow(
+      state => ({
+        TasksList: state.TasksList
+      })
+    )
+  );
+  const [Total, setTotal] = useImmer({ countNum: 0, pensNum: 0 });
   const [currentTask, restTaskIds] = useMemo(() => {
     const currentTask: Task[] = [];
     const restTaskIds: number[] = [];
@@ -100,6 +107,7 @@ const DetailHistory: FC<props> = () => {
                         taskIndex={taskIndex}
                         key={taskIndex}
                         total={Total}
+                        setTotal={setTotal}
                       />
                     ))
                   }
@@ -110,10 +118,10 @@ const DetailHistory: FC<props> = () => {
                       <Text>总数</Text>
                     </TableHead>
                     <TableHead {...PositionStyle}>
-                      <Text>{Total.get().pensNum}</Text>
+                      <Text>{Total.pensNum}</Text>
                     </TableHead>
                     <TableHead {...PositionStyle}>
-                      <Text>{Total.get().countNum}</Text>
+                      <Text>{Total.countNum}</Text>
                     </TableHead>
                   </TableRow>
                 </TableFooter>

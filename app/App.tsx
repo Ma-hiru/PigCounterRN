@@ -1,15 +1,12 @@
 import { Stack } from "expo-router";
 import { memo } from "react";
-import { useFonts, getLoadedFonts } from "expo-font";
-import FlyFlowerSongRegular from "@/assets/fonts/FlyFlowerSong-Regular.ttf";
-import baigetianxingtiRegular from "@/assets/fonts/zihun50hao-baigetianxingti-Regular.ttf";
+import { getLoadedFonts } from "expo-font";
 import { Log } from "@/utils/logger";
 import { useRefreshPersisted } from "@/hooks/useChangePersisted";
 
 const App = () => {
   useRefreshPersisted(false);
   Log.Console("App");
-  useFonts({ FlyFlowerSongRegular, baigetianxingtiRegular });
   Log.Console("LoadedFonts", getLoadedFonts());
   return (
     <Stack screenOptions={{

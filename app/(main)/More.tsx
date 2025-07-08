@@ -22,7 +22,7 @@ const More = () => {
         <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
         <Header title={profile?.admin ? "管理" : "数据"} />
         {
-          (isLogin() && <Report />) ||
+          (isLogin && <Report />) ||
           <Blank tips={NO_LOGIN_TIPS} />
         }
       </View>

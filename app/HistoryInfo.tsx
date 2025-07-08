@@ -4,13 +4,14 @@ import { View, StatusBar } from "react-native";
 import { APP_NAME, GlobalStyles, NO_LOGIN_TIPS } from "@/settings";
 import MyPagesCard from "@/components/my/MyPagesCard";
 import Task from "@/components/home/Task";
-import { uploadSelector, useAppSelector } from "@/stores";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { useLogin } from "@/hooks/useLogin";
 import Blank from "@/components/Blank";
 import PressFeedback from "@/components/animate/PressFeedback";
 import { LinearGradient } from "expo-linear-gradient";
+import { useTaskZustandStore } from "@/stores/zustand/task";
+import { useShallow } from "zustand/react/shallow";
 
 
 type props = object
@@ -18,7 +19,16 @@ type props = object
 export const HistoryInfo: FC<props> = () => {
   const { hasToken } = useLogin();
   const router = useRouter();
-  const { TasksList, AllTaskList } = useAppSelector(uploadSelector);
+  const { TasksList, AllTaskList } = useTaskZustandStore(
+    useShallow(
+      state => (
+        {
+          TasksList: state.TasksList,
+          AllTaskList: state.AllTaskList
+        }
+      )
+    )
+  );
   const TasksListIds = useMemo(() =>
       TasksList?.map(item => item.id)
     , [TasksList]);
@@ -58,7 +68,7 @@ export const HistoryInfo: FC<props> = () => {
                           time: "今日"
                         } satisfies DetailHistoryRouteParams
                       }, "FN")}>
-                      <Task TasksList={TasksList} HasBlur={true}/>
+                      <Task TasksList={TasksList} HasBlur={true} />
                     </PressFeedback>
                   </MyPagesCard>
                 }
@@ -79,7 +89,7 @@ export const HistoryInfo: FC<props> = () => {
                         time: "所有"
                       } satisfies DetailHistoryRouteParams
                     }, "FN")}>
-                    <Task TasksList={AllTaskList} HasBlur={true}/>
+                    <Task TasksList={AllTaskList} HasBlur={true} />
                   </PressFeedback>
                 </MyPagesCard>
               </>

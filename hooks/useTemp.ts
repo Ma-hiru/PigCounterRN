@@ -1,14 +1,7 @@
 import { tempClear, tempSize } from "@/utils/clearTemp";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Log } from "@/utils/logger";
-import { updateTaskList } from "@/utils/updateTaskStore";
-import { uploadSelector, useAppSelector } from "@/stores";
-import { DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_TYPE } from "@/settings";
 
-const _ = undefined;
 export const useTemp = () => {
-  Log.Console("useTemp");
-  const { TasksList } = useAppSelector(uploadSelector);
   const [TempSize, setTempSize] = useState(0);
   const GetSize = useCallback(async () => {
     const size = await tempSize();
@@ -18,28 +11,12 @@ export const useTemp = () => {
   useEffect(() => {
     GetSize().then();
   }, [GetSize]);
+  //TODO 更换清除Store存储本地缓存的方式
   const ClearTemp = useCallback(async () => {
     const res = await tempClear();
-    if (!res) return false;
     await GetSize();
-    TasksList.forEach((task, TaskIndex) => {
-      task.buildings.forEach((building, BuildingIndex) => {
-        building.pens.forEach((pen, PenIndex) => {
-          updateTaskList({
-            TaskIndex,
-            BuildingIndex,
-            PenIndex
-          }, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_RES, _);
-        });
-      });
-    });
-    updateTaskList({
-      TaskIndex: 0,
-      BuildingIndex: 0,
-      PenIndex: 0
-    }, DEFAULT_UPLOAD_PATH, DEFAULT_UPLOAD_TYPE, DEFAULT_UPLOAD_RES, DEFAULT_UPLOAD_RES, true);
-    return true;
-  }, [GetSize, TasksList]);
+    return res;
+  }, [GetSize]);
   return useMemo(() => ({
     ClearTemp,
     TempSize

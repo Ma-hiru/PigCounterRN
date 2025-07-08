@@ -10,7 +10,6 @@ import IconOptionItem from "@/components/home/IconOptionItem";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
-import { uploadSelector } from "@/stores";
 import { Log } from "@/utils/logger";
 import { newsSelector } from "@/stores/slice/newsSlice";
 import News from "@/components/home/News";
@@ -23,12 +22,22 @@ import ForbidIcon from "@/assets/images/forbid.svg";
 import RestIcon from "@/assets/images/home/rest.svg";
 import { useLogin } from "@/hooks/useLogin";
 import PressFeedback from "@/components/animate/PressFeedback";
+import { useTaskZustandStore } from "@/stores/zustand/task";
+import { useShallow } from "zustand/react/shallow";
 
 type props = object;
 const Options: FC<props> = () => {
   const router = useRouter();
   const { hasToken } = useLogin();
-  const { TasksList } = useSelector(uploadSelector);
+  const { TasksList } = useTaskZustandStore(
+    useShallow(
+      state => (
+        {
+          TasksList: state.TasksList
+        }
+      )
+    )
+  );
   const { NewsList } = useSelector(newsSelector);
   Log.Console("HomeOptionsStart");
   const LastCount = useMyState({
@@ -133,7 +142,7 @@ const Options: FC<props> = () => {
               containerStyle={{ paddingLeft: 5, paddingRight: 5 }}
               onPress={goToPages(router, "/Upload", "FN")}
             >
-              <Task TasksList={CurrentTask} HasBlur={false}/>
+              <Task TasksList={CurrentTask} HasBlur={false} />
             </PressFeedback>
             <PressFeedback>
               {(!hasToken) &&

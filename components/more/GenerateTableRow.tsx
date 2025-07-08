@@ -4,18 +4,27 @@ import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import { FC, memo, useEffect, useMemo } from "react";
 import { useValidateTask } from "@/utils/validateTask";
-import { MyState } from "@/hooks/useMyState";
 import { DEFAULT_UPLOAD_RES } from "@/settings";
+import { Updater } from "use-immer";
 
 type props = {
   task: Task;
   isHistory?: boolean;
   taskIndex: number;
   restTotal?: { countNum: number, pensNum: number }[];
-  total?: MyState<{ countNum: number; pensNum: number }>
+  total?: { countNum: number; pensNum: number };
+  setTotal?: Updater<{ countNum: number; pensNum: number }>;
 }
 
-const GenerateTableRow: FC<props> = ({ task, taskIndex, total, isHistory, restTotal }) => {
+const GenerateTableRow: FC<props> = (
+  {
+    task,
+    taskIndex,
+    total,
+    isHistory,
+    restTotal,
+    setTotal
+  }) => {
   const router = useRouter();
   const gotoEdit = (buildingIndex: number, penIndex: number, building: Building, pen: Pen) => {
     return () => {
@@ -47,7 +56,7 @@ const GenerateTableRow: FC<props> = ({ task, taskIndex, total, isHistory, restTo
     if (isHistory) {
       restTotal && (restTotal[taskIndex] = { pensNum, countNum });
     } else {
-      total?.set((draft) => {
+      setTotal && setTotal((draft) => {
         draft.pensNum = pensNum;
         draft.countNum = countNum;
       });

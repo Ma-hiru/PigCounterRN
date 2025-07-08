@@ -6,9 +6,9 @@ interface initialType {
   TasksList: TaskList;
   AllTaskList: BaseTask[];
   OnceTask: TaskList;
-  DEFAULT_UPLOAD_RES: typeof DEFAULT_UPLOAD_RES;
-  DEFAULT_UPLOAD_PATH: typeof DEFAULT_UPLOAD_PATH;
-  DEFAULT_UPLOAD_TYPE: typeof DEFAULT_UPLOAD_TYPE;
+  readonly DEFAULT_UPLOAD_RES: typeof DEFAULT_UPLOAD_RES;
+  readonly DEFAULT_UPLOAD_PATH: typeof DEFAULT_UPLOAD_PATH;
+  readonly DEFAULT_UPLOAD_TYPE: typeof DEFAULT_UPLOAD_TYPE;
 }
 
 const uploadSlice = createSlice({
@@ -54,5 +54,5 @@ const uploadSlice = createSlice({
   }
 });
 export const uploadReducer = uploadSlice.reducer;
-export const uploadSelector = (root: RootStateType) => root.uploadStore;
-export const uploadActions = uploadSlice.actions;
+// export const uploadSelector = (root: RootStateType) => root.uploadStore;
+// export const uploadActions = uploadSlice.actions;

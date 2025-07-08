@@ -1,6 +1,5 @@
 import GenerateTableRow from "@/components/more/GenerateTableRow";
 import { GlobalStyles } from "@/settings";
-import { uploadSelector } from "@/stores";
 import { FC, useState } from "react";
 import { RefreshControl, ScrollView, View, Text } from "react-native";
 import {
@@ -11,16 +10,23 @@ import {
   TableHead,
   TableRow
 } from "@/components/ui/table";
-import { useSelector } from "react-redux";
 import { Shadow } from "react-native-shadow-2";
-import { useMyState } from "@/hooks/useMyState";
+import { useTaskZustandStore } from "@/stores/zustand/task";
+import { useShallow } from "zustand/react/shallow";
+import { useImmer } from "use-immer";
 
 type props = object
 const Report: FC<props> = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [refreshing, setRefreshing] = useState(false);
-  const { TasksList } = useSelector(uploadSelector);
-  const Total = useMyState({ countNum: 0, pensNum: 0 });
+  const { TasksList } = useTaskZustandStore(
+    useShallow(
+      (state) => ({
+        TasksList: state.TasksList
+      })
+    )
+  );
+  const [Total, setTotal] = useImmer({ countNum: 0, pensNum: 0 });
   const onRefresh = async () => {
     setRefreshing(true);
     setRefreshing(false);
@@ -61,7 +67,7 @@ const Report: FC<props> = () => {
                 {
                   TasksList.map((task: Task, taskIndex: number) => (
                     <GenerateTableRow task={task} taskIndex={taskIndex} key={taskIndex}
-                                      total={Total} />
+                                      total={Total} setTotal={setTotal} />
                   ))
                 }
               </TableBody>
@@ -71,10 +77,10 @@ const Report: FC<props> = () => {
                     <Text>总数</Text>
                   </TableHead>
                   <TableHead {...PositionStyle}>
-                    <Text>{Total.get().pensNum}</Text>
+                    <Text>{Total.pensNum}</Text>
                   </TableHead>
                   <TableHead {...PositionStyle}>
-                    <Text>{Total.get().countNum}</Text>
+                    <Text>{Total.countNum}</Text>
                   </TableHead>
                 </TableRow>
               </TableFooter>

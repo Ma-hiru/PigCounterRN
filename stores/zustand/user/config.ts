@@ -1,17 +1,14 @@
-export const UserConfig: ZustandConfig<InitialStateType & UserStoreActions, InitialStateType> = (set, get, api) => ({
+export const UserConfig: ZustandConfig<InitialStateType & UserStoreActions, InitialStateType> = (set, get) => ({
   ...InitialState,
   setToken(token: string) {
     set(state => {
       state.token = token;
+      state.isLogin = token !== "";
     });
   },
   setUserProfile(userProfile: Partial<UserProfile>) {
     set(state => {
-      Object.keys(state.profile).forEach((key) => {
-        if (key in userProfile) {
-          Reflect.set(state.profile, key, userProfile[key as keyof UserProfile], state.profile);
-        }
-      });
+      state.profile = { ...state.profile, ...userProfile };
     });
   },
   setLogin(userProfile: UserProfile) {
@@ -20,34 +17,26 @@ export const UserConfig: ZustandConfig<InitialStateType & UserStoreActions, Init
     setUserProfile(userProfile);
   },
   setLogout() {
-    set(state => {
-      Object.assign(state, InitialState);
-    });
+    const { memo } = get();
+    set(() => ({ ...InitialState, memo }));
   },
   setMemo(memo) {
     set(state => {
       state.memo = memo;
     });
   },
-  isLogin() {
-    return get().token !== "";
-  },
   isMemo() {
+    const { memo } = get();
     return {
-      memo: get().memo,
-      isMemo: get().memo.username !== "" && get().memo.password !== ""
+      memo,
+      isMemo: memo.username !== "" && memo.password !== ""
     };
   }
 });
 
-interface InitialStateType {
-  token: string;
-  memo: { username: string, password: string };
-  profile: Omit<UserProfile, "token">;
-}
-
 const InitialState: InitialStateType = {
   token: "",
+  isLogin: false,
   memo: {
     username: "",
     password: ""
@@ -58,25 +47,28 @@ const InitialState: InitialStateType = {
     name: "",
     organization: "",
     profilePicture: "",
-    username: ""
+    username: "",
+    token: ""
   }
 };
 
-export interface UserStoreActions {
+interface InitialStateType {
+  token: string;
+  isLogin: boolean;
+  memo: { username: string, password: string };
+  profile: UserProfile;
+}
+
+interface UserStoreActions {
   setToken(token: string): void;
 
   setUserProfile(userProfile: Partial<UserProfile>): void;
-
-  isLogin(): boolean;
 
   setLogin(userProfile: UserProfile): void;
 
   setLogout(): void;
 
-  setMemo(memo: { username: string, password: string }): void;
+  setMemo(memo: InitialStateType["memo"]): void;
 
-  isMemo(): {
-    memo: { username: string, password: string };
-    isMemo: boolean;
-  };
+  isMemo(): { memo: InitialStateType["memo"], isMemo: boolean };
 }

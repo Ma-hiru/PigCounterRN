@@ -1,25 +1,18 @@
 import { ScrollView, StatusBar, View } from "react-native";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect } from "react";
 import Head from "@/components/home/Head";
 import Carousel from "@/components/home/Carousel";
 import Options from "@/components/home/Options";
-import { ExitApp } from "@/utils/exitAPP";
 import { Log } from "@/utils/logger";
 import { LinearGradient } from "expo-linear-gradient";
 import { useGetTaskListAsync } from "@/utils/getTaskListAsync";
-
+import { useExitApp } from "@/hooks/useExitApp";
 
 const Home = () => {
-  const navigation = useNavigation();
-  const isFirst = useRef(0);
+  useExitApp();
   const GetTaskList = useGetTaskListAsync();
-  useFocusEffect(ExitApp(navigation));
   useEffect(() => {
-    if (isFirst.current === 0) {
-      GetTaskList();
-      isFirst.current++;
-    }
+    GetTaskList().then();
   }, [GetTaskList]);
   Log.Console("HomeShow.");
   return (
