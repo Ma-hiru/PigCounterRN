@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { PersistedRootState } from "@/stores";
 import { Log } from "@/utils/logger";
 
+/** @deprecated */
 export const useRefreshPersisted = (once: boolean = true) => {
   // eslint-disable-next-line
   if (once) useEffect(() => {
@@ -15,6 +16,8 @@ export const useRefreshPersisted = (once: boolean = true) => {
     });
   }, []);
 };
+
+/** @deprecated */
 export const useDeletePersisted = (once: boolean = true) => {
   // eslint-disable-next-line
   if (once) useEffect(() => {

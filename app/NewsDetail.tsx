@@ -1,14 +1,13 @@
-import { FC, useEffect, useMemo } from "react";
-import { useAppSelector } from "@/stores";
-import { newsSelector } from "@/stores/slice/newsSlice";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Log } from "@/utils/logger";
 import { useGetRouteParam } from "@/hooks/useGetRouteParam";
-import { StatusBar, Text, View, InteractionManager, ScrollView } from "react-native";
+import { StatusBar, Text, View, InteractionManager, ScrollView, Pressable } from "react-native";
 import BigHeader from "@/components/BigHeader";
-import { Image } from "expo-image";
-import { useMyState } from "@/hooks/useMyState";
 import { News } from "@/types/news";
-import { useImageLoadedScale } from "@/hooks/useImageScale";
+import { useNewsZustandStore } from "@/stores/zustand/news";
+import { useShallow } from "zustand/react/shallow";
+import { useImmer } from "use-immer";
+import ScaledImage from "@/components/ScaledImage";
 
 
 type props = object;
@@ -16,11 +15,15 @@ type routeParam = {
   id: string;
 }
 const NewsDetail: FC<props> = () => {
-  const { NewsList } = useAppSelector(newsSelector);
+  const { NewsList } = useNewsZustandStore(
+    useShallow(state => ({
+      NewsList: state.NewsList
+    }))
+  );
   const NewsId = useGetRouteParam<routeParam, number>((params) => {
     return Number(params.id);
   });
-  const CurrentNews = useMyState<News>({
+  const [currentNews, setCurrentNews] = useImmer<News>({
     content: "",
     cover: { uri: "" },
     id: NewsId,
@@ -31,33 +34,36 @@ const NewsDetail: FC<props> = () => {
     InteractionManager.runAfterInteractions(() => {
       for (const news of NewsList.entries()) {
         if (news[1].id === NewsId) {
-          CurrentNews.set(news[1]);
+          setCurrentNews(news[1]);
           Log.Console("CurrentNewsId", NewsId);
           return;
         }
       }
     });
-    //eslint-disable-next-line
-  }, [NewsId, NewsList]);
+  }, [NewsId, NewsList, setCurrentNews]);
   const NewsTime = useMemo(() => {
-    if (CurrentNews.get().time) {
-      const num = Number(CurrentNews.get().time);
+    if (currentNews.time) {
+      const num = Number(currentNews.time);
       if (Number.isNaN(num)) {
-        return CurrentNews.get().time;
+        return currentNews.time;
       } else {
         //TODO 优化时间格式
         return new Date(num).toLocaleString();
       }
     }
     return "";
-  }, [CurrentNews]);
-  const CoverProps = useImageLoadedScale(CurrentNews.get().cover);
+  }, [currentNews.time]);
+
+  const [previewCover, setPreviewCover] = useState(false);
+  const preview = useCallback(() => {
+    setPreviewCover(!previewCover);
+  }, [previewCover]);
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <ScrollView className="flex-1 bg-white">
         <BigHeader
-          title={CurrentNews.get().title}
+          title={currentNews.title}
           info={
             <BigHeader.InfoText content={`{${NewsTime}}`} />
           }
@@ -70,9 +76,18 @@ const NewsDetail: FC<props> = () => {
           }}
         >
           <View style={{ marginTop: 30, marginBottom: 30 }}>
-            <Image {...CoverProps} />
+            <Pressable onPress={preview}>
+              <ScaledImage
+                source={currentNews.cover}
+                style={{ width: "100%" }}
+                contentFit="contain"
+                canPreview={true}
+                onCancelPreview={preview}
+                preview={previewCover}
+              />
+            </Pressable>
             <Text style={{ fontSize: 18, marginTop: 15 }} selectable={true}>
-              {CurrentNews.get().content}
+              {currentNews.content}
             </Text>
           </View>
         </BigHeader>

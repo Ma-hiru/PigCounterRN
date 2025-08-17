@@ -16,6 +16,7 @@ type CanPressType = {
   containerStyle?: StyleProp<ViewStyle>;
   onLongPress?: () => void;
 }
+/** @deprecated */
 const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
   {
     title,
@@ -25,8 +26,7 @@ const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
     titleStyle,
     className
   }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const navigation = useNavigation();
+  useNavigation();
   return (
     <>
       <View className={"w-full bg-white shadow-hard-2 " + className}
@@ -52,6 +52,7 @@ const MyPagesCard: FC<props> & { CanPress: FC<CanPressType> } = (
     </>
   );
 };
+/** @deprecated */
 const CanPress: FC<CanPressType> = ({ children, onPress, containerStyle, onLongPress }) => {
   return <>
     <Pressable onPress={onPress} onLongPress={onLongPress}>

@@ -1,20 +1,19 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { TaskConfig } from "@/stores/zustand/task/config";
+import { NewsConfig } from "@/stores/zustand/news/config";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isDev } from "@/utils/isDev";
 
-
 const middleware = immer(
   isDev
-    ? TaskConfig
+    ? NewsConfig
     : persist(
-      TaskConfig,
+      NewsConfig,
       {
-        name: "task",
+        name: "news",
         storage: createJSONStorage(() => AsyncStorage)
       }
     )
 );
-export const useTaskZustandStore = create<ReturnType<typeof TaskConfig>>()(middleware);
+export const useNewsZustandStore = create<ReturnType<typeof NewsConfig>>()(middleware);

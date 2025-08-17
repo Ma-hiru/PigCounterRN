@@ -4,9 +4,11 @@ import { useSyncExternalStore } from "react";
 
 
 dayjs.extend(duration);
+
 export const countdownFormat = (time: number) => {
   return dayjs.duration(time, "milliseconds").format("HH时mm分ss秒");
 };
+
 export const useValidateTask = (task: BaseTask) => {
   const endTime = dayjs(task.endTime);
   const nowTime = dayjs(Date.now());
@@ -21,6 +23,7 @@ export const useValidateTask = (task: BaseTask) => {
   const isOutdate = endTime.isBefore(nowTime);
   return { validation, startTime, endTime, isOutdate };
 };
+
 export const getCurrentTask = (taskList: Task[]) => {
   return taskList.reduce((pre, task) => {
     const endTime = dayjs(task.endTime);
@@ -29,4 +32,23 @@ export const getCurrentTask = (taskList: Task[]) => {
     startTime.isBefore(nowTime) && endTime.isAfter(nowTime) && pre.push(task);
     return pre;
   }, [] as Task[]);
+};
+
+export const getLastTaskInfo = (CurrentTask: Task[]) => {
+  for (const [taskIndex, task] of CurrentTask.entries()) {
+    for (const [buildingIndex, building] of task.buildings.entries()) {
+      for (const [penIndex, pen] of building.pens.entries()) {
+        if (pen.count === -1) {
+          return {
+            taskIndex,
+            buildingIndex,
+            penIndex,
+            buildingName: building.buildingName,
+            penName: pen.penName,
+            penId: pen.penId
+          };
+        }
+      }
+    }
+  }
 };

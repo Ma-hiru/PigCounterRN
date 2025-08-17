@@ -10,7 +10,6 @@ import {
   Text
 } from "react-native";
 import { useCallback, useEffect } from "react";
-import { useAppDispatch, userActions } from "@/stores";
 import { useFetchData } from "@/utils/fetchData";
 import { useRouter } from "expo-router";
 import background from "@/assets/images/login/login_bg_1.jpg";
@@ -21,7 +20,7 @@ import localStore from "@/utils/localStore";
 import { useUserZustandStore } from "@/stores/zustand/user";
 import { useShallow } from "zustand/react/shallow";
 
-const { setLogin } = userActions;
+
 const setRemember = (loginInfo: loginInfo, remember: boolean) => {
   if (remember) {
     localStore.setItem("remember", String(remember)).then();
@@ -35,16 +34,17 @@ const setRemember = (loginInfo: loginInfo, remember: boolean) => {
 };
 const Login = () => {
   const router = useRouter();
-  const { token } = useUserZustandStore(
+  const { token, setLogin } = useUserZustandStore(
     useShallow(
       (state) => {
         return {
-          token: state.token
+          token: state.token,
+          setLogin: state.setLogin
         };
       }
     )
   );
-  const dispatch = useAppDispatch();
+
   const { fetchData, API } = useFetchData();
   const loading = useMyState(false);
   const handleSubmit = useCallback(async (loginInfo: loginInfo, remember: boolean) => {
@@ -55,7 +55,7 @@ const Login = () => {
         [loginInfo],
         (res, createToast) => {
           Log.Console("loginResponse=>", res.data);
-          dispatch(setLogin(res.data));
+          setLogin(res.data);
           setRemember(loginInfo, remember);
           createToast("登录成功", "欢迎回来！" + res.data.username);
         },
@@ -66,7 +66,7 @@ const Login = () => {
         loading.set(false);
       });
     });
-  }, [API.reqLogin, dispatch, fetchData, loading]);
+  }, [API.reqLogin, fetchData, loading, setLogin]);
   useEffect(() => {
     if (token !== "") {
       router.push("/Home");

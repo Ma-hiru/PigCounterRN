@@ -1,19 +1,16 @@
 import { FC, memo } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { Image } from "expo-image";
+import { View, Text, StyleSheet } from "react-native";
 import { NewsList } from "@/types/news";
-import { useImageLoadedScale } from "@/hooks/useImageScale";
 import { goToPages } from "@/utils/goToPages";
 import { useRouter } from "expo-router";
 import PressFeedback from "@/components/animate/PressFeedback";
-
+import ScaledImage from "@/components/ScaledImage";
 
 type props = {
   news: NewsList[number];
 }
 
 const News: FC<props> = ({ news }) => {
-  const CoverProps = useImageLoadedScale(news.cover);
   const router = useRouter();
   return (
     <>
@@ -26,7 +23,7 @@ const News: FC<props> = ({ news }) => {
         {
           ({ pressed }) =>
             <View style={[pressed && styles.Shadow, { padding: 5 }]}>
-              <Image {...CoverProps} />
+              <ScaledImage source={news.cover} />
               <Text style={{
                 marginTop: 10,
                 fontWeight: "bold",

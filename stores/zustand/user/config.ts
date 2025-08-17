@@ -18,7 +18,7 @@ export const UserConfig: ZustandConfig<InitialStateType & UserStoreActions, Init
   },
   setLogout() {
     const { memo } = get();
-    set(() => ({ ...InitialState, memo }));
+    set((draft) => ({ ...draft, ...InitialState, memo }));
   },
   setMemo(memo) {
     set(state => {
