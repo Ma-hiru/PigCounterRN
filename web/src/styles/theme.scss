@@ -1,0 +1,129 @@
+:root.lightMode {
+  /* layout */
+  --layout-container-bg: linear-gradient(-120deg, #a1c4fd 0%, #c2e9fb 100%);
+  --layout-bar-bg: rgba(255, 255, 255, 0.5);
+  --layout-bar-border-color: #c2e9fb;
+  --layout-bar-height: 2.9rem;
+  --layout-bar-color: #000;
+  --layout-bar-title-color: #409eff;
+  --layout-bar-menu-active-color: #409eff;
+  --layout-bar-btn-tooltip-bgColor: #ffffff;
+  --layout-bar-btn-tooltip-textColor: #409eff;
+  --layout-content-padding: 1.5rem;
+  --layout-card-inset-padding: 1rem;
+  --layout-card-border-color: #ffffff;
+  --layout-card-divider-color: rgba(42, 82, 152, 0.25);
+  --layout-card-scrollbar-color: rgba(42, 82, 152, 0.25);
+  --layout-card-pagination-color: rgba(42, 82, 152, 0.25);
+  --layout-card-pagination-bg: transparent;
+  --layout-card-pagination-active-color: #409eff;
+  --layout-card-content-bg: rgba(255, 255, 255, 0.6);
+  --layout-task-card-content-bg: #ffffff;
+  --layout-card-content-height-calc: calc(100vh - var(--layout-bar-height) - 2 * var(--layout-content-padding) - 2 * var(--layout-card-inset-padding));
+  --layout-card-content-width-calc: calc(100vw - 2 * var(--layout-content-padding) - 2 * var(--layout-card-inset-padding));
+  --layout-card-height-calc: calc(100vh - var(--layout-bar-height) - 2 * var(--layout-content-padding));
+  --layout-card-width-calc: calc(100vw - 2 * var(--layout-content-padding));
+  /* AntdModal */
+  --antd-modal-header-bg: #ffffff;
+  --antd-modal-content-bg: #ffffff;
+  --antd-modal-title-color: #409eff;
+  --antd-modal-footer-bg: #ffffff;
+  /* AntdModal-Cancel */
+  --antd-modal-cancel-textColor: #0958d9;
+  /* AntdModal-Confirm */
+  --antd-modal-Confirm-defaultBg: #409eff;
+  --antd-modal-Confirm-defaultColor: #fff;
+  --antd-modal-Confirm-defaultActiveBg: #fff;
+  --antd-modal-Confirm-defaultActiveColor: #0958d9;
+  --antd-modal-Confirm-defaultHoverBg: #ffffff;
+  --antd-modal-Confirm-defaultHoverColor: #0958d9;
+  /* Task */
+  --task-currentTask-content-color: #000000;
+  --task-currentTask-title-prefix-color: #ffffff;
+  --task-currentTask-title-prefix-bg-current: #409eff;
+  --task-currentTask-title-prefix-bg-future: #16a085;
+  --task-currentTask-title-prefix-bg-history: #f4d03f;
+  --task-currentTask-title-prefix-bg-error: red;
+  --task-currentTask-progress-color: #a1c4fd;
+  --task-currentTask-progress-text-color: rgba(0, 0, 0, 0.4);
+  --task-currentTask-progress-bg-color: #c2e9fb;
+  /* CompanyInfo */
+  --company-info-card-bg: transparent;
+  /* Login */
+  --login-input-border-color: #2b5876;
+  --login-input-border-active-color: #fff;
+  --login-btn-bg: #2b5876;
+  --login-btn-color: #fff;
+  --login-logo-text: #2b5876;
+  /* Notice */
+  --notice-noticeList-title-prefix-bg-system: #f4d03f;
+  --notice-noticeList-title-prefix-bg-company: #409eff;
+  --notice-noticeList-title-prefix-bg-error: red;
+  --notice-noticeList-title-prefix-color: #fff;
+}
+
+:root.darkMode {
+  /* layout */
+  --layout-container-bg: linear-gradient(60deg, #29323c 0%, #485563 100%);
+  --layout-bar-bg: rgba(0, 0, 0, 0.4);
+  --layout-bar-border-color: #485563;
+  --layout-bar-height: 3rem;
+  --layout-bar-color: #ffffff;
+  --layout-bar-title-color: #ffffff;
+  --layout-bar-menu-active-color: #1890ff;
+  --layout-bar-btn-tooltip-bgColor: #262626;
+  --layout-bar-btn-tooltip-textColor: #1890ff;
+  --layout-content-padding: 1.5rem;
+  --layout-card-border-color: #999999;
+  --layout-card-divider-color: rgba(255, 255, 255, 0.25);
+  --layout-card-scrollbar-color: rgba(255, 255, 255, 0.25);
+  --layout-card-pagination-color: rgba(255, 255, 255, 0.25);
+  --layout-card-pagination-bg: transparent;
+  --layout-card-pagination-active-color: #1890ff;
+  --layout-card-inset-padding: 1rem;
+  --layout-card-content-bg: rgba(0, 0, 0, 0.35);
+  --layout-task-card-content-bg: rgba(32.4, 32.7, 33.3, 0.65);
+  --layout-card-content-height-calc: calc(100vh - var(--layout-bar-height) - 2 * var(--layout-content-padding) - 2 * var(--layout-card-inset-padding));
+  --layout-card-content-width-calc: calc(100vw - 2 * var(--layout-content-padding) - 2 * var(--layout-card-inset-padding));
+  --layout-card-height-calc: calc(100vh - var(--layout-bar-height) - 2 * var(--layout-content-padding));
+  --layout-card-width-calc: calc(100vw - 2 * var(--layout-content-padding));
+  /* AntdModal */
+  --antd-modal-header-bg: transparent;
+  --antd-modal-content-bg: rgb(32.4, 32.7, 33.3);
+  --antd-modal-content-backdrop-filter: blur(0px);
+  --antd-modal-title-color: #00a9ff;
+  --antd-modal-footer-bg: transparent;
+  /* AntdModal-Cancel */
+  --antd-modal-cancel-textColor: #fff;
+  /* AntdModal-Confirm */
+  --antd-modal-Confirm-defaultBg: #1890ff;
+  --antd-modal-Confirm-defaultColor: #fff;
+  --antd-modal-Confirm-defaultActiveBg: #fff;
+  --antd-modal-Confirm-defaultActiveColor: #0958d9;
+  --antd-modal-Confirm-defaultHoverBg: #ffffff;
+  --antd-modal-Confirm-defaultHoverColor: #0958d9;
+  --antd-modal-Confirm-defaultBorderColor: #1890ff;
+  /* Task */
+  --task-currentTask-content-color: #ffffff;
+  --task-currentTask-title-prefix-bg-current: #0958d9;
+  --task-currentTask-title-prefix-bg-future: #16a085;
+  --task-currentTask-title-prefix-bg-history: #f4d03f;
+  --task-currentTask-title-prefix-bg-error: red;
+  --task-currentTask-title-prefix-color: #ffffff;
+  --task-currentTask-progress-color: #409eff;
+  --task-currentTask-progress-text-color: rgba(0, 0, 0, 0.4);
+  --task-currentTask-progress-bg-color: rgba(0, 0, 0, 0.2);
+  /* CompanyInfo */
+  --company-info-card-bg: transparent;
+  /* Login */
+  --login-input-border-color: #2b5876;
+  --login-input-border-active-color: #fff;
+  --login-btn-bg: #2b5876;
+  --login-btn-color: #fff;
+  --login-logo-text: #2b5876;
+  /* Notice */
+  --notice-noticeList-title-prefix-bg-system: #f4d03f;
+  --notice-noticeList-title-prefix-bg-company: #409eff;
+  --notice-noticeList-title-prefix-bg-error: red;
+  --notice-noticeList-title-prefix-color: #fff;
+}

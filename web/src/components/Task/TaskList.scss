@@ -1,0 +1,57 @@
+#TaskList {
+  scrollbar-width: none;
+  scrollbar-color: var(--layout-card-scrollbar-color) transparent;
+  overflow-y: auto;
+  height: calc(var(--layout-card-content-height-calc) - 5*var(--layout-card-inset-padding) - 12rem);
+  .task-card {
+    margin-top: calc(0.5 * var(--layout-card-inset-padding));
+    padding: calc(0.5 * var(--layout-card-inset-padding));
+    border-radius: 0.5rem;
+    border-width: 0;
+    height: auto;
+    font-weight: normal;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    display: block;
+    text-align: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-shadow: none;
+
+    .task-item {
+      color: var(--task-currentTask-content-color);
+      
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+
+      .task-title {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: auto auto 1fr;
+        overflow: hidden;
+        height: 1.5rem;
+        .task-title-prefix {
+          font-weight: bold;
+          font-size: 0.8rem;
+          padding: 0 0.5rem;
+          border-radius: 5px;
+        }
+
+        .task-title-name {
+          margin-left: 0.5rem;
+          font-weight: bolder;
+        }
+
+        .task-title-count {
+          display: flex;
+          justify-content: end;
+        }
+      }
+
+      .task-content {
+      }
+    }
+  }
+}

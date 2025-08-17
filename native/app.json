@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "智牧云瞳",
-    "slug": "PigCounter",
+    "slug": "pigcounter",
     "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/icons/icon.png",
-    "scheme": "pigcounter",
+    "scheme": "pig-counter",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -75,7 +75,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "eaa55e22-9f5e-4bf7-a8e5-77e375a56d74"
+        "projectId": "b3d69a7d-5803-4e13-99f8-40e1a949ddcf"
       }
     },
     "owner": "mahiru"

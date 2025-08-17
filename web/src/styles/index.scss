@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "reset";
+@import "theme";
+@font-face {
+  font-family: "logo";
+  src: url("@/assets/fonts/logo.ttf") format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --spacing: 0.25rem;
+}
+
+html {
+  font-size: 16px;
+}
+
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.darkMode::view-transition-new(root) {
+  z-index: 9999;
+}
+
+::view-transition-old(root) {
+  z-index: 9999;
+}
+
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

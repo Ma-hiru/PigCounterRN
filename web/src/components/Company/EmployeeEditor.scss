@@ -1,0 +1,11 @@
+#employee-editor-avatar-container {
+  #employee-editor-avatar-container-mask{
+    opacity: 0;
+    border-radius: 9999px;
+    transition: all 0.3s ease-in-out;
+  }
+  &:hover #employee-editor-avatar-container-mask {
+    opacity: 1;
+    color: #666;
+  }
+}

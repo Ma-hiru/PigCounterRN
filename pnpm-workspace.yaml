@@ -1,0 +1,11 @@
+packages:
+  - native
+  - web
+
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@tailwindcss/oxide'
+  - core-js
+  - esbuild
+  - unrs-resolver
+  - vue-demi
