@@ -11,5 +11,8 @@
   },
   "resolutions": {
     "@react-aria/utils": "3.28.1"
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "7.0.0-dev.20250816.1"
   }
 }

@@ -4,6 +4,7 @@
     "requireCommit": true
   },
   "build": {
+    "preInstallCommand": "pnpm i -g pnpm@10",
     "development": {
       "developmentClient": true,
       "distribution": "internal",
